@@ -18,6 +18,7 @@ const {
   validarionerrorResponse,
 } = require("../middleware/response");
 const Usermodal = require("../models/user");
+const Walletmodal = require("../models/Wallet");
 const Token = require("../models/Token");
 const {
   token,
@@ -231,6 +232,7 @@ exports.register = {
                 { username: "V4X" + usernumber }
               );
               const accessToken = await token(Usermodal, user);
+              await Walletmodal({ userId: user._id }).save();
               successResponse(res, {
                 message: "Login successfully",
                 token: accessToken.token,

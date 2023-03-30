@@ -20,6 +20,14 @@ commonQueries.findOneRecord = async (model, condition, fetchValue) => {
     })
 }
 
+commonQueries.findAllRecord = async (model, condition, fetchValue) => {
+    return new Promise((resolve, reject) => {
+        model.find(condition, fetchValue, (error, record) => {
+            error ? reject(error) : resolve(record)
+        })
+    })
+}
+
 commonQueries.updateRecordValue = async (object, req) => {
     Object.keys(object).forEach((item) => {
         if (req.body.hasOwnProperty(item)) {
