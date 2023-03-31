@@ -6,6 +6,9 @@ const stackController = require("../controllers/Staking");
 router.post("/addstacking", (req, res) => {
   return stackController.stack.Buystack(req, res);
 });
+router.get("/stackingbouns", (req, res) => {
+  return stackController.stack.getstackbouns(req, res);
+});
 
 // router.get("/signUp/varify:Token", (req, res) => {
 //   return registerController.register.mailVarify(req, res);

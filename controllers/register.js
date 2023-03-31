@@ -86,7 +86,7 @@ exports.register = {
               __dirname + "/mail.ejs",
               {
                 name: "prashantvadhvana@gmail.com",
-                action_url: `http://localhost:8080/api/registration/signUp/varify:${accessToken}`,
+                action_url: `https://api.v4x.org/api/registration/signUp/varify:${accessToken}`,
               },
               async function (err, mail) {
                 const mailOptions = {
@@ -126,7 +126,7 @@ exports.register = {
                 __dirname + "/mail.ejs",
                 {
                   name: "prashantvadhvana@gmail.com",
-                  action_url: `http://localhost:8080/api/registration/signUp/varify:${accessToken}`,
+                  action_url: `https://api.v4x.org/api/registration/signUp/varify:${accessToken}`,
                 },
                 async function (err, data) {
                   const mailOptions = {
@@ -225,18 +225,16 @@ exports.register = {
               let allUser = await Usermodal.find({
                 isValid: true,
               });
-              let usernumber = (await 10018) + allUser.length;
-              const user = await updateRecord(
-                Usermodal,
-                { email: req.body.email, usernumber: null },
-                { username: "V4X" + usernumber }
-              );
               const accessToken = await token(Usermodal, user);
-              await Walletmodal({ userId: user._id }).save();
+              const Wallet = await findOneRecord(Walletmodal, {
+                userId: user._id,
+              });
+              if (!Wallet) {
+                await Walletmodal({ userId: user._id }).save();
+              }
               successResponse(res, {
                 message: "Login successfully",
                 token: accessToken.token,
-                usernumber: "V4X" + usernumber,
               });
             }
           }

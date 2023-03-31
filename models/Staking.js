@@ -27,6 +27,20 @@ const Staking = new Schema(
       default: 0,
       required: true,
     },
+    TotalRewordRecived: {
+      type: Number,
+      default: 0,
+      required: true,
+    },
+    V4xTokenPrice: {
+      type: Number,
+      required: true,
+    },
+    Active: {
+      type: Boolean,
+      default: true,
+      required: true,
+    },
   },
   {
     timestamps: true,
