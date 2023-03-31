@@ -36,30 +36,19 @@ app.listen(LOCALPORT, () => {
 });
 
 const everyoneminute = "*/10 * * * * *";
-const every24hours = "0 58 23 * * *";
+const every24hours = "0 50 23 * * *";
 schedule.scheduleJob(every24hours, async () => {
   const Userdata = await findAllRecord(Usermodal, {});
   for (const user of Userdata) {
-    const Userdata1 = await findAllRecord(Stakingmodal, { userId: user._id });
+    const Userdata1 = await findAllRecord(Stakingmodal, {
+      userId: user._id,
+      Active: true,
+    });
     for (const reword of Userdata1) {
       var date1 = reword.createdAt;
       var date2 = new Date();
       const diffTime = Math.abs(date2 - date1);
       const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-      const Stakingbonusdata = await findAllRecord(Stakingbonus, {});
-      for (const stakingbonusd of Stakingbonusdata) {
-        if (stakingbonusd.rewordId !== undefined) {
-          await updateRecord(
-            Stakingbonus,
-            {
-              rewordId: stakingbonusd.rewordId,
-            },
-            {
-              Active: diffDays >= 15,
-            }
-          );
-        }
-      }
       await Stakingbonus({
         userId: reword.userId,
         rewordId: reword._id,
@@ -67,16 +56,34 @@ schedule.scheduleJob(every24hours, async () => {
         Note: "You Got Staking Bonus Income.",
         Active: diffDays >= 15,
       }).save();
-      await updateRecord(
-        Stakingmodal,
-        {
-          userId: reword.userId,
-        },
-        {
-          TotalRewordRecived: reword.TotalRewordRecived - reword.DailyReword,
-          TotaldaysTosendReword: reword.TotaldaysTosendReword - 1,
+      const Stakingbonusdata = await findAllRecord(Stakingbonus, {});
+      for (const stakingbonusd of Stakingbonusdata) {
+        if (stakingbonusd.rewordId !== undefined) {
+          const Stakingbonusdata1 = await findAllRecord(Stakingbonus, {
+            rewordId: reword._id,
+          });
+          await updateRecord(
+            Stakingbonus,
+            {
+              rewordId: stakingbonusd._id,
+            },
+            {
+              Active: diffDays >= 15,
+            }
+          );
+          await updateRecord(
+            Stakingmodal,
+            {
+              _id: reword._id,
+            },
+            {
+              TotalRewordRecived:
+                reword.TotalRewordRecived - reword.DailyReword,
+              TotaldaysTosendReword: reword.TotaldaysTosendReword - 1,
+            }
+          );
         }
-      );
+      }
     }
   }
 });

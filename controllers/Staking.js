@@ -65,7 +65,7 @@ exports.stack = {
               await Stakingmodal({
                 userId: decoded.profile._id,
                 WalletType: "Main wallet",
-                DailyReword: Number(req.body.Amount / 730).toFixed(3) * 2,
+                DailyReword: Number(req.body.Amount / 730) * 2,
                 Amount: req.body.Amount,
                 TotalRewordRecived: req.body.Amount * 2,
                 V4xTokenPrice: req.body.V4xTokenPrice,
@@ -107,8 +107,7 @@ exports.stack = {
               await Stakingmodal({
                 userId: decoded.profile._id,
                 WalletType: "v4x wallet",
-                DailyReword: Number(req.body.Amount / 730).toFixed(3) * 2,
-                Amount: req.body.Amount,
+                DailyReword: Number(req.body.Amount / 730) * 2,
                 Amount: req.body.Amount,
                 TotalRewordRecived: req.body.Amount * 2,
                 V4xTokenPrice: req.body.V4xTokenPrice,
