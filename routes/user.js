@@ -8,6 +8,9 @@ router.get("/allstacking", (req, res) => {
 router.get("/gelUserWallate", (req, res) => {
   return stackController.stack.gelUserWallate(req, res);
 });
+router.post("/transfercoin", (req, res) => {
+  return stackController.stack.Transfercoin(req, res);
+});
 
 module.exports = router;
 

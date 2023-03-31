@@ -1,4 +1,4 @@
-const { Db } = require("mongodb");
+const { Db, ObjectId } = require("mongodb");
 const {
   decodeUris,
   cloneDeep,
@@ -184,10 +184,15 @@ exports.stack = {
           const StakingData = await findAllRecord(Walletmodal, {
             userId: decoded.profile._id,
           });
+          const ReffData = await findAllRecord(Usermodal, {
+            refferalBy: decoded.profile.refferalId,
+            isValid: true,
+          });
           return successResponse(res, {
-            message: "staking data get successfully",
+            message: "wallet data get successfully",
             data: StakingData,
             profile: decoded.profile,
+            ReffData: ReffData,
           });
         }
       } else {
@@ -229,5 +234,88 @@ exports.stack = {
     } catch (error) {
       return errorResponse(error, res);
     }
-  },  
+  },
+  Transfercoin: async (req, res) => {
+    try {
+      if (req.headers.authorization) {
+        let { err, decoded } = await tokenverify(
+          req.headers.authorization.split(" ")[1]
+        );
+        if (err) {
+          notFoundResponse(res, {
+            message: "user not found",
+          });
+        }
+        if (decoded) {
+          decoded = await cloneDeep(decoded);
+          let data = await findOneRecord(Walletmodal, {
+            userId: decoded.profile._id,
+          });
+          if (req.body.Wallet === "Main Wallet") {
+            if (data.mainWallet >= req.body.Amount) {
+              let amount = Number(data.mainWallet - req.body.Amount);
+              await updateRecord(
+                Walletmodal,
+                {
+                  userId: decoded.profile._id,
+                },
+                {
+                  mainWallet: amount,
+                }
+              );
+              await updateRecord(
+                Walletmodal,
+                {
+                  userId: new ObjectId(req.body.Username),
+                },
+                { $inc: { v4xWallet: req.body.Amount } }
+              );
+              return successResponse(res, {
+                message: "transactions have been sent successfully",
+              });
+            } else {
+              validarionerrorResponse(res, {
+                message:
+                  "please check your mian wallet balance do not have infoe amount to Transfer!",
+              });
+            }
+          } else {
+            if (data.v4xWallet >= req.body.Amount) {
+              let amount = Number(data.v4xWallet - req.body.Amount);
+              await updateRecord(
+                Walletmodal,
+                {
+                  userId: decoded.profile._id,
+                },
+                {
+                  v4xWallet: amount,
+                }
+              );
+              await updateRecord(
+                Walletmodal,
+                {
+                  userId: new ObjectId(req.body.Username),
+                },
+                { $inc: { v4xWallet: req.body.Amount } }
+              );
+              return successResponse(res, {
+                message: "transactions have been sent successfully",
+              });
+            } else {
+              validarionerrorResponse(res, {
+                message:
+                  "please check your V4X wallet balance do not have infoe amount to Transfer!",
+              });
+            }
+          }
+        }
+      } else {
+        badRequestResponse(res, {
+          message: "No token provided.",
+        });
+      }
+    } catch (error) {
+      return errorResponse(error, res);
+    }
+  },
 };
