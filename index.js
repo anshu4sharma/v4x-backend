@@ -41,6 +41,7 @@ const every24hours = "0 59 23 * * *";
 schedule.scheduleJob(every24hours, async () => {
   const Userdata = await findAllRecord(Usermodal, {});
   for (const user of Userdata) {
+    console.log(new Date().toLocaleDateString());
     const Userdata1 = await findAllRecord(Stakingmodal, {
       userId: user._id,
       Active: true,
