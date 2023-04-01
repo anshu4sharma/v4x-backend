@@ -1,23 +1,24 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const Wallet = new Schema(
+const Transaction = new Schema(
   {
     userId: {
       type: Schema.Types.ObjectId,
       ref: "user",
     },
-    mainWallet: {
+    tranforWallet: {
+      type: String,
+      default: 0,
+      required: true,
+    },
+    fromaccountusername: {
+      type: Schema.Types.ObjectId,
+      ref: "user",
+    },
+    Amount: {
       type: Number,
       default: 0,
-    },
-    v4xWallet: {
-      type: Number,
-      default: 0,
-    },
-    Active: {
-      type: Boolean,
-      default: true,
       required: true,
     },
   },
@@ -26,4 +27,4 @@ const Wallet = new Schema(
   }
 );
 
-module.exports = mongoose.model("Wallet", Wallet);
+module.exports = mongoose.model("Transaction", Transaction);

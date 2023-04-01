@@ -7,7 +7,7 @@ const user = new mongoose.Schema(
   {
     walletaddress: { type: String, trim: true, unique: true },
     email: { type: String, trim: true },
-    username: { type: String, default: null },
+    username: { type: String, default: null, unique: true },
     password: { type: String, trim: true },
     isActive: { type: Boolean, default: true },
     isValid: { type: Boolean, default: false },

@@ -41,6 +41,11 @@ const Staking = new Schema(
       default: true,
       required: true,
     },
+    bonusAmount: {
+      type: Number,
+      default: 200,
+      required: true,
+    },
   },
   {
     timestamps: true,

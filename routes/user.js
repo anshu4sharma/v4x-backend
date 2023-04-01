@@ -11,6 +11,9 @@ router.get("/gelUserWallate", (req, res) => {
 router.post("/transfercoin", (req, res) => {
   return stackController.stack.Transfercoin(req, res);
 });
+router.get("/transfercoin", (req, res) => {
+  return stackController.stack.getTransfercoinasync(req, res);
+});
 
 module.exports = router;
 

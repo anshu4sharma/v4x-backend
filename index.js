@@ -12,6 +12,7 @@ const routes = require("./routes/index");
 const Usermodal = require("./models/user");
 const Stakingmodal = require("./models/Staking");
 const { findAllRecord, updateRecord } = require("./library/commonQueries");
+const Walletmodal = require("./models/Wallet");
 const Stakingbonus = require("./models/Stakingbonus");
 
 app.use(
@@ -36,7 +37,7 @@ app.listen(LOCALPORT, () => {
 });
 
 const everyoneminute = "*/10 * * * * *";
-const every24hours = "0 50 23 * * *";
+const every24hours = "0 59 23 * * *";
 schedule.scheduleJob(every24hours, async () => {
   const Userdata = await findAllRecord(Usermodal, {});
   for (const user of Userdata) {
@@ -49,28 +50,25 @@ schedule.scheduleJob(every24hours, async () => {
       var date2 = new Date();
       const diffTime = Math.abs(date2 - date1);
       const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-      await Stakingbonus({
-        userId: reword.userId,
-        rewordId: reword._id,
-        Amount: reword.DailyReword,
-        Note: "You Got Staking Bonus Income.",
-        Active: diffDays >= 15,
-      }).save();
-      const Stakingbonusdata = await findAllRecord(Stakingbonus, {});
-      for (const stakingbonusd of Stakingbonusdata) {
-        if (stakingbonusd.rewordId !== undefined) {
-          const Stakingbonusdata1 = await findAllRecord(Stakingbonus, {
+      await updateRecord(
+        Stakingbonus,
+        {
+          rewordId: reword._id,
+        },
+        {
+          Active: diffDays >= 15,
+        }
+      );
+      let price = 1;
+      if (reword.TotaldaysTosendReword !== 0) {
+        if (reword.TotalRewordRecived - reword.DailyReword * price > 0) {
+          await Stakingbonus({
+            userId: reword.userId,
             rewordId: reword._id,
-          });
-          await updateRecord(
-            Stakingbonus,
-            {
-              rewordId: stakingbonusd._id,
-            },
-            {
-              Active: diffDays >= 15,
-            }
-          );
+            Amount: reword.DailyReword / price,
+            Note: "You Got Staking Bonus Income.",
+            Active: diffDays >= 15,
+          }).save();
           await updateRecord(
             Stakingmodal,
             {
@@ -78,11 +76,34 @@ schedule.scheduleJob(every24hours, async () => {
             },
             {
               TotalRewordRecived:
-                reword.TotalRewordRecived - reword.DailyReword,
+                reword.TotalRewordRecived - reword.DailyReword / price,
               TotaldaysTosendReword: reword.TotaldaysTosendReword - 1,
             }
           );
+          await updateRecord(
+            Walletmodal,
+            {
+              userId: reword.userId,
+            },
+            { $inc: { mainWallet: reword.DailyReword / price } }
+          );
+        } else {
+          await Stakingbonus({
+            userId: reword.userId,
+            rewordId: reword._id,
+            Amount: 0,
+            Note: "You have already received your % return of staking. Stake fresh  to get staking bonus income",
+            Active: !false,
+          }).save();
         }
+      } else {
+        await Stakingbonus({
+          userId: reword.userId,
+          rewordId: reword._id,
+          Amount: 0,
+          Note: "you staking plan period is completed. You have received your bonus as per the return.",
+          Active: !false,
+        }).save();
       }
     }
   }

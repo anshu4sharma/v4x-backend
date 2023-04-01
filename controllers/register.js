@@ -86,7 +86,7 @@ exports.register = {
               __dirname + "/mail.ejs",
               {
                 name: "prashantvadhvana@gmail.com",
-                action_url: `https://api.v4x.org/api/registration/signUp/varify:${accessToken}`,
+                action_url: `http://localhost:8080/api/registration/signUp/varify:${accessToken}`,
               },
               async function (err, mail) {
                 const mailOptions = {
@@ -126,7 +126,7 @@ exports.register = {
                 __dirname + "/mail.ejs",
                 {
                   name: "prashantvadhvana@gmail.com",
-                  action_url: `https://api.v4x.org/api/registration/signUp/varify:${accessToken}`,
+                  action_url: `http://localhost:8080/api/registration/signUp/varify:${accessToken}`,
                 },
                 async function (err, data) {
                   const mailOptions = {
@@ -184,13 +184,16 @@ exports.register = {
           let allUser = await Usermodal.find({
             isValid: true,
           });
-          let usernumber = (await 10018) + allUser.length;
-          const user = await updateRecord(
+          let usernumber = 10018 + allUser.length;
+          let finalusename = "V4X" + usernumber;
+          console.log("usernumber", finalusename);
+          await updateRecord(
             Usermodal,
-            { email: req.body.email, usernumber: null },
-            { username: "V4X" + usernumber }
-          );
-          res.redirect("http://localhost:3000/");
+            { email: decoded.profile.email },
+            { username: finalusename }
+          ).then(() => {
+            res.redirect("http://localhost:3000/");
+          });
         }
       } else {
         badRequestResponse(res, {
