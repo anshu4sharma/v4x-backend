@@ -238,6 +238,7 @@ exports.register = {
               successResponse(res, {
                 message: "Login successfully",
                 token: accessToken.token,
+                profile: user,
               });
             }
           }

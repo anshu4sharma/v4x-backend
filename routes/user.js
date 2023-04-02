@@ -14,6 +14,12 @@ router.post("/transfercoin", (req, res) => {
 router.get("/transfercoin", (req, res) => {
   return stackController.stack.getTransfercoinasync(req, res);
 });
+router.get("/Community/Building/income", (req, res) => {
+  return stackController.stack.getCommunityincome(req, res);
+});
+router.post("/getwallateblance", (req, res) => {
+  return stackController.stack.getwallateblance(req, res);
+});
 
 module.exports = router;
 

@@ -1,23 +1,25 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const Wallet = new Schema(
+const Community = new Schema(
   {
     userId: {
       type: Schema.Types.ObjectId,
       ref: "user",
     },
-    mainWallet: {
-      type: Number,
+    Note: {
+      type: String,
       default: 0,
+      required: true,
     },
-    v4xWallet: {
-      type: Number,
-      default: 0,
+    Usernameby: {
+      type: String,
+      ref: "user",
     },
-    dappWallet: {
+    Amount: {
       type: Number,
       default: 0,
+      required: true,
     },
     Active: {
       type: Boolean,
@@ -30,4 +32,4 @@ const Wallet = new Schema(
   }
 );
 
-module.exports = mongoose.model("Wallet", Wallet);
+module.exports = mongoose.model("community", Community);

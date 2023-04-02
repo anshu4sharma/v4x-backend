@@ -22,6 +22,100 @@ const Walletmodal = require("../models/Wallet");
 const Usermodal = require("../models/user");
 const Stakingbonus = require("../models/Stakingbonus");
 const Transactionmodal = require("../models/Transaction");
+const Communitymodal = require("../models/Community");
+
+let levalreword = [
+  {
+    LEVELS: 1,
+    INCOME: 4,
+    DIRECTS: 1,
+  },
+  {
+    LEVELS: 2,
+    INCOME: 3,
+    DIRECTS: 1,
+  },
+  {
+    LEVELS: 3,
+    INCOME: 2,
+    DIRECTS: 2,
+  },
+  {
+    LEVELS: 4,
+    INCOME: 1,
+    DIRECTS: 2,
+  },
+  {
+    LEVELS: 5,
+    INCOME: 0.5,
+    DIRECTS: 3,
+  },
+  {
+    LEVELS: 6,
+    INCOME: 0.5,
+    DIRECTS: 3,
+  },
+  {
+    LEVELS: 7,
+    INCOME: 0.5,
+    DIRECTS: 4,
+  },
+  {
+    LEVELS: 8,
+    INCOME: 0.5,
+    DIRECTS: 4,
+  },
+  {
+    LEVELS: 9,
+    INCOME: 0.5,
+    DIRECTS: 5,
+  },
+  {
+    LEVELS: 10,
+    INCOME: 0.5,
+    DIRECTS: 5,
+  },
+  {
+    LEVELS: 11,
+    INCOME: 0.5,
+    DIRECTS: 6,
+  },
+  {
+    LEVELS: 12,
+    INCOME: 0.5,
+    DIRECTS: 6,
+  },
+  {
+    LEVELS: 13,
+    INCOME: 0.5,
+    DIRECTS: 7,
+  },
+  {
+    LEVELS: 14,
+    INCOME: 0.5,
+    DIRECTS: 7,
+  },
+  {
+    LEVELS: 15,
+    INCOME: 1,
+    DIRECTS: 8,
+  },
+  {
+    LEVELS: 16,
+    INCOME: 2,
+    DIRECTS: 8,
+  },
+  {
+    LEVELS: 17,
+    INCOME: 2,
+    DIRECTS: 8,
+  },
+  {
+    LEVELS: 18,
+    INCOME: 2,
+    DIRECTS: 8,
+  },
+];
 exports.stack = {
   Buystack: async (req, res) => {
     try {
@@ -102,6 +196,61 @@ exports.stack = {
                 { userId: decoded.profile._id },
                 { mainWallet: WalletData.mainWallet - req.body.Amount }
               );
+
+              const ReffData1 = await findOneRecord(Usermodal, {
+                refferalId: decoded.profile.refferalBy,
+                isValid: true,
+              });
+              const ReffData2 = await findAllRecord(Usermodal, {
+                refferalBy: ReffData1.refferalId,
+                isValid: true,
+              });
+              updateRecord(
+                Usermodal,
+                { _id: ReffData1._id },
+                {
+                  leval: Number(
+                    ReffData2.length == 1
+                      ? 2
+                      : ReffData2.length == 2
+                      ? 4
+                      : ReffData2.length == 3
+                      ? 6
+                      : ReffData2.length == 4
+                      ? 8
+                      : ReffData2.length == 5
+                      ? 10
+                      : ReffData2.length == 6
+                      ? 12
+                      : ReffData2.length == 7
+                      ? 14
+                      : ReffData2.length == 8
+                      ? 16
+                      : 18
+                  ),
+                }
+              );
+              const leval = await findOneRecord(Usermodal, {
+                _id: ReffData1._id,
+                isValid: true,
+              });
+              let dataleval = levalreword.filter((e) => {
+                if (e.LEVELS <= leval.leval) {
+                  return e.INCOME;
+                }
+              });
+              let totalNumber = 0,
+                i = -1;
+              while (++i < dataleval.length) {
+                totalNumber += dataleval[i].INCOME;
+              }
+              let data = {
+                userId: leval._id,
+                Note: `You Got Level ${leval.leval} Income`,
+                Usernameby: decoded.profile.username,
+                Amount: (req.body.Amount * totalNumber) / 100,
+              };
+              await Communitymodal(data).save();
               return successResponse(res, {
                 message: "staking complaint successfully",
               });
@@ -111,7 +260,7 @@ exports.stack = {
                   "please check your mian wallet balance do not have infoe amount to stake!",
               });
             }
-          } else {
+          } else if (req.body.WalletType == "ewalletstacking") {
             if (
               WalletData.v4xWallet >=
               req.body.Amount * req.body.V4xTokenPrice
@@ -136,7 +285,7 @@ exports.stack = {
               }).save();
               await Stakingmodal({
                 userId: decoded.profile._id,
-                WalletType: "v4x wallet",
+                WalletType: "V4X wallet",
                 DailyReword:
                   Number(req.body.Amount / 730) * req.body.Amount <= 2500
                     ? Number(req.body.Amount / 730) * 2
@@ -169,6 +318,60 @@ exports.stack = {
                 { userId: decoded.profile._id },
                 { v4xWallet: WalletData.v4xWallet - req.body.Amount }
               );
+              const ReffData1 = await findOneRecord(Usermodal, {
+                refferalId: decoded.profile.refferalBy,
+                isValid: true,
+              });
+              const ReffData2 = await findAllRecord(Usermodal, {
+                refferalBy: ReffData1.refferalId,
+                isValid: true,
+              });
+              updateRecord(
+                Usermodal,
+                { _id: ReffData1._id },
+                {
+                  leval: Number(
+                    ReffData2.length == 1
+                      ? 2
+                      : ReffData2.length == 2
+                      ? 4
+                      : ReffData2.length == 3
+                      ? 6
+                      : ReffData2.length == 4
+                      ? 8
+                      : ReffData2.length == 5
+                      ? 10
+                      : ReffData2.length == 6
+                      ? 12
+                      : ReffData2.length == 7
+                      ? 14
+                      : ReffData2.length == 8
+                      ? 16
+                      : 18
+                  ),
+                }
+              );
+              const leval = await findOneRecord(Usermodal, {
+                _id: ReffData1._id,
+                isValid: true,
+              });
+              let dataleval = levalreword.filter((e) => {
+                if (e.LEVELS <= leval.leval) {
+                  return e.INCOME;
+                }
+              });
+              let totalNumber = 0,
+                i = -1;
+              while (++i < dataleval.length) {
+                totalNumber += dataleval[i].INCOME;
+              }
+              let data = {
+                userId: leval._id,
+                Note: `You Got Level ${leval.leval} Income`,
+                Usernameby: decoded.profile.username,
+                Amount: (req.body.Amount * totalNumber) / 100,
+              };
+              await Communitymodal(data).save();
               return successResponse(res, {
                 message: "staking complaint successfully",
               });
@@ -178,12 +381,156 @@ exports.stack = {
                   "please check your v4xWallet balance do not have infoe amount to stake!",
               });
             }
+          } else {
+            const ReffData = await findOneRecord(Usermodal, {
+              refferalId: decoded.profile.refferalBy,
+              isValid: true,
+            });
+            await updateRecord(
+              Walletmodal,
+              {
+                userId: ReffData._id,
+              },
+              { $inc: { mainWallet: (req.body.Amount * 10) / 100 } }
+            );
+            await Stakingbonus({
+              userId: ReffData._id,
+              ReffId: decoded.profile._id,
+              Amount: (req.body.Amount * 10) / 100,
+              Note: `You Got Airdrop V4x token through Refer And Earn Income from ${decoded.profile.username}`,
+              Active: true,
+            }).save();
+            await Stakingmodal({
+              userId: decoded.profile._id,
+              WalletType: "Dapp wallet",
+              DailyReword:
+                Number(req.body.Amount / 730) * req.body.Amount <= 2500
+                  ? Number(req.body.Amount / 730) * 2
+                  : req.body.Amount >= 2550 && req.body.Amount <= 10000
+                  ? Number(req.body.Amount / 730) * 2.25
+                  : req.body.Amount >= 10050 && req.body.Amount <= 25000
+                  ? Number(req.body.Amount / 730) * 2.5
+                  : Number(req.body.Amount / 730) * 3,
+              bonusAmount:
+                req.body.Amount <= 2500
+                  ? 200
+                  : req.body.Amount >= 2550 && req.body.Amount <= 10000
+                  ? 225
+                  : req.body.Amount >= 10050 && req.body.Amount <= 25000
+                  ? 250
+                  : 300,
+              Amount: req.body.Amount,
+              TotalRewordRecived:
+                req.body.Amount <= 2500
+                  ? req.body.Amount * 2
+                  : req.body.Amount >= 2550 && req.body.Amount <= 10000
+                  ? req.body.Amount * 2.25
+                  : req.body.Amount >= 10050 && req.body.Amount <= 25000
+                  ? req.body.Amount * 2.5
+                  : req.body.Amount * 3,
+              V4xTokenPrice: req.body.V4xTokenPrice,
+            }).save();
+            updateRecord(
+              Walletmodal,
+              { userId: decoded.profile._id },
+              { v4xWallet: WalletData.v4xWallet - req.body.Amount }
+            );
+            const ReffData1 = await findOneRecord(Usermodal, {
+              refferalId: decoded.profile.refferalBy,
+              isValid: true,
+            });
+            const ReffData2 = await findAllRecord(Usermodal, {
+              refferalBy: ReffData1.refferalId,
+              isValid: true,
+            });
+            updateRecord(
+              Usermodal,
+              { _id: ReffData1._id },
+              {
+                leval: Number(
+                  ReffData2.length == 1
+                    ? 2
+                    : ReffData2.length == 2
+                    ? 4
+                    : ReffData2.length == 3
+                    ? 6
+                    : ReffData2.length == 4
+                    ? 8
+                    : ReffData2.length == 5
+                    ? 10
+                    : ReffData2.length == 6
+                    ? 12
+                    : ReffData2.length == 7
+                    ? 14
+                    : ReffData2.length == 8
+                    ? 16
+                    : 18
+                ),
+              }
+            );
+            const leval = await findOneRecord(Usermodal, {
+              _id: ReffData1._id,
+              isValid: true,
+            });
+            let dataleval = levalreword.filter((e) => {
+              if (e.LEVELS <= leval.leval) {
+                return e.INCOME;
+              }
+            });
+            let totalNumber = 0,
+              i = -1;
+            while (++i < dataleval.length) {
+              totalNumber += dataleval[i].INCOME;
+            }
+            let data = {
+              userId: leval._id,
+              Note: `You Got Level ${leval.leval} Income`,
+              Usernameby: decoded.profile.username,
+              Amount: (req.body.Amount * totalNumber) / 100,
+            };
+            await Communitymodal(data).save();
+            return successResponse(res, {
+              message: "staking complaint successfully",
+            });
           }
         }
       } else {
         badRequestResponse(res, {
           message: "No token provided.",
         });
+      }
+    } catch (error) {
+      return errorResponse(error, res);
+    }
+  },
+  getwallateblance: async (req, res) => {
+    try {
+      if (req.headers.authorization) {
+        let { err, decoded } = await tokenverify(
+          req.headers.authorization.split(" ")[1]
+        );
+        if (err) {
+          notFoundResponse(res, {
+            message: "user not found",
+          });
+        }
+        if (decoded) {
+          decoded = await cloneDeep(decoded);
+          let data = await findOneRecord(Walletmodal, {
+            userId: decoded.profile._id,
+          });
+          await updateRecord(
+            Walletmodal,
+            {
+              userId: decoded.profile._id,
+            },
+            { dappWallet: Number(req.body.data.balance) }
+          );
+          return successResponse(res, {
+            message: "Transfer data get successfully",
+            balance: req.body.balance,
+          });
+        }
       }
     } catch (error) {
       return errorResponse(error, res);
@@ -423,6 +770,35 @@ exports.stack = {
               message: "plase enter valid amount.",
             });
           }
+        }
+      } else {
+        badRequestResponse(res, {
+          message: "No token provided.",
+        });
+      }
+    } catch (error) {
+      return errorResponse(error, res);
+    }
+  },
+  getCommunityincome: async (req, res) => {
+    try {
+      if (req.headers.authorization) {
+        let { err, decoded } = await tokenverify(
+          req.headers.authorization.split(" ")[1]
+        );
+        if (err) {
+          notFoundResponse(res, {
+            message: "user not found",
+          });
+        }
+        if (decoded) {
+          let data = await findAllRecord(Communitymodal, {
+            userId: decoded.profile._id,
+          });
+          return successResponse(res, {
+            message: "Community Building Programe Income get successfully",
+            data: data,
+          });
         }
       } else {
         badRequestResponse(res, {
