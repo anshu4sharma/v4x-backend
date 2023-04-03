@@ -16,7 +16,7 @@ router.put("/forgotPassword", (req, res) => {
   return registerController.register.forgotPassword(req, res);
 });
 router.post("/changepassword", (req, res) => {
-  return registerController.stack.changePassword(req, res);
+  return registerController.register.changePassword(req, res);
 });
 
 module.exports = router;

@@ -196,18 +196,13 @@ exports.stack = {
                 { userId: decoded.profile._id },
                 { mainWallet: WalletData.mainWallet - req.body.Amount }
               );
-
-              const ReffData1 = await findOneRecord(Usermodal, {
-                refferalId: decoded.profile.refferalBy,
-                isValid: true,
-              });
               const ReffData2 = await findAllRecord(Usermodal, {
-                refferalBy: ReffData1.refferalId,
+                refferalBy: ReffData.refferalId,
                 isValid: true,
               });
               updateRecord(
                 Usermodal,
-                { _id: ReffData1._id },
+                { _id: ReffData._id },
                 {
                   leval: Number(
                     ReffData2.length == 1
@@ -231,7 +226,7 @@ exports.stack = {
                 }
               );
               const leval = await findOneRecord(Usermodal, {
-                _id: ReffData1._id,
+                _id: ReffData._id,
                 isValid: true,
               });
               let dataleval = levalreword.filter((e) => {
@@ -318,17 +313,13 @@ exports.stack = {
                 { userId: decoded.profile._id },
                 { v4xWallet: WalletData.v4xWallet - req.body.Amount }
               );
-              const ReffData1 = await findOneRecord(Usermodal, {
-                refferalId: decoded.profile.refferalBy,
-                isValid: true,
-              });
               const ReffData2 = await findAllRecord(Usermodal, {
-                refferalBy: ReffData1.refferalId,
+                refferalBy: ReffData.refferalId,
                 isValid: true,
               });
               updateRecord(
                 Usermodal,
-                { _id: ReffData1._id },
+                { _id: ReffData._id },
                 {
                   leval: Number(
                     ReffData2.length == 1
@@ -352,7 +343,7 @@ exports.stack = {
                 }
               );
               const leval = await findOneRecord(Usermodal, {
-                _id: ReffData1._id,
+                _id: ReffData._id,
                 isValid: true,
               });
               let dataleval = levalreword.filter((e) => {
@@ -382,10 +373,6 @@ exports.stack = {
               });
             }
           } else {
-            const ReffData = await findOneRecord(Usermodal, {
-              refferalId: decoded.profile.refferalBy,
-              isValid: true,
-            });
             await updateRecord(
               Walletmodal,
               {
@@ -435,17 +422,17 @@ exports.stack = {
               { userId: decoded.profile._id },
               { v4xWallet: WalletData.v4xWallet - req.body.Amount }
             );
-            const ReffData1 = await findOneRecord(Usermodal, {
+            const ReffData = await findOneRecord(Usermodal, {
               refferalId: decoded.profile.refferalBy,
               isValid: true,
             });
             const ReffData2 = await findAllRecord(Usermodal, {
-              refferalBy: ReffData1.refferalId,
+              refferalBy: ReffData.refferalId,
               isValid: true,
             });
             updateRecord(
               Usermodal,
-              { _id: ReffData1._id },
+              { _id: ReffData._id },
               {
                 leval: Number(
                   ReffData2.length == 1
@@ -469,7 +456,7 @@ exports.stack = {
               }
             );
             const leval = await findOneRecord(Usermodal, {
-              _id: ReffData1._id,
+              _id: ReffData._id,
               isValid: true,
             });
             let dataleval = levalreword.filter((e) => {
@@ -498,39 +485,6 @@ exports.stack = {
         badRequestResponse(res, {
           message: "No token provided.",
         });
-      }
-    } catch (error) {
-      return errorResponse(error, res);
-    }
-  },
-  getwallateblance: async (req, res) => {
-    try {
-      if (req.headers.authorization) {
-        let { err, decoded } = await tokenverify(
-          req.headers.authorization.split(" ")[1]
-        );
-        if (err) {
-          notFoundResponse(res, {
-            message: "user not found",
-          });
-        }
-        if (decoded) {
-          decoded = await cloneDeep(decoded);
-          let data = await findOneRecord(Walletmodal, {
-            userId: decoded.profile._id,
-          });
-          await updateRecord(
-            Walletmodal,
-            {
-              userId: decoded.profile._id,
-            },
-            { dappWallet: Number(req.body.data.balance) }
-          );
-          return successResponse(res, {
-            message: "Transfer data get successfully",
-            balance: req.body.balance,
-          });
-        }
       }
     } catch (error) {
       return errorResponse(error, res);
@@ -582,7 +536,7 @@ exports.stack = {
           const StakingData = await findAllRecord(Walletmodal, {
             userId: decoded.profile._id,
           });
-          const ReffData = await findAllRecord(Usermodal, {
+          await findAllRecord(Usermodal, {
             refferalBy: decoded.profile.refferalId,
             isValid: true,
           });
@@ -610,26 +564,27 @@ exports.stack = {
                 as: "referBY",
               },
             },
-            {
-              $lookup: {
-                from: "stakings",
-                let: {
-                  rId: "$_id",
-                },
-                pipeline: [
-                  {
-                    $match: {
-                      $expr: {
-                        $and: [{ $eq: ["$userId", "$$rId"] }],
-                      },
-                    },
-                  },
-                ],
-                as: "stackingdata",
-              },
-            },
           ]);
-          console.log("data===>>><<<.>>>", data);
+          const Stakingbonusdata = await findAllRecord(Stakingbonus, {
+            Active: false,
+          });
+
+          let lockendamount = 0,
+            i = -1;
+          while (++i < Stakingbonusdata.length) {
+            lockendamount += Stakingbonusdata[i]["Amount"];
+            await updateRecord(
+              Walletmodal,
+              {
+                userId: decoded.profile._id,
+              },
+              {
+                lockendamount: Number(
+                  lockendamount - Stakingbonusdata[i]["Amount"]
+                ),
+              }
+            );
+          }
           return successResponse(res, {
             message: "wallet data get successfully",
             data: StakingData,

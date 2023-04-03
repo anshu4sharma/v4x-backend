@@ -25,6 +25,9 @@ const StakingBonus = new Schema(
       type: String,
       required: true,
     },
+    V4xTokenPrice: {
+      type: Number,
+    },
     Active: {
       type: Boolean,
       default: false,

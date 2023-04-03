@@ -15,7 +15,7 @@ const Wallet = new Schema(
       type: Number,
       default: 0,
     },
-    dappWallet: {
+    lockendamount: {
       type: Number,
       default: 0,
     },

@@ -32,6 +32,16 @@ const Staking = new Schema(
       default: 0,
       required: true,
     },
+    TotalRewordsend: {
+      type: Number,
+      default: 0,
+      required: true,
+    },
+    Totalsend: {
+      type: Number,
+      default: 0,
+      required: true,
+    },
     V4xTokenPrice: {
       type: Number,
       required: true,
