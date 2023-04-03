@@ -110,7 +110,16 @@ exports.register = {
               }
             );
           } else {
-            const isCreated = await Usermodal(req.body).save();
+            let allUser = await Usermodal.find({
+              isValid: true,
+            });
+            let usernumber = 10018 + allUser.length;
+            let finalusename = "V4X" + usernumber;
+            console.log("usernumber", finalusename);
+            const isCreated = await Usermodal({
+              ...req.body,
+              username: finalusename,
+            }).save();
             if (!isCreated) {
               return badRequestResponse(res, {
                 message: "Failed to create register!",
@@ -181,19 +190,8 @@ exports.register = {
               isValid: true,
             }
           );
-          let allUser = await Usermodal.find({
-            isValid: true,
-          });
-          let usernumber = 10018 + allUser.length;
-          let finalusename = "V4X" + usernumber;
-          console.log("usernumber", finalusename);
-          await updateRecord(
-            Usermodal,
-            { email: decoded.profile.email },
-            { username: finalusename }
-          ).then(() => {
-            res.redirect("http://localhost:3000/");
-          });
+
+          res.redirect("http://localhost:3000/");
         }
       } else {
         badRequestResponse(res, {

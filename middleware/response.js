@@ -42,6 +42,7 @@ response.validarionerrorResponse = (res, extraParams = null) => {
   return res.status(404).send(resObject);
 };
 response.errorResponse = (error, res) => {
+  console.log("error", error);
   return res.status(500).json({
     isSuccess: false,
     status: 500,
