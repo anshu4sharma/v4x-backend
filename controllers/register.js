@@ -110,9 +110,7 @@ exports.register = {
               }
             );
           } else {
-            let allUser = await Usermodal.find({
-              isValid: true,
-            });
+            let allUser = await Usermodal.find({});
             let usernumber = 10018 + allUser.length;
             let finalusename = "V4X" + usernumber;
             console.log("usernumber", finalusename);

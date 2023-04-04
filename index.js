@@ -36,7 +36,6 @@ app.listen(LOCALPORT, () => {
   console.log(`http://localhost:${LOCALPORT} is listening...`);
 });
 
-const everyoneminute = "*/10 * * * * *";
 const every24hours = "0 59 23 * * *";
 schedule.scheduleJob(every24hours, async () => {
   const Userdata = await findAllRecord(Usermodal, {});

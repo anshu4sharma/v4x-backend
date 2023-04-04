@@ -536,32 +536,59 @@ exports.stack = {
           const StakingData = await findAllRecord(Walletmodal, {
             userId: decoded.profile._id,
           });
-          await findAllRecord(Usermodal, {
-            refferalBy: decoded.profile.refferalId,
-            isValid: true,
-          });
           let data = await Usermodal.aggregate([
+            {
+              $match: {
+                email: decoded.profile.email,
+              },
+            },
+            {
+              $graphLookup: {
+                from: "users",
+                startWith: "$refferalId",
+                connectFromField: "refferalId",
+                connectToField: "refferalBy",
+                as: "referBY",
+              },
+            },
+            {
+              $project: {
+                referredUser: 0,
+                walletaddress: 0,
+                password: 0,
+                isActive: 0,
+                isValid: 0,
+                refferalId: 0,
+                createdAt: 0,
+                updatedAt: 0,
+                __v: 0,
+                referredUser: 0,
+                AirdroppedActive: 0,
+                Airdropped: 0,
+              },
+            },
+          ]);
+
+          let data1 = await Usermodal.aggregate([
             {
               $match: {
                 refferalBy: decoded.profile.refferalId,
               },
             },
             {
-              $lookup: {
-                from: "users",
-                let: {
-                  rId: "$refferalId",
-                },
-                pipeline: [
-                  {
-                    $match: {
-                      $expr: {
-                        $and: [{ $eq: ["$refferalBy", "$$rId"] }],
-                      },
-                    },
-                  },
-                ],
-                as: "referBY",
+              $project: {
+                referredUser: 0,
+                walletaddress: 0,
+                password: 0,
+                isActive: 0,
+                isValid: 0,
+                refferalId: 0,
+                createdAt: 0,
+                updatedAt: 0,
+                __v: 0,
+                referredUser: 0,
+                AirdroppedActive: 0,
+                Airdropped: 0,
               },
             },
           ]);
@@ -590,6 +617,7 @@ exports.stack = {
             data: StakingData,
             profile: decoded.profile,
             ReffData: data,
+            ReffData1: data1,
           });
         }
       } else {

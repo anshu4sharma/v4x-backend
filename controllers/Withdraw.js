@@ -85,15 +85,17 @@ exports.Withdraw = {
                       message: `Email not send error something is wrong ${err}`,
                     });
                   } else {
-                    successResponse(res, {
-                      message:
-                        "otp has been send to your email address..!!",
-                    });
                   }
                 });
               }
             );
+            successResponse(res, {
+              message: "otp has been send to your email address..!!",
+            });
           } else {
+            successResponse(res, {
+              message: "otp already and in your mail plase check your email",
+            });
           }
         }
       } else {
@@ -103,6 +105,33 @@ exports.Withdraw = {
       }
     } catch (error) {
       return errorResponse(error, res);
+    }
+  },
+  Withdrawotpcheck: async (req, res) => {
+    if (req.headers.authorization) {
+      let { err, decoded } = await tokenverify(
+        req.headers.authorization.split(" ")[1]
+      );
+      if (err) {
+        notFoundResponse(res, {
+          message: "user not found",
+        });
+      }
+      if (decoded) {
+        let data1 = await otp.find({
+          userId: decoded.profile._id,
+          otp: Number(req.body.otp),
+        });
+        if (data1.length !== 0) {
+          successResponse(res, {
+            message: "otp verified successfully",
+          });
+        } else {
+          notFoundResponse(res, {
+            message: "plase enter valid otp.",
+          });
+        }
+      }
     }
   },
 };
