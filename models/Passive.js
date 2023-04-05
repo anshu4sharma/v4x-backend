@@ -17,6 +17,10 @@ const Passive = new Schema(
       default: 0,
       required: true,
     },
+    username: {
+      type: String,
+      required: true,
+    },
     Active: {
       type: Boolean,
       default: true,

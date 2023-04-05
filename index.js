@@ -460,7 +460,7 @@ schedule.scheduleJob(every24hours, async () => {
               },
               { $inc: { mainWallet: 50 } }
             );
-            // await Achivement(data).save();
+            await Achivement(data).save();
           }
         }
       } else if (res[0]?.Rank == "EXECUTIVE") {

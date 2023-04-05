@@ -23,6 +23,8 @@ const Usermodal = require("../models/user");
 const Stakingbonus = require("../models/Stakingbonus");
 const Transactionmodal = require("../models/Transaction");
 const Communitymodal = require("../models/Community");
+const Achivementmodal = require("../models/Achivement");
+const Passivemodal = require("../models/Passive");
 
 let levalreword = [
   {
@@ -539,7 +541,7 @@ exports.stack = {
           let data = await Usermodal.aggregate([
             {
               $match: {
-                email: "sswami610@gmail.com",
+                email:  decoded.profile.email,
               },
             },
             {
@@ -569,7 +571,6 @@ exports.stack = {
               },
             },
           ]);
-
           let data1 = await Usermodal.aggregate([
             {
               $match: {
@@ -860,6 +861,174 @@ exports.stack = {
             message: "Transfer data get successfully",
             data: data,
             reciveddata: reciveddata,
+          });
+        }
+      } else {
+        badRequestResponse(res, {
+          message: "No token provided.",
+        });
+      }
+    } catch (error) {
+      return errorResponse(error, res);
+    }
+  },
+  getAchievementincome: async (req, res) => {
+    try {
+      if (req.headers.authorization) {
+        let { err, decoded } = await tokenverify(
+          req.headers.authorization.split(" ")[1]
+        );
+        if (err) {
+          notFoundResponse(res, {
+            message: "user not found",
+          });
+        }
+        if (decoded) {
+          let data = await findAllRecord(Achivementmodal, {
+            userId: decoded.profile._id,
+          });
+          return successResponse(res, {
+            message: "Achievement Income get successfully",
+            data: data,
+          });
+        }
+      } else {
+        badRequestResponse(res, {
+          message: "No token provided.",
+        });
+      }
+    } catch (error) {
+      return errorResponse(error, res);
+    }
+  },
+  gePassiveincome: async (req, res) => {
+    try {
+      if (req.headers.authorization) {
+        let { err, decoded } = await tokenverify(
+          req.headers.authorization.split(" ")[1]
+        );
+        if (err) {
+          notFoundResponse(res, {
+            message: "user not found",
+          });
+        }
+        if (decoded) {
+          let data = await findAllRecord(Passivemodal, {
+            userId: decoded.profile._id,
+          });
+          return successResponse(res, {
+            message: "Achievement Income get successfully",
+            data: data,
+          });
+        }
+      } else {
+        badRequestResponse(res, {
+          message: "No token provided.",
+        });
+      }
+    } catch (error) {
+      return errorResponse(error, res);
+    }
+  },
+  indaireactteam: async (req, res) => {
+    try {
+      if (req.headers.authorization) {
+        let { err, decoded } = await tokenverify(
+          req.headers.authorization.split(" ")[1]
+        );
+        if (err) {
+          notFoundResponse(res, {
+            message: "user not found",
+          });
+        }
+        if (decoded) {
+          decoded = await cloneDeep(decoded);
+          let data = await Usermodal.aggregate([
+            {
+              $match: {
+                refferalBy: decoded.profile.refferalId,
+              },
+            },
+            {
+              $project: {
+                referredUser: 0,
+                walletaddress: 0,
+                password: 0,
+                isActive: 0,
+                isValid: 0,
+                refferalId: 0,
+                createdAt: 0,
+                updatedAt: 0,
+                __v: 0,
+                referredUser: 0,
+                AirdroppedActive: 0,
+                Airdropped: 0,
+              },
+            },
+          ]);
+          return successResponse(res, {
+            message: "wallet data get successfully",
+            ReffData: data,
+          });
+        }
+      } else {
+        badRequestResponse(res, {
+          message: "No token provided.",
+        });
+      }
+    } catch (error) {
+      return errorResponse(error, res);
+    }
+  },
+  daireactteam: async (req, res) => {
+    try {
+      if (req.headers.authorization) {
+        let { err, decoded } = await tokenverify(
+          req.headers.authorization.split(" ")[1]
+        );
+        if (err) {
+          notFoundResponse(res, {
+            message: "user not found",
+          });
+        }
+        if (decoded) {
+          decoded = await cloneDeep(decoded);
+          let data = await Usermodal.aggregate([
+            {
+              $match: {
+                email: "sswami610@gmail.com",
+              },
+            },
+            {
+              $graphLookup: {
+                from: "users",
+                startWith: "$refferalId",
+                connectFromField: "refferalId",
+                connectToField: "refferalBy",
+                as: "referBY",
+              },
+            },
+            {
+              $project: {
+                referredUser: 0,
+                walletaddress: 0,
+                password: 0,
+                isActive: 0,
+                isValid: 0,
+                refferalId: 0,
+                createdAt: 0,
+                updatedAt: 0,
+                __v: 0,
+                email: 0,
+                referredUser: 0,
+                AirdroppedActive: 0,
+                Airdropped: 0,
+              },
+            },
+          ]);
+          return successResponse(res, {
+            message: "wallet data get successfully",
+            ReffData: data,
           });
         }
       } else {
