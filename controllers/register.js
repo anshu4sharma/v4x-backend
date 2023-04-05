@@ -86,7 +86,7 @@ exports.register = {
               __dirname + "/mail.ejs",
               {
                 name: "prashantvadhvana@gmail.com",
-                action_url: `http://localhost:8080/api/registration/signUp/varify:${accessToken}`,
+                action_url: `https://api.v4x.org/api/registration/signUp/varify:${accessToken}`,
               },
               async function (err, mail) {
                 const mailOptions = {
@@ -133,7 +133,7 @@ exports.register = {
                 __dirname + "/mail.ejs",
                 {
                   name: "prashantvadhvana@gmail.com",
-                  action_url: `http://localhost:8080/api/registration/signUp/varify:${accessToken}`,
+                  action_url: `https://api.v4x.org/api/registration/signUp/varify:${accessToken}`,
                 },
                 async function (err, data) {
                   const mailOptions = {
