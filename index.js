@@ -39,6 +39,7 @@ app.listen(LOCALPORT, () => {
 });
 
 const every24hours = "0 59 23 * * *";
+// const every24hours = "*/5 * * * * *";
 schedule.scheduleJob(every24hours, async () => {
   const Userdata = await findAllRecord(Usermodal, {});
   for (const user of Userdata) {
@@ -117,7 +118,6 @@ schedule.scheduleJob(every24hours, async () => {
     }
   }
 });
-
 schedule.scheduleJob(every24hours, async () => {
   const Userdata = await findAllRecord(Usermodal, {});
   for (const user of Userdata) {
@@ -196,7 +196,7 @@ schedule.scheduleJob(every24hours, async () => {
         },
       },
     ]).then(async (res) => {
-      if (res[0].Rank === "EXECUTIVE") {
+      if (res[0]?.Rank === "EXECUTIVE") {
         if (res[0]?.total) {
           for (const d of res[0]?.stackingdata) {
             if (d.Active === true) {
@@ -211,7 +211,7 @@ schedule.scheduleJob(every24hours, async () => {
           }
         }
       }
-      if (res[0].Rank === "MANAGER") {
+      if (res[0]?.Rank === "MANAGER") {
         if (res[0]?.total) {
           for (const d of res[0]?.stackingdata) {
             if (d.Active === true) {
@@ -226,7 +226,7 @@ schedule.scheduleJob(every24hours, async () => {
           }
         }
       }
-      if (res[0].Rank === "SENIOR MANAGER") {
+      if (res[0]?.Rank === "SENIOR MANAGER") {
         if (res[0]?.total) {
           for (const d of res[0]?.stackingdata) {
             if (d.Active === true) {
@@ -241,7 +241,7 @@ schedule.scheduleJob(every24hours, async () => {
           }
         }
       }
-      if (res[0].Rank === "BUSINESS HEAD") {
+      if (res[0]?.Rank === "BUSINESS HEAD") {
         if (res[0]?.total) {
           for (const d of res[0]?.stackingdata) {
             if (d.Active === true) {
@@ -256,7 +256,7 @@ schedule.scheduleJob(every24hours, async () => {
           }
         }
       }
-      if (res[0].Rank === "GOLD MANAGER") {
+      if (res[0]?.Rank === "GOLD MANAGER") {
         if (res[0]?.total) {
           for (const d of res[0]?.stackingdata) {
             if (d.Active === true) {
@@ -271,7 +271,7 @@ schedule.scheduleJob(every24hours, async () => {
           }
         }
       }
-      if (res[0].Rank === "DIAMOND MANAGER") {
+      if (res[0]?.Rank === "DIAMOND MANAGER") {
         if (res[0]?.total) {
           for (const d of res[0]?.stackingdata) {
             if (d.Active === true) {
@@ -286,7 +286,7 @@ schedule.scheduleJob(every24hours, async () => {
           }
         }
       }
-      if (res[0].Rank === "CROWN 1") {
+      if (res[0]?.Rank === "CROWN 1") {
         if (res[0]?.total) {
           for (const d of res[0]?.stackingdata) {
             if (d.Active === true) {
@@ -301,7 +301,7 @@ schedule.scheduleJob(every24hours, async () => {
           }
         }
       }
-      if (res[0].Rank === "CROWN 2") {
+      if (res[0]?.Rank === "CROWN 2") {
         if (res[0]?.total) {
           if (d.Active === true) {
             let data = {
@@ -314,7 +314,7 @@ schedule.scheduleJob(every24hours, async () => {
           }
         }
       }
-      if (res[0].Rank === "CROWN 3") {
+      if (res[0]?.Rank === "CROWN 3") {
         if (res[0]?.total) {
           for (const d of res[0]?.stackingdata) {
             console.log("res.stackingdata", res[0]);
@@ -330,7 +330,7 @@ schedule.scheduleJob(every24hours, async () => {
           }
         }
       }
-      if (res[0].Rank === "AMBASSADOR") {
+      if (res[0]?.Rank === "AMBASSADOR") {
         if (res[0]?.total) {
           for (const d of res[0]?.stackingdata) {
             if (d.Active === true) {
