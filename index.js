@@ -14,6 +14,8 @@ const Stakingmodal = require("./models/Staking");
 const { findAllRecord, updateRecord } = require("./library/commonQueries");
 const Walletmodal = require("./models/Wallet");
 const Stakingbonus = require("./models/Stakingbonus");
+const Achivement = require("./models/Achivement");
+const Passive = require("./models/Passive");
 
 app.use(
   express.json({
@@ -113,5 +115,689 @@ schedule.scheduleJob(every24hours, async () => {
         );
       }
     }
+  }
+});
+
+schedule.scheduleJob(every24hours, async () => {
+  const Userdata = await findAllRecord(Usermodal, {});
+  for (const user of Userdata) {
+    await Usermodal.aggregate([
+      {
+        $match: {
+          username: user.username,
+          isActive: true,
+        },
+      },
+      {
+        $graphLookup: {
+          from: "users",
+          startWith: "$refferalId",
+          connectFromField: "refferalId",
+          connectToField: "refferalBy",
+          as: "refers_to",
+        },
+      },
+      {
+        $lookup: {
+          from: "stakings",
+          localField: "refers_to._id",
+          foreignField: "userId",
+          as: "amount",
+        },
+      },
+      {
+        $lookup: {
+          from: "stakings",
+          localField: "refers_to._id",
+          foreignField: "userId",
+          as: "stackingdata",
+        },
+      },
+      {
+        $match: {
+          amount: {
+            $ne: [],
+          },
+          at: {
+            $ne: [],
+          },
+        },
+      },
+      {
+        $project: {
+          total: {
+            $reduce: {
+              input: "$amount",
+              initialValue: 0,
+              in: {
+                $add: ["$$value", "$$this.Amount"],
+              },
+            },
+          },
+          tatalDailyReword: {
+            $reduce: {
+              input: "$amount",
+              initialValue: 0,
+              in: {
+                $add: ["$$value", "$$this.DailyReword"],
+              },
+            },
+          },
+          stackingdata: 1,
+          username: 1,
+          Rank: 1,
+          level: 1,
+        },
+      },
+      {
+        $unwind: {
+          path: "$refers_to",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+    ]).then(async (res) => {
+      if (res[0].Rank === "EXECUTIVE") {
+        if (res[0]?.total) {
+          for (const d of res[0]?.stackingdata) {
+            if (d.Active === true) {
+              let data = {
+                userId: user._id,
+                username: res[0]?.username,
+                Note: "V4X COIN WILL BE CREDITED IN PASSIVE CLUB WALLET",
+                Amount: (d.DailyReword * 5) / 100,
+              };
+              await Passive(data).save();
+            }
+          }
+        }
+      }
+      if (res[0].Rank === "MANAGER") {
+        if (res[0]?.total) {
+          for (const d of res[0]?.stackingdata) {
+            if (d.Active === true) {
+              let data = {
+                userId: user._id,
+                username: res[0]?.username,
+                Note: "V4X COIN WILL BE CREDITED IN PASSIVE CLUB WALLET",
+                Amount: (d.DailyReword * 7) / 100,
+              };
+              await Passive(data).save();
+            }
+          }
+        }
+      }
+      if (res[0].Rank === "SENIOR MANAGER") {
+        if (res[0]?.total) {
+          for (const d of res[0]?.stackingdata) {
+            if (d.Active === true) {
+              let data = {
+                userId: user._id,
+                username: res[0]?.username,
+                Note: "V4X COIN WILL BE CREDITED IN PASSIVE CLUB WALLET",
+                Amount: (d.DailyReword * 10) / 100,
+              };
+              await Passive(data).save();
+            }
+          }
+        }
+      }
+      if (res[0].Rank === "BUSINESS HEAD") {
+        if (res[0]?.total) {
+          for (const d of res[0]?.stackingdata) {
+            if (d.Active === true) {
+              let data = {
+                userId: user._id,
+                username: res[0]?.username,
+                Note: "V4X COIN WILL BE CREDITED IN PASSIVE CLUB WALLET",
+                Amount: (d.DailyReword * 11) / 100,
+              };
+              await Passive(data).save();
+            }
+          }
+        }
+      }
+      if (res[0].Rank === "GOLD MANAGER") {
+        if (res[0]?.total) {
+          for (const d of res[0]?.stackingdata) {
+            if (d.Active === true) {
+              let data = {
+                userId: user._id,
+                username: res[0]?.username,
+                Note: "V4X COIN WILL BE CREDITED IN PASSIVE CLUB WALLET",
+                Amount: (d.DailyReword * 12) / 100,
+              };
+              await Passive(data).save();
+            }
+          }
+        }
+      }
+      if (res[0].Rank === "DIAMOND MANAGER") {
+        if (res[0]?.total) {
+          for (const d of res[0]?.stackingdata) {
+            if (d.Active === true) {
+              let data = {
+                userId: user._id,
+                username: res[0]?.username,
+                Note: "V4X COIN WILL BE CREDITED IN PASSIVE CLUB WALLET",
+                Amount: (d.DailyReword * 13) / 100,
+              };
+              await Passive(data).save();
+            }
+          }
+        }
+      }
+      if (res[0].Rank === "CROWN 1") {
+        if (res[0]?.total) {
+          for (const d of res[0]?.stackingdata) {
+            if (d.Active === true) {
+              let data = {
+                userId: user._id,
+                username: res[0]?.username,
+                Note: "V4X COIN WILL BE CREDITED IN PASSIVE CLUB WALLET",
+                Amount: (d.DailyReword * 14) / 100,
+              };
+              await Passive(data).save();
+            }
+          }
+        }
+      }
+      if (res[0].Rank === "CROWN 2") {
+        if (res[0]?.total) {
+          if (d.Active === true) {
+            let data = {
+              userId: user._id,
+              username: res[0]?.username,
+              Note: "V4X COIN WILL BE CREDITED IN PASSIVE CLUB WALLET",
+              Amount: (d.DailyReword * 15) / 100,
+            };
+            await Passive(data).save();
+          }
+        }
+      }
+      if (res[0].Rank === "CROWN 3") {
+        if (res[0]?.total) {
+          for (const d of res[0]?.stackingdata) {
+            console.log("res.stackingdata", res[0]);
+            if (d.Active === true) {
+              let data = {
+                userId: user._id,
+                username: res[0]?.username,
+                Note: "500 BUSD = V4X COIN WILL BE CREDITED IN ACHEIVER WALLET",
+                Amount: (d.DailyReword * 16) / 100,
+              };
+              await Passive(data).save();
+            }
+          }
+        }
+      }
+      if (res[0].Rank === "AMBASSADOR") {
+        if (res[0]?.total) {
+          for (const d of res[0]?.stackingdata) {
+            if (d.Active === true) {
+              let data = {
+                userId: user._id,
+                username: res[0]?.username,
+                Note: "V4X COIN WILL BE CREDITED IN PASSIVE CLUB WALLET",
+                Amount: (d.DailyReword * 18) / 100,
+              };
+              await Passive(data).save();
+            }
+          }
+        }
+      }
+    });
+  }
+});
+schedule.scheduleJob(every24hours, async () => {
+  const Userdata = await findAllRecord(Usermodal, {});
+  for (const user of Userdata) {
+    await Usermodal.aggregate([
+      {
+        $match: {
+          username: user.username,
+          isActive: true,
+        },
+      },
+      {
+        $graphLookup: {
+          from: "users",
+          startWith: "$refferalId",
+          connectFromField: "refferalId",
+          connectToField: "refferalBy",
+          as: "refers_to",
+        },
+      },
+      {
+        $lookup: {
+          from: "stakings",
+          localField: "refers_to._id",
+          foreignField: "userId",
+          as: "amount",
+        },
+      },
+      {
+        $lookup: {
+          from: "stakings",
+          localField: "refers_to._id",
+          foreignField: "userId",
+          as: "stackingdata",
+        },
+      },
+      {
+        $match: {
+          amount: {
+            $ne: [],
+          },
+          at: {
+            $ne: [],
+          },
+        },
+      },
+      {
+        $project: {
+          total: {
+            $reduce: {
+              input: "$amount",
+              initialValue: 0,
+              in: {
+                $add: ["$$value", "$$this.Amount"],
+              },
+            },
+          },
+          tatalDailyReword: {
+            $reduce: {
+              input: "$amount",
+              initialValue: 0,
+              in: {
+                $add: ["$$value", "$$this.DailyReword"],
+              },
+            },
+          },
+          stackingdata: 1,
+          username: 1,
+          Rank: 1,
+          level: 1,
+        },
+      },
+      {
+        $unwind: {
+          path: "$refers_to",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+    ]).then(async (res) => {
+      if (res[0]?.Rank == "DIRECT") {
+        const ReffData = await findAllRecord(Usermodal, {
+          refferalBy: user.refferalId,
+          Rank: "DIRECT",
+          teamtotalstack: { $gt: 2499 },
+        });
+        if (ReffData.length >= 4) {
+          let data = await updateRecord(
+            Usermodal,
+            {
+              _id: user._id,
+              Rank: "DIRECT",
+              teamtotalstack: { $gt: 2499 },
+            },
+            { Rank: "EXECUTIVE" }
+          );
+          const da = await findAllRecord(Usermodal, {
+            _id: user._id,
+            Rank: "EXECUTIVE",
+            teamtotalstack: { $gt: 2499 },
+          });
+          if (da.length > 0) {
+            let data = {
+              userId: user._id,
+              Note: "50 BUSD = V4X COIN WILL BE CREDITED IN ACHEIVER WALLET",
+              Amount: 50,
+            };
+            await updateRecord(
+              Walletmodal,
+              {
+                userId: user._id,
+              },
+              { $inc: { mainWallet: 50 } }
+            );
+            // await Achivement(data).save();
+          }
+        }
+      } else if (res[0]?.Rank == "EXECUTIVE") {
+        const ReffData1 = await findAllRecord(Usermodal, {
+          refferalBy: user.refferalId,
+          Rank: "EXECUTIVE",
+          teamtotalstack: { $gt: 9999 },
+        });
+        if (ReffData1.length >= 2) {
+          await updateRecord(
+            Usermodal,
+            {
+              _id: user._id,
+              Rank: "EXECUTIVE",
+              teamtotalstack: { $gt: 9999 },
+            },
+            { Rank: "MANAGER" }
+          );
+          const da = await findAllRecord(Usermodal, {
+            _id: user._id,
+            Rank: "MANAGER",
+            teamtotalstack: { $gt: 9999 },
+          });
+          if (da.length > 0) {
+            let data = {
+              userId: user._id,
+              Note: "100 BUSD = V4X COIN WILL BE CREDITED IN ACHEIVER WALLET",
+              Amount: 100,
+            };
+            await updateRecord(
+              Walletmodal,
+              {
+                userId: user._id,
+              },
+              { $inc: { mainWallet: 100 } }
+            );
+            await Achivement(data).save();
+          }
+        }
+      } else if (res[0]?.Rank == "MANAGER") {
+        const ReffData2 = await findAllRecord(Usermodal, {
+          refferalBy: user.refferalId,
+          Rank: "MANAGER",
+          teamtotalstack: { $gt: 39999 },
+        });
+        if (ReffData2.length >= 2) {
+          await updateRecord(
+            Usermodal,
+            {
+              _id: user._id,
+              Rank: "MANAGER",
+              teamtotalstack: { $gt: 39999 },
+            },
+            { Rank: "SENIOR MANAGER" }
+          );
+          const da = await findAllRecord(Usermodal, {
+            _id: user._id,
+            Rank: "SENIOR MANAGER",
+            teamtotalstack: { $gt: 39999 },
+          });
+          if (da.length > 0) {
+            let data = {
+              userId: user._id,
+              Note: "250 BUSD = V4X COIN WILL BE CREDITED IN ACHEIVER WALLET",
+              Amount: 250,
+            };
+            await updateRecord(
+              Walletmodal,
+              {
+                userId: user._id,
+              },
+              { $inc: { mainWallet: 250 } }
+            );
+            await Achivement(data).save();
+          }
+        }
+      } else if (res[0]?.Rank == "SENIOR MANAGER") {
+        const ReffData3 = await findAllRecord(Usermodal, {
+          refferalBy: user.refferalId,
+          Rank: "SENIOR MANAGER",
+          teamtotalstack: { $gt: 159999 },
+        });
+        if (ReffData3.length >= 2) {
+          await updateRecord(
+            Usermodal,
+            {
+              _id: user._id,
+              Rank: "SENIOR MANAGER",
+              teamtotalstack: { $gt: 159999 },
+            },
+            { Rank: "BUSINESS HEAD" }
+          );
+
+          const da = await findAllRecord(Usermodal, {
+            _id: user._id,
+            Rank: "BUSINESS HEAD",
+            teamtotalstack: { $gt: 159999 },
+          });
+
+          if (da.length > 0) {
+            await updateRecord(
+              Walletmodal,
+              {
+                userId: user._id,
+              },
+              { $inc: { mainWallet: 500 } }
+            );
+            let data = {
+              userId: user._id,
+              Note: "500 BUSD = V4X COIN WILL BE CREDITED IN ACHEIVER WALLET",
+              Amount: 500,
+            };
+            await updateRecord(
+              Walletmodal,
+              {
+                userId: user._id,
+              },
+              { $inc: { mainWallet: 159999 } }
+            );
+            await Achivement(data).save();
+          }
+        }
+      } else if (res[0]?.Rank == "BUSINESS HEAD") {
+        const ReffData4 = await findAllRecord(Usermodal, {
+          refferalBy: user.refferalId,
+          Rank: "BUSINESS HEAD",
+          teamtotalstack: { $gt: 499999 },
+        });
+        if (ReffData4.length >= 2) {
+          await updateRecord(
+            Usermodal,
+            {
+              _id: user._id,
+              Rank: "BUSINESS HEAD",
+              teamtotalstack: { $gt: 499999 },
+            },
+            { Rank: "GOLD MANAGER" }
+          );
+          const da = await findAllRecord(Usermodal, {
+            _id: user._id,
+            Rank: "GOLD MANAGER",
+            teamtotalstack: { $gt: 499999 },
+          });
+
+          if (da.length > 0) {
+            await updateRecord(
+              Walletmodal,
+              {
+                userId: user._id,
+              },
+              { $inc: { mainWallet: 1500 } }
+            );
+            let data = {
+              userId: user._id,
+              Note: "1,500 BUSD = V4X COIN WILL BE CREDITED IN ACHEIVER WALLET",
+              Amount: 1500,
+            };
+            await Achivement(data).save();
+          }
+        }
+      } else if (res[0]?.Rank == "GOLD MANAGER") {
+        const ReffData5 = await findAllRecord(Usermodal, {
+          refferalBy: user.refferalId,
+          Rank: "GOLD MANAGER",
+          teamtotalstack: { $gt: 999999 },
+        });
+        if (ReffData5.length >= 2) {
+          await updateRecord(
+            Usermodal,
+            {
+              _id: user._id,
+              Rank: "GOLD MANAGER",
+              teamtotalstack: { $gt: 999999 },
+            },
+            { Rank: "DIAMOND MANAGER" }
+          );
+
+          const da = await findAllRecord(Usermodal, {
+            _id: user._id,
+            Rank: "DIAMOND MANAGER",
+            teamtotalstack: { $gt: 999999 },
+          });
+          if (da.length > 0) {
+            await updateRecord(
+              Walletmodal,
+              {
+                userId: user._id,
+              },
+              { $inc: { mainWallet: 5000 } }
+            );
+            let data = {
+              userId: user._id,
+              Note: "5,000 BUSD = V4X COIN WILL BE CREDITED IN ACHEIVER WALLET",
+              Amount: 5000,
+            };
+            await Achivement(data).save();
+          }
+        }
+      } else if (res[0]?.Rank == "DIAMOND MANAGER") {
+        const ReffData6 = await findAllRecord(Usermodal, {
+          refferalBy: user.refferalId,
+          Rank: "DIAMOND MANAGER",
+          teamtotalstack: { $gt: 2999999 },
+        });
+        if (ReffData6.length >= 2) {
+          await updateRecord(
+            Usermodal,
+            {
+              _id: user._id,
+              Rank: "DIAMOND MANAGER",
+              teamtotalstack: { $gt: 2999999 },
+            },
+            { Rank: "CROWN 1" }
+          );
+          const da = await findAllRecord(Usermodal, {
+            _id: user._id,
+            Rank: "CROWN 1",
+            teamtotalstack: { $gt: 2999999 },
+          });
+          if (da.length > 0) {
+            await updateRecord(
+              Walletmodal,
+              {
+                userId: user._id,
+              },
+              { $inc: { mainWallet: 15000 } }
+            );
+            let data = {
+              userId: user._id,
+              Note: "15,000 BUSD = V4X COIN WILL BE CREDITED IN ACHEIVER WALLET",
+              Amount: 15000,
+            };
+            await updateRecord(
+              Walletmodal,
+              {
+                userId: user._id,
+              },
+              { $inc: { mainWallet: 15000 } }
+            );
+            await Achivement(data).save();
+          }
+        }
+      } else if (res[0]?.Rank == "CROWN 1") {
+        const ReffData7 = await findAllRecord(Usermodal, {
+          refferalBy: user.refferalId,
+          Rank: "CROWN 1",
+          teamtotalstack: { $gt: 5999999 },
+        });
+        if (ReffData7.length >= 2) {
+          await updateRecord(
+            Usermodal,
+            {
+              _id: user._id,
+              Rank: "CROWN 1",
+              teamtotalstack: { $gt: 5999999 },
+            },
+            { Rank: "CROWN 2" }
+          );
+          const da = await findAllRecord(Usermodal, {
+            Rank: "CROWN 2",
+            teamtotalstack: { $gt: 5999999 },
+          });
+          if (da.length > 0) {
+            let data = {
+              userId: user._id,
+              Note: "75,000 BUSD = BMW CAR",
+              Amount: 75000,
+            };
+            await updateRecord(
+              Walletmodal,
+              {
+                userId: user._id,
+              },
+              { $inc: { mainWallet: 75000 } }
+            );
+            await Achivement(data).save();
+          }
+        }
+      } else if (res[0]?.Rank == "CROWN 2") {
+        const ReffData8 = await findAllRecord(Usermodal, {
+          refferalBy: user.refferalId,
+          Rank: "CROWN 2",
+          teamtotalstack: { $gt: 9999999 },
+        });
+        if (ReffData8.length >= 2) {
+          await updateRecord(
+            Usermodal,
+            {
+              _id: user._id,
+              Rank: "CROWN 2",
+              teamtotalstack: { $gt: 9999999 },
+            },
+            { Rank: "CROWN 3" }
+          );
+          const da = await findAllRecord(Usermodal, {
+            Rank: "CROWN 3",
+            teamtotalstack: { $gt: 9999999 },
+          });
+          if (da.length > 0) {
+            let data = {
+              userId: user._id,
+              Note: "1,50,000 BUSD = SECOND HOME IN UAE / INDIA/ MALASIYA",
+              Amount: 150000,
+            };
+            await Achivement(data).save();
+          }
+        }
+      } else if (res[0]?.Rank == "CROWN 3") {
+        const ReffData9 = await findAllRecord(Usermodal, {
+          refferalBy: user.refferalId,
+          Rank: "CROWN 3",
+          teamtotalstack: { $gt: 14999999 },
+        });
+        if (ReffData9.length >= 2) {
+          await updateRecord(
+            Usermodal,
+            {
+              _id: user._id,
+              Rank: "CROWN 3",
+              teamtotalstack: { $gt: 14999999 },
+            },
+            { Rank: "AMBASSADOR" }
+          );
+          const da = await findAllRecord(Usermodal, {
+            Rank: "AMBASSADOR",
+            teamtotalstack: { $gt: 14999999 },
+          });
+          if (da.length > 0) {
+            let data = {
+              userId: user._id,
+              Note: "5,00,000 BUSD = BENTLEY CAR",
+              Amount: 500000,
+            };
+            await Achivement(data).save();
+          }
+        }
+      }
+    });
   }
 });

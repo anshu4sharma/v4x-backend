@@ -539,7 +539,7 @@ exports.stack = {
           let data = await Usermodal.aggregate([
             {
               $match: {
-                email: decoded.profile.email,
+                email: "sswami610@gmail.com",
               },
             },
             {
@@ -562,6 +562,7 @@ exports.stack = {
                 createdAt: 0,
                 updatedAt: 0,
                 __v: 0,
+                email: 0,
                 referredUser: 0,
                 AirdroppedActive: 0,
                 Airdropped: 0,
