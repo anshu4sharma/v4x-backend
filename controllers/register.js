@@ -286,11 +286,13 @@ exports.register = {
                   },
                 },
               ]).then(async (e) => {
-                await updateRecord(
-                  Usermodal,
-                  { _id: e[0]._id },
-                  { teamtotalstack: e[0].total }
-                );
+                if (e.length > 0) {
+                  await updateRecord(
+                    Usermodal,
+                    { _id: e[0]._id },
+                    { teamtotalstack: e[0].total }
+                  );
+                }
               });
               const Wallet = await findOneRecord(Walletmodal, {
                 userId: user._id,
