@@ -189,7 +189,7 @@ exports.register = {
             }
           );
 
-          res.redirect("http://localhost:3000/");
+          res.redirect("https://api.v4x.org/login");
         }
       } else {
         badRequestResponse(res, {

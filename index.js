@@ -123,7 +123,7 @@ schedule.scheduleJob(every24hours, async () => {
     await Usermodal.aggregate([
       {
         $match: {
-          username: "V4X10019",
+          username: user.username,
           isActive: true,
         },
       },
