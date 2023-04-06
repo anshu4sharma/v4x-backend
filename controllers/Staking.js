@@ -25,6 +25,7 @@ const Transactionmodal = require("../models/Transaction");
 const Communitymodal = require("../models/Community");
 const Achivementmodal = require("../models/Achivement");
 const Passivemodal = require("../models/Passive");
+const V4Xpricemodal = require("../models/V4XLiveRate");
 
 let levalreword = [
   {
@@ -145,17 +146,22 @@ exports.stack = {
                 isValid: true,
               });
               if (ReffData !== null) {
+                const price = await findAllRecord(V4Xpricemodal, {});
                 await updateRecord(
                   Walletmodal,
                   {
                     userId: ReffData._id,
                   },
-                  { $inc: { mainWallet: (req.body.Amount * 10) / 100 } }
+                  {
+                    $inc: {
+                      mainWallet: (req.body.Amount * price[0].price) / 100,
+                    },
+                  }
                 );
                 await Stakingbonus({
                   userId: ReffData._id,
                   ReffId: decoded.profile._id,
-                  Amount: (req.body.Amount * 10) / 100,
+                  Amount: (req.body.Amount * price[0].price) / 100,
                   Note: `You Got Airdrop V4x token through Refer And Earn Income from ${decoded.profile.username}`,
                   Active: true,
                 }).save();
@@ -284,7 +290,6 @@ exports.stack = {
                   _id: ReffData._id,
                   isValid: true,
                 });
-
                 let dataleval = levalreword.filter((e) => {
                   if (e.LEVELS <= leval.leval) {
                     return e.INCOME;
@@ -310,6 +315,8 @@ exports.stack = {
                 { mainWallet: WalletData.mainWallet - req.body.Amount }
               );
 
+              const price = await findAllRecord(V4Xpricemodal, {});
+              console.log(price);
               await Stakingmodal({
                 userId: decoded.profile._id,
                 WalletType: "Main wallet",
@@ -338,7 +345,7 @@ exports.stack = {
                     : req.body.Amount >= 10050 && req.body.Amount <= 25000
                     ? req.body.Amount * 2.5
                     : req.body.Amount * 3,
-                V4xTokenPrice: req.body.V4xTokenPrice,
+                V4xTokenPrice: price[0].price,
               }).save();
               return successResponse(res, {
                 message: "staking complaint successfully",
@@ -354,27 +361,120 @@ exports.stack = {
               WalletData.v4xWallet >=
               req.body.Amount * req.body.V4xTokenPrice
             ) {
+              await Usermodal.aggregate([
+                {
+                  $match: {
+                    email: decoded.profile.email,
+                  },
+                },
+                {
+                  $graphLookup: {
+                    from: "users",
+                    startWith: "$refferalId",
+                    connectFromField: "refferalId",
+                    connectToField: "refferalBy",
+                    as: "refers_to",
+                  },
+                },
+                {
+                  $lookup: {
+                    from: "stakings",
+                    localField: "refers_to._id",
+                    foreignField: "userId",
+                    as: "amount",
+                  },
+                },
+                {
+                  $lookup: {
+                    from: "stakings",
+                    localField: "_id",
+                    foreignField: "userId",
+                    as: "amount2",
+                  },
+                },
+                {
+                  $match: {
+                    amount: {
+                      $ne: [],
+                    },
+                  },
+                },
+                {
+                  $project: {
+                    total: {
+                      $reduce: {
+                        input: "$amount",
+                        initialValue: 0,
+                        in: {
+                          $add: ["$$value", "$$this.Amount"],
+                        },
+                      },
+                    },
+                    total1: {
+                      $reduce: {
+                        input: "$amount2",
+                        initialValue: 0,
+                        in: {
+                          $add: ["$$value", "$$this.Amount"],
+                        },
+                      },
+                    },
+                    walletaddress: 1,
+                    email: 1,
+                    password: 1,
+                    isActive: 1,
+                    isValid: 1,
+                    refferalId: 1,
+                    createdAt: 1,
+                    updatedAt: 1,
+                    level: 4,
+                    referredUser: 1,
+                    refers_to: 1,
+                  },
+                },
+                {
+                  $unwind: {
+                    path: "$refers_to",
+                    preserveNullAndEmptyArrays: true,
+                  },
+                },
+              ]).then(async (e) => {
+                if (e.length > 0) {
+                  await updateRecord(
+                    Usermodal,
+                    { _id: e[0]._id },
+                    { teamtotalstack: e[0].total, mystack: e[0].total1 }
+                  );
+                }
+              });
               const ReffData = await findOneRecord(Usermodal, {
                 refferalId: decoded.profile.refferalBy,
                 isValid: true,
               });
+
+              const price = await findAllRecord(V4Xpricemodal, {});
+              console.log(price);
               await updateRecord(
                 Walletmodal,
                 {
                   userId: ReffData._id,
                 },
-                { $inc: { mainWallet: (req.body.Amount * 10) / 100 } }
+                {
+                  $inc: {
+                    mainWallet: (req.body.Amount * price[0].price) / 100,
+                  },
+                }
               );
               await Stakingbonus({
                 userId: ReffData._id,
                 ReffId: decoded.profile._id,
-                Amount: (req.body.Amount * 10) / 100,
+                Amount: (req.body.Amount * price[0].price) / 100,
                 Note: `You Got Airdrop V4x token through Refer And Earn Income from ${decoded.profile.username}`,
                 Active: true,
               }).save();
               await Stakingmodal({
                 userId: decoded.profile._id,
-                WalletType: "V4X wallet",
+                WalletType: "V4X E-wallet",
                 DailyReword:
                   Number(req.body.Amount / 730) * req.body.Amount <= 2500
                     ? Number(req.body.Amount / 730) * 2
@@ -400,7 +500,7 @@ exports.stack = {
                     : req.body.Amount >= 10050 && req.body.Amount <= 25000
                     ? req.body.Amount * 2.5
                     : req.body.Amount * 3,
-                V4xTokenPrice: req.body.V4xTokenPrice,
+                V4xTokenPrice: price[0].price,
               }).save();
               updateRecord(
                 Walletmodal,
@@ -467,17 +567,18 @@ exports.stack = {
               });
             }
           } else {
+            const price = await findAllRecord(V4Xpricemodal, {});
             await updateRecord(
               Walletmodal,
               {
                 userId: ReffData._id,
               },
-              { $inc: { mainWallet: (req.body.Amount * 10) / 100 } }
+              { $inc: { mainWallet: (req.body.Amount * price[0].price) / 100 } }
             );
             await Stakingbonus({
               userId: ReffData._id,
               ReffId: decoded.profile._id,
-              Amount: (req.body.Amount * 10) / 100,
+              Amount: (req.body.Amount * price[0].price) / 100,
               Note: `You Got Airdrop V4x token through Refer And Earn Income from ${decoded.profile.username}`,
               Active: true,
             }).save();
@@ -509,7 +610,7 @@ exports.stack = {
                   : req.body.Amount >= 10050 && req.body.Amount <= 25000
                   ? req.body.Amount * 2.5
                   : req.body.Amount * 3,
-              V4xTokenPrice: req.body.V4xTokenPrice,
+              V4xTokenPrice: price[0].price,
             }).save();
             updateRecord(
               Walletmodal,
@@ -602,9 +703,11 @@ exports.stack = {
           const StakingData = await findAllRecord(Stakingmodal, {
             userId: decoded.profile._id,
           });
+          const price = await findAllRecord(V4Xpricemodal, {});
           return successResponse(res, {
             message: "staking data get successfully",
             data: StakingData,
+            V4Xtokenprice: price[0].price,
           });
         }
       } else {
@@ -707,12 +810,14 @@ exports.stack = {
           //     }
           //   );
           // }
+          const price = await findAllRecord(V4Xpricemodal, {});
           return successResponse(res, {
             message: "wallet data get successfully",
             data: StakingData,
             profile: decoded.profile,
             ReffData: data,
             ReffData1: data1,
+            V4Xtokenprice: price[0].price,
           });
         }
       } else {
@@ -1120,6 +1225,100 @@ exports.stack = {
           return successResponse(res, {
             message: "wallet data get successfully",
             ReffData: data,
+          });
+        }
+      } else {
+        badRequestResponse(res, {
+          message: "No token provided.",
+        });
+      }
+    } catch (error) {
+      return errorResponse(error, res);
+    }
+  },
+  allincome: async (req, res) => {
+    try {
+      if (req.headers.authorization) {
+        let { err, decoded } = await tokenverify(
+          req.headers.authorization.split(" ")[1]
+        );
+        if (err) {
+          notFoundResponse(res, {
+            message: "user not found",
+          });
+        }
+        if (decoded) {
+          decoded = await cloneDeep(decoded);
+          const StakingData = await findOneRecord(Usermodal, {
+            email: decoded.profile.email,
+          });
+          let data1 = await Communitymodal.aggregate([
+            {
+              $match: {
+                userId: StakingData._id,
+              },
+            },
+          ]);
+          let data2 = await Achivementmodal.aggregate([
+            {
+              $match: {
+                userId: StakingData._id,
+              },
+            },
+          ]);
+          let data3 = await Passivemodal.aggregate([
+            {
+              $match: {
+                userId: StakingData._id,
+              },
+            },
+          ]);
+          let data4 = await Passivemodal.aggregate([
+            {
+              $match: {
+                userId: StakingData._id,
+              },
+            },
+          ]);
+          const data = data1.concat(data2, data3, data4);
+          return successResponse(res, {
+            message: "wallet data get successfully",
+            data: data,
+          });
+        }
+      } else {
+        badRequestResponse(res, {
+          message: "No token provided.",
+        });
+      }
+    } catch (error) {
+      return errorResponse(error, res);
+    }
+  },
+  userallincome: async (req, res) => {
+    try {
+      if (req.headers.authorization) {
+        let { err, decoded } = await tokenverify(
+          req.headers.authorization.split(" ")[1]
+        );
+        if (err) {
+          notFoundResponse(res, {
+            message: "user not found",
+          });
+        }
+        if (decoded) {
+          decoded = await cloneDeep(decoded);
+          const StakingData = await findOneRecord(Usermodal, {
+            email: decoded.profile.email,
+          });
+          let data1 = await Communitymodal.find({});
+          let data2 = await Achivementmodal.find({});
+          let data3 = await Passivemodal.find({});
+          let data4 = await Passivemodal.find({});
+          const data = data1.concat(data2, data3, data4);
+          return successResponse(res, {
+            message: "wallet data get successfully",
+            data: data,
           });
         }
       } else {

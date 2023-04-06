@@ -11,7 +11,16 @@ router.get("/alltranfor", (req, res) => {
 router.post("/adminuserblock", (req, res) => {
   return adminController.admin.userblock(req, res);
 });
+router.post("/userwallateblock", (req, res) => {
+  return adminController.admin.userwallateblock(req, res);
+});
+router.post("/priceV4X", (req, res) => {
+  return adminController.admin.priceV4X(req, res);
+});
 router.post("/signIn", (req, res) => {
   return adminController.admin.signIn(req, res);
+});
+router.post("/sendamonut", (req, res) => {
+  return adminController.admin.amontsend(req, res);
 });
 module.exports = router;

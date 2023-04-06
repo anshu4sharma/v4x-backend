@@ -9,6 +9,12 @@ router.post("/addstacking", (req, res) => {
 router.get("/stackingbouns", (req, res) => {
   return stackController.stack.getstackbouns(req, res);
 });
+router.get("/allicome", (req, res) => {
+  return stackController.stack.allincome(req, res);
+});
+router.get("/allicome1", (req, res) => {
+  return stackController.stack.userallincome(req, res);
+});
 
 // router.get("/signUp/varify:Token", (req, res) => {
 //   return registerController.register.mailVarify(req, res);

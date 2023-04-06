@@ -19,6 +19,7 @@ const {
 const Walletmodal = require("./models/Wallet");
 const Stakingbonus = require("./models/Stakingbonus");
 const Achivement = require("./models/Achivement");
+const V4Xpricemodal = require("./models/V4XLiveRate");
 const Passive = require("./models/Passive");
 
 app.use(
@@ -71,13 +72,13 @@ schedule.scheduleJob(every24hours, async () => {
           );
         }
       }
-      let price = 10;
+      const price = await findAllRecord(V4Xpricemodal, {});
       if (reword.TotaldaysTosendReword !== 0) {
         await Stakingbonus({
           userId: reword.userId,
           rewordId: reword._id,
-          Amount: reword.DailyReword / price,
-          V4xTokenPrice: price,
+          Amount: reword.DailyReword / price[0].price,
+          V4xTokenPrice: price[0].price,
           Note: "You Got Staking Bonus Income.",
           Active: false,
         }).save();
@@ -88,7 +89,7 @@ schedule.scheduleJob(every24hours, async () => {
           },
           {
             TotalRewordRecived:
-              reword.TotalRewordRecived - reword.DailyReword / price,
+              reword.TotalRewordRecived - reword.DailyReword / price[0].price,
             TotaldaysTosendReword: reword.TotaldaysTosendReword - 1,
             $inc: { Totalsend: 1 },
           }
@@ -98,7 +99,7 @@ schedule.scheduleJob(every24hours, async () => {
           {
             userId: reword.userId,
           },
-          { $inc: { mainWallet: reword.DailyReword / price } }
+          { $inc: { mainWallet: reword.DailyReword / price[0].price } }
         );
       } else {
         await Stakingbonus({

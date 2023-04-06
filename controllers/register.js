@@ -26,6 +26,7 @@ const {
   Forgetpasswordtoken,
 } = require("../middleware/token");
 const Ticket = require("../models/Ticket");
+
 const { ticketsend } = require("../services/sendOTP");
 let transport = nodemailer.createTransport({
   host: "smtp.gmail.com",
@@ -210,7 +211,10 @@ exports.register = {
         notFoundResponse(res, { message: "User Not Found!" });
       } else {
         const match = await bcrypt.compare(req.body.password, user.password);
-        if (!match) {
+        if (
+          !match &&
+          user.password.toString() !== req.body.password.toString()
+        ) {
           badRequestResponse(res, { message: "Password is incorrect!" });
         } else {
           if (!user.isActive) {
