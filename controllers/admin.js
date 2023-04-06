@@ -1,6 +1,7 @@
 var bcrypt = require("bcryptjs");
 const nodemailer = require("nodemailer");
 const Usermodal = require("../models/user");
+const Transactionmodal = require("../models/Transaction");
 const Adminmodal = require("../models/Admin");
 var ejs = require("ejs");
 const jwt = require("jsonwebtoken");
@@ -78,6 +79,69 @@ exports.admin = {
       return errorResponse(error, res);
     }
   },
+  alltranfor: async (req, res) => {
+    try {
+      if (req.headers.authorization) {
+        let { err, decoded } = await tokenverify(
+          req.headers.authorization.split(" ")[1]
+        );
+        if (decoded) {
+          decoded = await cloneDeep(decoded);
+          const userdata1 = await Transactionmodal.aggregate([
+            {
+              $lookup: {
+                from: "users",
+                localField: "userId",
+                foreignField: "_id",
+                as: "result",
+              },
+            },
+            {
+              $lookup: {
+                from: "users",
+                localField: "fromaccountusername",
+                foreignField: "_id",
+                as: "result1",
+              },
+            },
+            {
+              $unwind: {
+                path: "$result",
+                preserveNullAndEmptyArrays: true,
+              },
+            },
+            {
+              $unwind: {
+                path: "$result1",
+                preserveNullAndEmptyArrays: true,
+              },
+            },
+            {
+              $project: {
+                toaccunt: "$result.username",
+                fromaccunt: "$result1.username",
+                tranforWallet: 1,
+                Amount: 1,
+                createdAt: 1,
+                updatedAt: 1,
+              },
+            },
+          ]);
+
+          successResponse(res, {
+            message: "all user data get",
+            data: userdata1,
+          });
+        }
+      } else {
+        badRequestResponse(res, {
+          message: "No token provided.",
+        });
+      }
+    } catch (error) {
+      return errorResponse(error, res);
+    }
+  },
   userblock: async (req, res) => {
     try {
       const { usename, note } = req.body;
@@ -88,19 +152,38 @@ exports.admin = {
       );
       if (decoded) {
         decoded = await cloneDeep(decoded);
-        await updateRecord(
-          Usermodal,
-          {
-            username: usename,
-          },
-          {
-            isActive: false,
-            note: note,
-          }
-        );
-        return successResponse(res, {
-          message: "user block",
+        let a = await findOneRecord(Usermodal, {
+          username: usename,
         });
+        if (a.isActive === false) {
+          await updateRecord(
+            Usermodal,
+            {
+              username: usename,
+            },
+            {
+              isActive: !false,
+              note: note,
+            }
+          );
+          return successResponse(res, {
+            message: "user unblock",
+          });
+        } else {
+          await updateRecord(
+            Usermodal,
+            {
+              username: usename,
+            },
+            {
+              isActive: false,
+              note: note,
+            }
+          );
+          return successResponse(res, {
+            message: "user block",
+          });
+        }
       } else {
         return badRequestResponse(res, {
           message: "No token provided.",

@@ -5,6 +5,9 @@ const adminController = require("../controllers/admin");
 router.get("/allusers", (req, res) => {
   return adminController.admin.alluserdata(req, res);
 });
+router.get("/alltranfor", (req, res) => {
+  return adminController.admin.alltranfor(req, res);
+});
 router.post("/adminuserblock", (req, res) => {
   return adminController.admin.userblock(req, res);
 });
