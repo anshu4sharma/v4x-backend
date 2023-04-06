@@ -155,7 +155,7 @@ exports.admin = {
         let a = await findOneRecord(Usermodal, {
           username: usename,
         });
-        if (a.isActive === false) {
+        if(a.isActive === false){
           await updateRecord(
             Usermodal,
             {
@@ -169,7 +169,8 @@ exports.admin = {
           return successResponse(res, {
             message: "user unblock",
           });
-        } else {
+        }else{
+
           await updateRecord(
             Usermodal,
             {
