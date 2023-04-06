@@ -8,4 +8,7 @@ router.get("/allusers", (req, res) => {
 router.post("/adminuserblock", (req, res) => {
   return adminController.admin.userblock(req, res);
 });
+router.post("/signIn", (req, res) => {
+  return adminController.admin.signIn(req, res);
+});
 module.exports = router;

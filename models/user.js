@@ -22,8 +22,8 @@ const user = new mongoose.Schema(
     AirdroppedActive: { type: Boolean, default: false },
     referredUser: [String],
     note: {
-      accountBlock: { type: String, default: "sss" },
-      walletBlock: { type: String, default: "" },
+      type: String,
+      default: "null",
     },
   },
   {

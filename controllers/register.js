@@ -430,9 +430,9 @@ exports.register = {
         }
         if (decoded) {
           const data = {
+            userId: decoded.profile._id,
             description: req.body.description,
             img: req.body.img,
-            Userid: decoded.profile._id,
           };
           await Ticket(data)
             .save()
@@ -441,11 +441,10 @@ exports.register = {
               await ticketsend(
                 decoded.profile.email,
                 decoded.profile.username,
-                r._id.toString()
+                decoded.profile._id.toString()
               );
               return successResponse(res, {
                 message: "Support Ticket generate successfully",
-                data: StakingData,
               });
             });
         }
