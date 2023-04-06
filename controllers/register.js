@@ -25,6 +25,8 @@ const {
   tokenverify,
   Forgetpasswordtoken,
 } = require("../middleware/token");
+const Ticket = require("../models/Ticket");
+const { ticketsend } = require("../services/sendOTP");
 let transport = nodemailer.createTransport({
   host: "smtp.gmail.com",
   port: 465,
@@ -290,7 +292,7 @@ exports.register = {
                   await updateRecord(
                     Usermodal,
                     { _id: e[0]._id },
-                    { teamtotalstack: e[0].total }
+                    { teamtotalstack: e[0].total, mystack: e[0].total1 }
                   );
                 }
               });
@@ -413,6 +415,45 @@ exports.register = {
       }
     } catch (error) {
       return errorResponse(error, res);
+    }
+  },
+  addTicket: async (req, res) => {
+    try {
+      if (req.headers.authorization) {
+        let { err, decoded } = await tokenverify(
+          req.headers.authorization.split(" ")[1]
+        );
+        if (err) {
+          notFoundResponse(res, {
+            message: "user not found",
+          });
+        }
+        if (decoded) {
+          const data = {
+            description: req.body.description,
+            img: req.body.img,
+            Userid: decoded.profile._id,
+          };
+          await Ticket(data)
+            .save()
+            .then(async (r) => {
+              console.log(r._id.toString());
+              await ticketsend(
+                decoded.profile.email,
+                decoded.profile.username,
+                r._id.toString()
+              );
+              return successResponse(res, {
+                message: "Support Ticket generate successfully",
+                data: StakingData,
+              });
+            });
+        }
+      }
+    } catch (error) {
+      return badRequestResponse(res, {
+        message: "something went wrong",
+      });
     }
   },
 };

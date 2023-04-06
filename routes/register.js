@@ -18,5 +18,8 @@ router.put("/forgotPassword", (req, res) => {
 router.post("/changepassword", (req, res) => {
   return registerController.register.changePassword(req, res);
 });
+router.post("/addTicket", (req, res) => {
+  return registerController.register.addTicket(req, res);
+});
 
 module.exports = router;

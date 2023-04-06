@@ -11,7 +11,11 @@ app.use(cors());
 const routes = require("./routes/index");
 const Usermodal = require("./models/user");
 const Stakingmodal = require("./models/Staking");
-const { findAllRecord, updateRecord, findOneRecord } = require("./library/commonQueries");
+const {
+  findAllRecord,
+  updateRecord,
+  findOneRecord,
+} = require("./library/commonQueries");
 const Walletmodal = require("./models/Wallet");
 const Stakingbonus = require("./models/Stakingbonus");
 const Achivement = require("./models/Achivement");
@@ -819,6 +823,98 @@ schedule.scheduleJob(every24hours1, async () => {
             }
           }
         }
+      }
+    });
+  }
+});
+const every1hours = "0 59 5 * * *";
+schedule.scheduleJob(every24hours, async () => {
+  const Userdata = await findAllRecord(Usermodal, {});
+  for (const user of Userdata) {
+    await Usermodal.aggregate([
+      {
+        $match: {
+          email: user.email,
+        },
+      },
+      {
+        $graphLookup: {
+          from: "users",
+          startWith: "$refferalId",
+          connectFromField: "refferalId",
+          connectToField: "refferalBy",
+          as: "refers_to",
+        },
+      },
+      {
+        $lookup: {
+          from: "stakings",
+          localField: "refers_to._id",
+          foreignField: "userId",
+          as: "amount",
+        },
+      },
+      {
+        $lookup: {
+          from: "stakings",
+          localField: "_id",
+          foreignField: "userId",
+          as: "amount2",
+        },
+      },
+      {
+        $match: {
+          amount: {
+            $ne: [],
+          },
+        },
+      },
+      {
+        $project: {
+          total: {
+            $reduce: {
+              input: "$amount",
+              initialValue: 0,
+              in: {
+                $add: ["$$value", "$$this.Amount"],
+              },
+            },
+          },
+          total1: {
+            $reduce: {
+              input: "$amount2",
+              initialValue: 0,
+              in: {
+                $add: ["$$value", "$$this.Amount"],
+              },
+            },
+          },
+          walletaddress: 1,
+          email: 1,
+          password: 1,
+          isActive: 1,
+          isValid: 1,
+          refferalId: 1,
+          createdAt: 1,
+          updatedAt: 1,
+          level: 4,
+          referredUser: 1,
+          refers_to: 1,
+        },
+      },
+      {
+        $unwind: {
+          path: "$refers_to",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+    ]).then(async (e) => {
+      if (e.length > 0) {
+        await updateRecord(
+          Usermodal,
+          { _id: e[0]._id },
+          { teamtotalstack: e[0].total, mystack: e[0].total1 }
+        );
       }
     });
   }

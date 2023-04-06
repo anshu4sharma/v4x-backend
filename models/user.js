@@ -18,6 +18,7 @@ const user = new mongoose.Schema(
     refferalBy: { type: String, trim: true },
     Airdropped: { type: Number, default: 10 },
     teamtotalstack: { type: Number, default: 0 },
+    mystack: { type: Number, default: 0 },
     AirdroppedActive: { type: Boolean, default: false },
     referredUser: [String],
     note: {
