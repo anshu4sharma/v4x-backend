@@ -46,7 +46,7 @@ exports.register = {
       req.body = decodeUris(req.body);
       console.log(req.body);
       const refferalBygetdata = await findOneRecord(Usermodal, {
-        username: req.body.refferalBy,
+        refferalId: req.body.refferalBy,
       });
       if (refferalBygetdata !== null) {
         const userdata = await findOneRecord(Usermodal, {
@@ -114,7 +114,7 @@ exports.register = {
             );
           } else {
             let allUser = await Usermodal.find({});
-            let usernumber = 10018 + allUser.length;
+            let usernumber = 10019 + allUser.length;
             let finalusename = "V4X" + usernumber;
             console.log("usernumber", finalusename);
             const isCreated = await Usermodal({
