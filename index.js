@@ -135,8 +135,8 @@ schedule.scheduleJob(every24hours, async () => {
       {
         $graphLookup: {
           from: "users",
-          startWith: "$refferalId",
-          connectFromField: "refferalId",
+          startWith: "$username",
+          connectFromField: "username",
           connectToField: "refferalBy",
           as: "refers_to",
         },
@@ -191,7 +191,7 @@ schedule.scheduleJob(every24hours, async () => {
           username: 1,
           Rank: 1,
           level: 1,
-          refferalId: 1,
+          username: 1,
         },
       },
       {
@@ -203,7 +203,7 @@ schedule.scheduleJob(every24hours, async () => {
     ]).then(async (res) => {
       if (res[0]?.Rank == "DIRECT") {
         const ReffData = await findAllRecord(Usermodal, {
-          refferalBy: res[0].refferalId,
+          refferalBy: res[0].username,
           Rank: "DIRECT",
         });
         if (ReffData.length >= 4) {
@@ -239,7 +239,7 @@ schedule.scheduleJob(every24hours, async () => {
         }
       } else if (res[0]?.Rank == "EXECUTIVE") {
         const ReffData1 = await findAllRecord(Usermodal, {
-          refferalBy: user.refferalId,
+          refferalBy: user.username,
           Rank: "EXECUTIVE",
         });
         if (ReffData1.length >= 2) {
@@ -275,7 +275,7 @@ schedule.scheduleJob(every24hours, async () => {
         }
       } else if (res[0]?.Rank == "MANAGER") {
         const ReffData2 = await findAllRecord(Usermodal, {
-          refferalBy: user.refferalId,
+          refferalBy: user.username,
           Rank: "MANAGER",
         });
         if (ReffData2.length >= 2) {
@@ -311,7 +311,7 @@ schedule.scheduleJob(every24hours, async () => {
         }
       } else if (res[0]?.Rank == "SENIOR MANAGER") {
         const ReffData3 = await findAllRecord(Usermodal, {
-          refferalBy: user.refferalId,
+          refferalBy: user.username,
           Rank: "SENIOR MANAGER",
         });
         if (ReffData3.length >= 2) {
@@ -356,7 +356,7 @@ schedule.scheduleJob(every24hours, async () => {
         }
       } else if (res[0]?.Rank == "BUSINESS HEAD") {
         const ReffData4 = await findAllRecord(Usermodal, {
-          refferalBy: user.refferalId,
+          refferalBy: user.username,
           Rank: "BUSINESS HEAD",
           teamtotalstack: { $gt: 499999 },
         });
@@ -394,7 +394,7 @@ schedule.scheduleJob(every24hours, async () => {
         }
       } else if (res[0]?.Rank == "GOLD MANAGER") {
         const ReffData5 = await findAllRecord(Usermodal, {
-          refferalBy: user.refferalId,
+          refferalBy: user.username,
           Rank: "GOLD MANAGER",
         });
         if (ReffData5.length >= 2) {
@@ -431,7 +431,7 @@ schedule.scheduleJob(every24hours, async () => {
         }
       } else if (res[0]?.Rank == "DIAMOND MANAGER") {
         const ReffData6 = await findAllRecord(Usermodal, {
-          refferalBy: user.refferalId,
+          refferalBy: user.username,
           Rank: "DIAMOND MANAGER",
         });
         if (ReffData6.length >= 2) {
@@ -474,7 +474,7 @@ schedule.scheduleJob(every24hours, async () => {
         }
       } else if (res[0]?.Rank == "CROWN 1") {
         const ReffData7 = await findAllRecord(Usermodal, {
-          refferalBy: user.refferalId,
+          refferalBy: user.username,
           Rank: "CROWN 1",
         });
         if (ReffData7.length >= 2) {
@@ -509,7 +509,7 @@ schedule.scheduleJob(every24hours, async () => {
         }
       } else if (res[0]?.Rank == "CROWN 2") {
         const ReffData8 = await findAllRecord(Usermodal, {
-          refferalBy: user.refferalId,
+          refferalBy: user.username,
           Rank: "CROWN 2",
         });
         if (ReffData8.length >= 2) {
@@ -537,7 +537,7 @@ schedule.scheduleJob(every24hours, async () => {
         }
       } else if (res[0]?.Rank == "CROWN 3") {
         const ReffData9 = await findAllRecord(Usermodal, {
-          refferalBy: user.refferalId,
+          refferalBy: user.username,
           Rank: "CROWN 3",
         });
         if (ReffData9.length >= 2) {
@@ -581,8 +581,8 @@ schedule.scheduleJob(every24hours1, async () => {
       {
         $graphLookup: {
           from: "users",
-          startWith: "$refferalId",
-          connectFromField: "refferalId",
+          startWith: "$username",
+          connectFromField: "username",
           connectToField: "refferalBy",
           as: "refers_to",
         },
@@ -841,8 +841,8 @@ schedule.scheduleJob(every24hours, async () => {
       {
         $graphLookup: {
           from: "users",
-          startWith: "$refferalId",
-          connectFromField: "refferalId",
+          startWith: "$username",
+          connectFromField: "username",
           connectToField: "refferalBy",
           as: "refers_to",
         },
@@ -895,7 +895,7 @@ schedule.scheduleJob(every24hours, async () => {
           password: 1,
           isActive: 1,
           isValid: 1,
-          refferalId: 1,
+          username: 1,
           createdAt: 1,
           updatedAt: 1,
           level: 4,

@@ -142,7 +142,7 @@ exports.stack = {
               req.body.Amount * req.body.V4xTokenPrice
             ) {
               const ReffData = await findOneRecord(Usermodal, {
-                refferalId: decoded.profile.refferalBy,
+                username: decoded.profile.refferalBy,
                 isValid: true,
               });
               if (ReffData !== null) {
@@ -175,8 +175,8 @@ exports.stack = {
                   {
                     $graphLookup: {
                       from: "users",
-                      startWith: "$refferalId",
-                      connectFromField: "refferalId",
+                      startWith: "$username",
+                      connectFromField: "username",
                       connectToField: "refferalBy",
                       as: "refers_to",
                     },
@@ -229,7 +229,7 @@ exports.stack = {
                       password: 1,
                       isActive: 1,
                       isValid: 1,
-                      refferalId: 1,
+                      username: 1,
                       createdAt: 1,
                       updatedAt: 1,
                       level: 4,
@@ -258,7 +258,7 @@ exports.stack = {
                   { mainWallet: WalletData.mainWallet - req.body.Amount }
                 );
                 const ReffData2 = await findAllRecord(Usermodal, {
-                  refferalBy: ReffData.refferalId,
+                  refferalBy: ReffData.username,
                   isValid: true,
                 });
                 updateRecord(
@@ -370,8 +370,8 @@ exports.stack = {
                 {
                   $graphLookup: {
                     from: "users",
-                    startWith: "$refferalId",
-                    connectFromField: "refferalId",
+                    startWith: "$username",
+                    connectFromField: "username",
                     connectToField: "refferalBy",
                     as: "refers_to",
                   },
@@ -424,7 +424,7 @@ exports.stack = {
                     password: 1,
                     isActive: 1,
                     isValid: 1,
-                    refferalId: 1,
+                    username: 1,
                     createdAt: 1,
                     updatedAt: 1,
                     level: 4,
@@ -448,7 +448,7 @@ exports.stack = {
                 }
               });
               const ReffData = await findOneRecord(Usermodal, {
-                refferalId: decoded.profile.refferalBy,
+                username: decoded.profile.refferalBy,
                 isValid: true,
               });
 
@@ -508,7 +508,7 @@ exports.stack = {
                 { v4xWallet: WalletData.v4xWallet - req.body.Amount }
               );
               const ReffData2 = await findAllRecord(Usermodal, {
-                refferalBy: ReffData.refferalId,
+                refferalBy: ReffData.username,
                 isValid: true,
               });
               updateRecord(
@@ -618,11 +618,11 @@ exports.stack = {
               { v4xWallet: WalletData.v4xWallet - req.body.Amount }
             );
             const ReffData = await findOneRecord(Usermodal, {
-              refferalId: decoded.profile.refferalBy,
+              username: decoded.profile.refferalBy,
               isValid: true,
             });
             const ReffData2 = await findAllRecord(Usermodal, {
-              refferalBy: ReffData.refferalId,
+              refferalBy: ReffData.username,
               isValid: true,
             });
             if (ReffData2.length > 0) {
@@ -744,8 +744,8 @@ exports.stack = {
             {
               $graphLookup: {
                 from: "users",
-                startWith: "$refferalId",
-                connectFromField: "refferalId",
+                startWith: "$username",
+                connectFromField: "username",
                 connectToField: "refferalBy",
                 as: "referBY",
               },
@@ -757,7 +757,7 @@ exports.stack = {
                 password: 0,
                 isActive: 0,
                 isValid: 0,
-                refferalId: 0,
+                username: 0,
                 createdAt: 0,
                 updatedAt: 0,
                 __v: 0,
@@ -771,7 +771,7 @@ exports.stack = {
           let data1 = await Usermodal.aggregate([
             {
               $match: {
-                refferalBy: decoded.profile.refferalId,
+                refferalBy:decoded.profile.username,
               },
             },
             {
@@ -781,7 +781,7 @@ exports.stack = {
                 password: 0,
                 isActive: 0,
                 isValid: 0,
-                refferalId: 0,
+                username: 0,
                 createdAt: 0,
                 updatedAt: 0,
                 __v: 0,
@@ -886,26 +886,31 @@ exports.stack = {
                   fromaccountusername: new ObjectId(req.body.Username),
                   Amount: Number(req.body.Amount),
                 };
-                await Transactionmodal(tdata).save();
-                await updateRecord(
-                  Walletmodal,
-                  {
-                    userId: decoded.profile._id,
-                  },
-                  {
-                    mainWallet: amount,
-                  }
-                );
-                await updateRecord(
-                  Walletmodal,
-                  {
-                    userId: new ObjectId(req.body.Username),
-                  },
-                  { $inc: { v4xWallet: req.body.Amount } }
-                );
-                return successResponse(res, {
-                  message: "transactions have been sent successfully",
-                });
+                if (req.body.Username1 !== "") {
+                  await Transactionmodal(tdata).save();
+                  await updateRecord(
+                    Walletmodal,
+                    {
+                      userId: decoded.profile._id,
+                    },
+                    {
+                      mainWallet: amount,
+                    }
+                  );
+                  let abc = await Usermodal.find({
+                    username: req.body.Username1,
+                  });
+                  await updateRecord(
+                    Walletmodal,
+                    {
+                      userId: abc[0]._id,
+                    },
+                    { $inc: { mainWallet: req.body.Amount } }
+                  );
+                  return successResponse(res, {
+                    message: "transactions have been sent successfully",
+                  });
+                }
               } else {
                 validarionerrorResponse(res, {
                   message:
@@ -921,26 +926,32 @@ exports.stack = {
                   fromaccountusername: new ObjectId(req.body.Username),
                   Amount: Number(req.body.Amount),
                 };
-                await Transactionmodal(tdata).save();
-                await updateRecord(
-                  Walletmodal,
-                  {
-                    userId: decoded.profile._id,
-                  },
-                  {
-                    v4xWallet: amount,
-                  }
-                );
-                await updateRecord(
-                  Walletmodal,
-                  {
-                    userId: new ObjectId(req.body.Username),
-                  },
-                  { $inc: { v4xWallet: req.body.Amount } }
-                );
-                return successResponse(res, {
-                  message: "transactions have been sent successfully",
-                });
+             
+                if (req.body.Username1 !== "") {
+                  await Transactionmodal(tdata).save();
+                  await updateRecord(
+                    Walletmodal,
+                    {
+                      userId: decoded.profile._id,
+                    },
+                    {
+                      mainWallet: amount,
+                    }
+                  );
+                  let abc = await Usermodal.find({
+                    username: req.body.Username1,
+                  });
+                  await updateRecord(
+                    Walletmodal,
+                    {
+                      userId: abc[0]._id,
+                    },
+                    { $inc: { v4xWallet: req.body.Amount } }
+                  );
+                  return successResponse(res, {
+                    message: "transactions have been sent successfully",
+                  });
+                }
               } else {
                 validarionerrorResponse(res, {
                   message:
@@ -1144,7 +1155,7 @@ exports.stack = {
           let data = await Usermodal.aggregate([
             {
               $match: {
-                refferalBy: decoded.profile.refferalId,
+                refferalBy: decoded.profile.username,
               },
             },
             {
@@ -1153,7 +1164,7 @@ exports.stack = {
                 password: 0,
                 isActive: 0,
                 isValid: 0,
-                refferalId: 0,
+                username: 0,
                 updatedAt: 0,
                 __v: 0,
                 referredUser: 0,
@@ -1192,14 +1203,14 @@ exports.stack = {
           let data = await Usermodal.aggregate([
             {
               $match: {
-                refferalBy: decoded.profile.refferalId,
+                refferalBy: decoded.profile.username,
               },
             },
             {
               $graphLookup: {
                 from: "users",
-                startWith: "$refferalId",
-                connectFromField: "refferalId",
+                startWith: "$username",
+                connectFromField: "username",
                 connectToField: "refferalBy",
                 as: "referBY",
               },
@@ -1211,7 +1222,7 @@ exports.stack = {
                 password: 0,
                 isActive: 0,
                 isValid: 0,
-                refferalId: 0,
+                username: 0,
                 createdAt: 0,
                 updatedAt: 0,
                 __v: 0,

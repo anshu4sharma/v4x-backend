@@ -46,7 +46,7 @@ exports.register = {
       req.body = decodeUris(req.body);
       console.log(req.body);
       const refferalBygetdata = await findOneRecord(Usermodal, {
-        refferalId: req.body.refferalBy,
+        username: req.body.refferalBy,
       });
       if (refferalBygetdata !== null) {
         const userdata = await findOneRecord(Usermodal, {
@@ -240,8 +240,8 @@ exports.register = {
                 {
                   $graphLookup: {
                     from: "users",
-                    startWith: "$refferalId",
-                    connectFromField: "refferalId",
+                    startWith: "$username",
+                    connectFromField: "username",
                     connectToField: "refferalBy",
                     as: "refers_to",
                   },
@@ -277,7 +277,7 @@ exports.register = {
                     password: 1,
                     isActive: 1,
                     isValid: 1,
-                    refferalId: 1,
+                    username: 1,
                     createdAt: 1,
                     updatedAt: 1,
                     level: 4,
