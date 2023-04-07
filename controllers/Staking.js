@@ -200,38 +200,93 @@ exports.stack = {
                     ),
                   }
                 );
-                const leval = await findOneRecord(Usermodal, {
-                  _id: ReffData._id,
-                  isValid: true,
-                });
-                let dataleval = levalreword.filter((e) => {
-                  if (e.LEVELS <= leval.leval) {
-                    return e.INCOME;
-                  }
-                });
-                let totalNumber = 0,
-                  i = -1;
-                while (++i < dataleval.length) {
-                  totalNumber += dataleval[i].INCOME;
-                }
-                if (leval.leval > 0) {
+                const perentusers = await Usermodal.aggregate([
+                  {
+                    $match: {
+                      username: decoded.profile.username,
+                    },
+                  },
+                  {
+                    $graphLookup: {
+                      from: "users",
+                      startWith: "$refferalBy",
+                      connectFromField: "refferalBy",
+                      connectToField: "username",
+                      as: "refers_to",
+                    },
+                  },
+                  {
+                    $lookup: {
+                      from: "stakings",
+                      localField: "refers_to._id",
+                      foreignField: "userId",
+                      as: "amount",
+                    },
+                  },
+                  {
+                    $match: {
+                      amount: {
+                        $ne: [],
+                      },
+                    },
+                  },
+                  {
+                    $project: {
+                      total: {
+                        $reduce: {
+                          input: "$amount",
+                          initialValue: 0,
+                          in: {
+                            $add: ["$$value", "$$this.Amount"],
+                          },
+                        },
+                      },
+                      walletaddress: 1,
+                      email: 1,
+                      password: 1,
+                      isActive: 1,
+                      isValid: 1,
+                      refferalId: 1,
+                      createdAt: 1,
+                      updatedAt: 1,
+                      level: 4,
+                      referredUser: 1,
+                      refers_to: 1,
+                    },
+                  },
+                  {
+                    $unwind: {
+                      path: "$refers_to",
+                      preserveNullAndEmptyArrays: true,
+                    },
+                  },
+                ]);
+                for (let index = 0; index < perentusers.length; index++) {
+                  const element = perentusers[index];
+                  const element1 = levalreword[index];
+                  const laval = index + 1;
+                  console.log("===================>>>>", {
+                    user: element.refers_to,
+                    reword: element1,
+                    laval,
+                  });
                   await updateRecord(
                     Walletmodal,
                     {
-                      userId: leval._id,
+                      userId: element.refers_to._id,
                       isValid: true,
                     },
                     {
                       $inc: {
-                        mainWallet: (req.body.Amount * totalNumber) / 100,
+                        mainWallet: (req.body.Amount * element1.INCOME) / 100,
                       },
                     }
                   );
                   let data = {
-                    userId: leval._id,
-                    Note: `You Got Level ${leval.leval} Income`,
+                    userId: element.refers_to._id,
+                    Note: `You Got Level ${laval} Income`,
                     Usernameby: decoded.profile.username,
-                    Amount: (req.body.Amount * totalNumber) / 100,
+                    Amount: (req.body.Amount * element1?.INCOME) / 100,
                   };
                   await Communitymodal(data).save();
                 }
@@ -425,38 +480,93 @@ exports.stack = {
                     ),
                   }
                 );
-                const leval = await findOneRecord(Usermodal, {
-                  _id: ReffData._id,
-                  isValid: true,
-                });
-                let dataleval = levalreword.filter((e) => {
-                  if (e.LEVELS <= leval.leval) {
-                    return e.INCOME;
-                  }
-                });
-                let totalNumber = 0,
-                  i = -1;
-                while (++i < dataleval.length) {
-                  totalNumber += dataleval[i].INCOME;
-                }
-                if (leval.leval > 0) {
+                const perentusers = await Usermodal.aggregate([
+                  {
+                    $match: {
+                      username: decoded.profile.username,
+                    },
+                  },
+                  {
+                    $graphLookup: {
+                      from: "users",
+                      startWith: "$refferalBy",
+                      connectFromField: "refferalBy",
+                      connectToField: "username",
+                      as: "refers_to",
+                    },
+                  },
+                  {
+                    $lookup: {
+                      from: "stakings",
+                      localField: "refers_to._id",
+                      foreignField: "userId",
+                      as: "amount",
+                    },
+                  },
+                  {
+                    $match: {
+                      amount: {
+                        $ne: [],
+                      },
+                    },
+                  },
+                  {
+                    $project: {
+                      total: {
+                        $reduce: {
+                          input: "$amount",
+                          initialValue: 0,
+                          in: {
+                            $add: ["$$value", "$$this.Amount"],
+                          },
+                        },
+                      },
+                      walletaddress: 1,
+                      email: 1,
+                      password: 1,
+                      isActive: 1,
+                      isValid: 1,
+                      refferalId: 1,
+                      createdAt: 1,
+                      updatedAt: 1,
+                      level: 4,
+                      referredUser: 1,
+                      refers_to: 1,
+                    },
+                  },
+                  {
+                    $unwind: {
+                      path: "$refers_to",
+                      preserveNullAndEmptyArrays: true,
+                    },
+                  },
+                ]);
+                for (let index = 0; index < perentusers.length; index++) {
+                  const element = perentusers[index];
+                  const element1 = levalreword[index];
+                  const laval = index + 1;
+                  console.log("===================>>>>", {
+                    user: element.refers_to,
+                    reword: element1,
+                    laval,
+                  });
                   await updateRecord(
                     Walletmodal,
                     {
-                      userId: leval._id,
+                      userId: element.refers_to._id,
                       isValid: true,
                     },
                     {
                       $inc: {
-                        mainWallet: (req.body.Amount * totalNumber) / 100,
+                        mainWallet: (req.body.Amount * element1.INCOME) / 100,
                       },
                     }
                   );
                   let data = {
-                    userId: leval._id,
-                    Note: `You Got Level ${leval.leval} Income`,
+                    userId: element.refers_to._id,
+                    Note: `You Got Level ${laval} Income`,
                     Usernameby: decoded.profile.username,
-                    Amount: (req.body.Amount * totalNumber) / 100,
+                    Amount: (req.body.Amount * element1?.INCOME) / 100,
                   };
                   await Communitymodal(data).save();
                 }
