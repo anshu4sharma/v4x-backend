@@ -248,32 +248,32 @@ exports.stack = {
                       isValid: 1,
                       refferalId: 1,
                       createdAt: 1,
+                      refferalBy: 1,
                       updatedAt: 1,
                       level: 4,
+                      username: 1,
                       referredUser: 1,
                       refers_to: 1,
                     },
                   },
-                  {
-                    $unwind: {
-                      path: "$refers_to",
-                      preserveNullAndEmptyArrays: true,
-                    },
-                  },
                 ]);
-                for (let index = 0; index < perentusers.length; index++) {
-                  const element = perentusers[index];
+                for (
+                  let index = 0;
+                  index < perentusers[0].refers_to.length;
+                  index++
+                ) {
+                  const element = perentusers[0].refers_to[index];
                   const element1 = levalreword[index];
                   const laval = index + 1;
                   console.log("===================>>>>", {
-                    user: element.refers_to,
+                    user: element,
                     reword: element1,
                     laval,
                   });
                   await updateRecord(
                     Walletmodal,
                     {
-                      userId: element.refers_to._id,
+                      userId: element._id,
                       isValid: true,
                     },
                     {
@@ -283,7 +283,7 @@ exports.stack = {
                     }
                   );
                   let data = {
-                    userId: element.refers_to._id,
+                    userId: element._id,
                     Note: `You Got Level ${laval} Income`,
                     Usernameby: decoded.profile.username,
                     Amount: (req.body.Amount * element1?.INCOME) / 100,
@@ -528,32 +528,32 @@ exports.stack = {
                       isValid: 1,
                       refferalId: 1,
                       createdAt: 1,
+                      refferalBy: 1,
                       updatedAt: 1,
                       level: 4,
+                      username: 1,
                       referredUser: 1,
                       refers_to: 1,
                     },
                   },
-                  {
-                    $unwind: {
-                      path: "$refers_to",
-                      preserveNullAndEmptyArrays: true,
-                    },
-                  },
                 ]);
-                for (let index = 0; index < perentusers.length; index++) {
-                  const element = perentusers[index];
+                for (
+                  let index = 0;
+                  index < perentusers[0].refers_to.length;
+                  index++
+                ) {
+                  const element = perentusers[0].refers_to[index];
                   const element1 = levalreword[index];
                   const laval = index + 1;
                   console.log("===================>>>>", {
-                    user: element.refers_to,
+                    user: element,
                     reword: element1,
                     laval,
                   });
                   await updateRecord(
                     Walletmodal,
                     {
-                      userId: element.refers_to._id,
+                      userId: element._id,
                       isValid: true,
                     },
                     {
@@ -563,7 +563,7 @@ exports.stack = {
                     }
                   );
                   let data = {
-                    userId: element.refers_to._id,
+                    userId: element._id,
                     Note: `You Got Level ${laval} Income`,
                     Usernameby: decoded.profile.username,
                     Amount: (req.body.Amount * element1?.INCOME) / 100,
