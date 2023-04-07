@@ -447,12 +447,6 @@ exports.stack = {
                   Note: `You Got Refer and Earn Income From ${decoded.profile.username}`,
                   Active: true,
                 }).save();
-
-                updateRecord(
-                  Walletmodal,
-                  { userId: decoded.profile._id },
-                  { mainWallet: WalletData.mainWallet - req.body.Amount }
-                );
                 const ReffData2 = await findAllRecord(Usermodal, {
                   refferalBy: ReffData.username,
                   isValid: true,
