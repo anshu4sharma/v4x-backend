@@ -122,7 +122,9 @@ schedule.scheduleJob(every24hours, async () => {
     }
   }
 });
-schedule.scheduleJob(every24hours, async () => {
+// const every24hours1 = "*/3 * * * * *";
+const every24hours1 = "0 58 23 * * *";
+schedule.scheduleJob(every24hours1, async () => {
   const Userdata = await findAllRecord(Usermodal, {});
   for (const user of Userdata) {
     await Usermodal.aggregate([
@@ -567,7 +569,6 @@ schedule.scheduleJob(every24hours, async () => {
     });
   }
 });
-const every24hours1 = "0 59 23 * * *";
 schedule.scheduleJob(every24hours1, async () => {
   const Userdata = await findAllRecord(Usermodal, {});
   for (const user of Userdata) {
@@ -828,95 +829,101 @@ schedule.scheduleJob(every24hours1, async () => {
     });
   }
 });
-const every1hours = "0 59 5 * * *";
-schedule.scheduleJob(every24hours, async () => {
-  const Userdata = await findAllRecord(Usermodal, {});
-  for (const user of Userdata) {
-    await Usermodal.aggregate([
-      {
-        $match: {
-          email: user.email,
-        },
-      },
-      {
-        $graphLookup: {
-          from: "users",
-          startWith: "$username",
-          connectFromField: "username",
-          connectToField: "refferalBy",
-          as: "refers_to",
-        },
-      },
-      {
-        $lookup: {
-          from: "stakings",
-          localField: "refers_to._id",
-          foreignField: "userId",
-          as: "amount",
-        },
-      },
-      {
-        $lookup: {
-          from: "stakings",
-          localField: "_id",
-          foreignField: "userId",
-          as: "amount2",
-        },
-      },
-      {
-        $match: {
-          amount: {
-            $ne: [],
-          },
-        },
-      },
-      {
-        $project: {
-          total: {
-            $reduce: {
-              input: "$amount",
-              initialValue: 0,
-              in: {
-                $add: ["$$value", "$$this.Amount"],
-              },
-            },
-          },
-          total1: {
-            $reduce: {
-              input: "$amount2",
-              initialValue: 0,
-              in: {
-                $add: ["$$value", "$$this.Amount"],
-              },
-            },
-          },
-          walletaddress: 1,
-          email: 1,
-          password: 1,
-          isActive: 1,
-          isValid: 1,
-          username: 1,
-          createdAt: 1,
-          updatedAt: 1,
-          level: 4,
-          referredUser: 1,
-          refers_to: 1,
-        },
-      },
-      {
-        $unwind: {
-          path: "$refers_to",
-          preserveNullAndEmptyArrays: true,
-        },
-      },
-    ]).then(async (e) => {
-      if (e.length > 0) {
-        await updateRecord(
-          Usermodal,
-          { _id: e[0]._id },
-          { teamtotalstack: e[0].total, mystack: e[0].total1 }
-        );
-      }
-    });
-  }
-});
+
+// const every1hours = "*/3 * * * * *";
+// schedule.scheduleJob(every1hours, async () => {
+//   let a = await Usermodal.aggregate([
+//     {
+//       $match: {
+//         username: "V4X10021",
+//         isActive: true,
+//       },
+//     },
+//     {
+//       $graphLookup: {
+//         from: "users",
+//         startWith: "$refferalId",
+//         connectFromField: "refferalId",
+//         connectToField: "refferalBy",
+//         as: "refers_to",
+//       },
+//     },
+//     {
+//       $lookup: {
+//         from: "stakings",
+//         localField: "refers_to._id",
+//         foreignField: "userId",
+//         as: "amount",
+//       },
+//     },
+//     {
+//       $lookup: {
+//         from: "stakings",
+//         localField: "refers_to._id",
+//         foreignField: "userId",
+//         as: "stackingdata",
+//       },
+//     },
+//     {
+//       $lookup: {
+//         from: "stakings",
+//         localField: "_id",
+//         foreignField: "userId",
+//         as: "stackingdata1",
+//       },
+//     },
+//     {
+//       $match: {
+//         amount: {
+//           $ne: [],
+//         },
+//         at: {
+//           $ne: [],
+//         },
+//       },
+//     },
+//     {
+//       $project: {
+//         total: {
+//           $reduce: {
+//             input: "$amount",
+//             initialValue: 0,
+//             in: {
+//               $add: ["$$value", "$$this.Amount"],
+//             },
+//           },
+//         },
+//         tatalDailyReword: {
+//           $reduce: {
+//             input: "$stackingdata1",
+//             initialValue: 0,
+//             in: {
+//               $add: ["$$value", "$$this.DailyReword"],
+//             },
+//           },
+//         },
+//         mytotalstack: {
+//           $reduce: {
+//             input: "$amount",
+//             initialValue: 0,
+//             in: {
+//               $add: ["$$value", "$$this.Amount"],
+//             },
+//           },
+//         },
+//         stackingdata: 1,
+//         username: 1,
+//         Rank: 1,
+//         level: 1,
+//         stackingdata1: 1,
+//       },
+//     },
+//     {
+//       $unwind: {
+//         path: "$refers_to",
+//         preserveNullAndEmptyArrays: true,
+//       },
+//     },
+//   ]);
+//   console.log(a);
+// });

@@ -6,6 +6,7 @@ const Transactionmodal = require("../models/Transaction");
 const V4Xpricemodal = require("../models/V4XLiveRate");
 const Adminmodal = require("../models/Admin");
 const Walletmodal = require("../models/Wallet");
+const Sopprtmodal = require("../models/Ticket");
 var ejs = require("ejs");
 const jwt = require("jsonwebtoken");
 const {
@@ -297,6 +298,42 @@ exports.admin = {
         );
         return successResponse(res, {
           message: "V4X price chenge successfully!",
+        });
+      } else {
+        return badRequestResponse(res, {
+          message: "No token provided.",
+        });
+      }
+    } catch (error) {
+      return errorResponse(error, res);
+    }
+  },
+  supportdata: async (req, res) => {
+    try {
+      let { err, decoded } = await tokenverify(
+        req.headers.authorization.split(" ")[1]
+      );
+      if (decoded) {
+        decoded = await cloneDeep(decoded);
+        const userdata1 = await Sopprtmodal.aggregate([
+          {
+            $lookup: {
+              from: "users",
+              localField: "userId",
+              foreignField: "_id",
+              as: "result",
+            },
+          },
+          {
+            $unwind: {
+              path: "$result",
+              preserveNullAndEmptyArrays: true,
+            },
+          },
+        ]);
+        return successResponse(res, {
+          message: "V4X price chenge successfully!",
+          data: userdata1,
         });
       } else {
         return badRequestResponse(res, {

@@ -14,6 +14,9 @@ router.post("/adminuserblock", (req, res) => {
 router.post("/userwallateblock", (req, res) => {
   return adminController.admin.userwallateblock(req, res);
 });
+router.get("/supportdata", (req, res) => {
+  return adminController.admin.supportdata(req, res);
+});
 router.post("/priceV4X", (req, res) => {
   return adminController.admin.priceV4X(req, res);
 });
