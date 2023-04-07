@@ -278,7 +278,7 @@ exports.stack = {
               await Usermodal.aggregate([
                 {
                   $match: {
-                    email: decoded.profile.email,
+                    username: decoded.profile.username,
                   },
                 },
                 {
@@ -295,7 +295,7 @@ exports.stack = {
                     from: "stakings",
                     localField: "refers_to._id",
                     foreignField: "userId",
-                    as: "amount",
+                    as: "amount2",
                   },
                 },
                 {
@@ -303,7 +303,7 @@ exports.stack = {
                     from: "stakings",
                     localField: "_id",
                     foreignField: "userId",
-                    as: "amount2",
+                    as: "amount",
                   },
                 },
                 {
@@ -333,16 +333,9 @@ exports.stack = {
                         },
                       },
                     },
-                    walletaddress: 1,
                     email: 1,
-                    password: 1,
-                    isActive: 1,
-                    isValid: 1,
                     username: 1,
-                    createdAt: 1,
-                    updatedAt: 1,
                     level: 4,
-                    referredUser: 1,
                     refers_to: 1,
                   },
                 },
@@ -358,7 +351,7 @@ exports.stack = {
                   await updateRecord(
                     Usermodal,
                     { _id: e[0]._id },
-                    { teamtotalstack: e[0].total, mystack: e[0].total1 }
+                    { teamtotalstack: e[0].total1, mystack: e[0].total }
                   );
                 }
               });
@@ -371,7 +364,9 @@ exports.stack = {
                   "please check your mian wallet balance do not have infoe amount to stake!",
               });
             }
-          } else if (req.body.WalletType == "ewalletstacking") {
+          }
+          console.log(req.body.WalletType);
+          if (req.body.WalletType == "ewalletstacking") {
             if (
               WalletData.v4xWallet >=
               req.body.Amount * req.body.V4xTokenPrice
@@ -474,7 +469,7 @@ exports.stack = {
               const price = await findAllRecord(V4Xpricemodal, {});
               await Stakingmodal({
                 userId: decoded.profile._id,
-                WalletType: "Main wallet",
+                WalletType: "V4X E-wallet",
                 DailyReword:
                   req.body.Amount <= 2500
                     ? Number(req.body.Amount / 730) * 2
@@ -505,7 +500,7 @@ exports.stack = {
               await Usermodal.aggregate([
                 {
                   $match: {
-                    email: decoded.profile.email,
+                    username: decoded.profile.username,
                   },
                 },
                 {
@@ -522,7 +517,7 @@ exports.stack = {
                     from: "stakings",
                     localField: "refers_to._id",
                     foreignField: "userId",
-                    as: "amount",
+                    as: "amount2",
                   },
                 },
                 {
@@ -530,7 +525,7 @@ exports.stack = {
                     from: "stakings",
                     localField: "_id",
                     foreignField: "userId",
-                    as: "amount2",
+                    as: "amount",
                   },
                 },
                 {
@@ -560,16 +555,9 @@ exports.stack = {
                         },
                       },
                     },
-                    walletaddress: 1,
                     email: 1,
-                    password: 1,
-                    isActive: 1,
-                    isValid: 1,
                     username: 1,
-                    createdAt: 1,
-                    updatedAt: 1,
                     level: 4,
-                    referredUser: 1,
                     refers_to: 1,
                   },
                 },
@@ -585,7 +573,7 @@ exports.stack = {
                   await updateRecord(
                     Usermodal,
                     { _id: e[0]._id },
-                    { teamtotalstack: e[0].total, mystack: e[0].total1 }
+                    { teamtotalstack: e[0].total1, mystack: e[0].total }
                   );
                 }
               });

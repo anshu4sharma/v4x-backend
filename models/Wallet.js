@@ -21,7 +21,7 @@ const Wallet = new Schema(
     },
     Active: {
       type: Boolean,
-      default: false,
+      default: true,
       required: true,
     },
   },
