@@ -145,93 +145,6 @@ exports.stack = {
                 username: decoded.profile.refferalBy,
                 isValid: true,
               });
-              await Usermodal.aggregate([
-                {
-                  $match: {
-                    email: decoded.profile.email,
-                  },
-                },
-                {
-                  $graphLookup: {
-                    from: "users",
-                    startWith: "$username",
-                    connectFromField: "username",
-                    connectToField: "refferalBy",
-                    as: "refers_to",
-                  },
-                },
-                {
-                  $lookup: {
-                    from: "stakings",
-                    localField: "refers_to._id",
-                    foreignField: "userId",
-                    as: "amount",
-                  },
-                },
-                {
-                  $lookup: {
-                    from: "stakings",
-                    localField: "_id",
-                    foreignField: "userId",
-                    as: "amount2",
-                  },
-                },
-                {
-                  $match: {
-                    amount: {
-                      $ne: [],
-                    },
-                  },
-                },
-                {
-                  $project: {
-                    total: {
-                      $reduce: {
-                        input: "$amount",
-                        initialValue: 0,
-                        in: {
-                          $add: ["$$value", "$$this.Amount"],
-                        },
-                      },
-                    },
-                    total1: {
-                      $reduce: {
-                        input: "$amount2",
-                        initialValue: 0,
-                        in: {
-                          $add: ["$$value", "$$this.Amount"],
-                        },
-                      },
-                    },
-                    walletaddress: 1,
-                    email: 1,
-                    password: 1,
-                    isActive: 1,
-                    isValid: 1,
-                    username: 1,
-                    createdAt: 1,
-                    updatedAt: 1,
-                    level: 4,
-                    referredUser: 1,
-                    refers_to: 1,
-                  },
-                },
-                {
-                  $unwind: {
-                    path: "$refers_to",
-                    preserveNullAndEmptyArrays: true,
-                  },
-                },
-              ]).then(async (e) => {
-                if (e.length > 0) {
-                  console.log("e[0]=====>", e[0]);
-                  await updateRecord(
-                    Usermodal,
-                    { _id: e[0]._id },
-                    { teamtotalstack: e[0].total, mystack: e[0].total1 }
-                  );
-                }
-              });
               if (ReffData !== null) {
                 const price = await findAllRecord(V4Xpricemodal, {});
                 await updateRecord(
@@ -361,24 +274,6 @@ exports.stack = {
                     : req.body.Amount * 3,
                 V4xTokenPrice: price[0].price,
               }).save();
-              return successResponse(res, {
-                message: "staking complaint successfully",
-              });
-            } else {
-              validarionerrorResponse(res, {
-                message:
-                  "please check your mian wallet balance do not have infoe amount to stake!",
-              });
-            }
-          } else if (req.body.WalletType == "ewalletstacking") {
-            if (
-              WalletData.v4xWallet >=
-              req.body.Amount * req.body.V4xTokenPrice
-            ) {
-              const ReffData = await findOneRecord(Usermodal, {
-                username: decoded.profile.refferalBy,
-                isValid: true,
-              });
               
               await Usermodal.aggregate([
                 {
@@ -467,6 +362,26 @@ exports.stack = {
                   );
                 }
               });
+              return successResponse(res, {
+                message: "staking complaint successfully",
+              });
+            } else {
+              validarionerrorResponse(res, {
+                message:
+                  "please check your mian wallet balance do not have infoe amount to stake!",
+              });
+            }
+          } else if (req.body.WalletType == "ewalletstacking") {
+            if (
+              WalletData.v4xWallet >=
+              req.body.Amount * req.body.V4xTokenPrice
+            ) {
+              const ReffData = await findOneRecord(Usermodal, {
+                username: decoded.profile.refferalBy,
+                isValid: true,
+              });
+              
+             
               if (ReffData !== null) {
                 const price = await findAllRecord(V4Xpricemodal, {});
                 await updateRecord(
@@ -594,6 +509,93 @@ exports.stack = {
                     : req.body.Amount * 3,
                 V4xTokenPrice: price[0].price,
               }).save();
+              await Usermodal.aggregate([
+                {
+                  $match: {
+                    email: decoded.profile.email,
+                  },
+                },
+                {
+                  $graphLookup: {
+                    from: "users",
+                    startWith: "$username",
+                    connectFromField: "username",
+                    connectToField: "refferalBy",
+                    as: "refers_to",
+                  },
+                },
+                {
+                  $lookup: {
+                    from: "stakings",
+                    localField: "refers_to._id",
+                    foreignField: "userId",
+                    as: "amount",
+                  },
+                },
+                {
+                  $lookup: {
+                    from: "stakings",
+                    localField: "_id",
+                    foreignField: "userId",
+                    as: "amount2",
+                  },
+                },
+                {
+                  $match: {
+                    amount: {
+                      $ne: [],
+                    },
+                  },
+                },
+                {
+                  $project: {
+                    total: {
+                      $reduce: {
+                        input: "$amount",
+                        initialValue: 0,
+                        in: {
+                          $add: ["$$value", "$$this.Amount"],
+                        },
+                      },
+                    },
+                    total1: {
+                      $reduce: {
+                        input: "$amount2",
+                        initialValue: 0,
+                        in: {
+                          $add: ["$$value", "$$this.Amount"],
+                        },
+                      },
+                    },
+                    walletaddress: 1,
+                    email: 1,
+                    password: 1,
+                    isActive: 1,
+                    isValid: 1,
+                    username: 1,
+                    createdAt: 1,
+                    updatedAt: 1,
+                    level: 4,
+                    referredUser: 1,
+                    refers_to: 1,
+                  },
+                },
+                {
+                  $unwind: {
+                    path: "$refers_to",
+                    preserveNullAndEmptyArrays: true,
+                  },
+                },
+              ]).then(async (e) => {
+                if (e.length > 0) {
+                  console.log("e[0]=====>", e[0]);
+                  await updateRecord(
+                    Usermodal,
+                    { _id: e[0]._id },
+                    { teamtotalstack: e[0].total, mystack: e[0].total1 }
+                  );
+                }
+              });
               return successResponse(res, {
                 message: "staking complaint successfully",
               });
