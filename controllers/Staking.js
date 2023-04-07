@@ -274,7 +274,7 @@ exports.stack = {
                     : req.body.Amount * 3,
                 V4xTokenPrice: price[0].price,
               }).save();
-              
+
               await Usermodal.aggregate([
                 {
                   $match: {
@@ -380,8 +380,7 @@ exports.stack = {
                 username: decoded.profile.refferalBy,
                 isValid: true,
               });
-              
-             
+
               if (ReffData !== null) {
                 const price = await findAllRecord(V4Xpricemodal, {});
                 await updateRecord(
@@ -1207,7 +1206,7 @@ exports.stack = {
                 password: 0,
                 isActive: 0,
                 isValid: 0,
-                username: 0,
+                username: 1,
                 updatedAt: 0,
                 __v: 0,
                 referredUser: 0,
@@ -1265,13 +1264,13 @@ exports.stack = {
                 password: 0,
                 isActive: 0,
                 isValid: 0,
-                username: 0,
                 createdAt: 0,
                 updatedAt: 0,
                 __v: 0,
                 email: 0,
                 referredUser: 0,
                 AirdroppedActive: 0,
+                username: 1,
                 Airdropped: 0,
               },
             },
