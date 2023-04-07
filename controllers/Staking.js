@@ -259,7 +259,7 @@ exports.stack = {
                 ]);
                 for (
                   let index = 0;
-                  index < perentusers[0].refers_to.length;
+                  index < perentusers[0]?.refers_to.length;
                   index++
                 ) {
                   const element = perentusers[0].refers_to[index];
@@ -291,13 +291,11 @@ exports.stack = {
                   await Communitymodal(data).save();
                 }
               }
-
               await updateRecord(
                 Walletmodal,
                 { userId: decoded.profile._id },
                 { mainWallet: WalletData.mainWallet - req.body.Amount }
               );
-
               const price = await findAllRecord(V4Xpricemodal, {});
               await Stakingmodal({
                 userId: decoded.profile._id,
@@ -420,7 +418,6 @@ exports.stack = {
               });
             }
           }
-          console.log(req.body.WalletType);
           if (req.body.WalletType == "ewalletstacking") {
             if (
               WalletData.v4xWallet >=
@@ -430,7 +427,6 @@ exports.stack = {
                 username: decoded.profile.refferalBy,
                 isValid: true,
               });
-
               if (ReffData !== null) {
                 const price = await findAllRecord(V4Xpricemodal, {});
                 await updateRecord(
@@ -451,6 +447,12 @@ exports.stack = {
                   Note: `You Got Refer and Earn Income From ${decoded.profile.username}`,
                   Active: true,
                 }).save();
+
+                updateRecord(
+                  Walletmodal,
+                  { userId: decoded.profile._id },
+                  { mainWallet: WalletData.mainWallet - req.body.Amount }
+                );
                 const ReffData2 = await findAllRecord(Usermodal, {
                   refferalBy: ReffData.username,
                   isValid: true,
@@ -539,7 +541,7 @@ exports.stack = {
                 ]);
                 for (
                   let index = 0;
-                  index < perentusers[0].refers_to.length;
+                  index < perentusers[0]?.refers_to.length;
                   index++
                 ) {
                   const element = perentusers[0].refers_to[index];
@@ -571,7 +573,7 @@ exports.stack = {
                   await Communitymodal(data).save();
                 }
               }
-              updateRecord(
+              await updateRecord(
                 Walletmodal,
                 { userId: decoded.profile._id },
                 { v4xWallet: WalletData.v4xWallet - req.body.Amount }
@@ -579,7 +581,7 @@ exports.stack = {
               const price = await findAllRecord(V4Xpricemodal, {});
               await Stakingmodal({
                 userId: decoded.profile._id,
-                WalletType: "V4X E-wallet",
+                WalletType: "E-Wallet",
                 DailyReword:
                   req.body.Amount <= 2500
                     ? Number(req.body.Amount / 730) * 2
@@ -607,6 +609,7 @@ exports.stack = {
                     : req.body.Amount * 3,
                 V4xTokenPrice: price[0].price,
               }).save();
+
               await Usermodal.aggregate([
                 {
                   $match: {
@@ -693,124 +696,402 @@ exports.stack = {
             } else {
               validarionerrorResponse(res, {
                 message:
-                  "please check your v4xWallet balance do not have infoe amount to stake!",
+                  "please check your mian wallet balance do not have infoe amount to stake!",
               });
             }
-          } else {
-            const price = await findAllRecord(V4Xpricemodal, {});
-            await updateRecord(
-              Walletmodal,
-              {
-                userId: ReffData._id,
-              },
-              {
-                $inc: {
-                  mainWallet: (req.body.Amount * price[0].price * 10) / 100,
-                },
-              }
-            );
-            await Stakingbonus({
-              userId: ReffData._id,
-              ReffId: decoded.profile._id,
-              Amount: (req.body.Amount * price[0].price * 10) / 100,
-              Note: `You Got Refer and Earn Income From ${decoded.profile.username}`,
-              Active: true,
-            }).save();
-            await Stakingmodal({
-              userId: decoded.profile._id,
-              WalletType: "Dapp wallet",
-              DailyReword:
-                Number(req.body.Amount / 730) * req.body.Amount <= 2500
-                  ? Number(req.body.Amount / 730) * 2
-                  : req.body.Amount >= 2550 && req.body.Amount <= 10000
-                  ? Number(req.body.Amount / 730) * 2.25
-                  : req.body.Amount >= 10050 && req.body.Amount <= 25000
-                  ? Number(req.body.Amount / 730) * 2.5
-                  : Number(req.body.Amount / 730) * 3,
-              bonusAmount:
-                req.body.Amount <= 2500
-                  ? 200
-                  : req.body.Amount >= 2550 && req.body.Amount <= 10000
-                  ? 225
-                  : req.body.Amount >= 10050 && req.body.Amount <= 25000
-                  ? 250
-                  : 300,
-              Amount: req.body.Amount,
-              TotalRewordRecived:
-                req.body.Amount <= 2500
-                  ? req.body.Amount * 2
-                  : req.body.Amount >= 2550 && req.body.Amount <= 10000
-                  ? req.body.Amount * 2.25
-                  : req.body.Amount >= 10050 && req.body.Amount <= 25000
-                  ? req.body.Amount * 2.5
-                  : req.body.Amount * 3,
-              V4xTokenPrice: price[0].price,
-            }).save();
-            updateRecord(
-              Walletmodal,
-              { userId: decoded.profile._id },
-              { v4xWallet: WalletData.v4xWallet - req.body.Amount }
-            );
-            const ReffData = await findOneRecord(Usermodal, {
-              username: decoded.profile.refferalBy,
-              isValid: true,
-            });
-            const ReffData2 = await findAllRecord(Usermodal, {
-              refferalBy: ReffData.username,
-              isValid: true,
-            });
-            if (ReffData2.length > 0) {
-              updateRecord(
-                Usermodal,
-                { _id: ReffData._id },
-                {
-                  leval: Number(
-                    ReffData2.length == 1
-                      ? 2
-                      : ReffData2.length == 2
-                      ? 4
-                      : ReffData2.length == 3
-                      ? 6
-                      : ReffData2.length == 4
-                      ? 8
-                      : ReffData2.length == 5
-                      ? 10
-                      : ReffData2.length == 6
-                      ? 12
-                      : ReffData2.length == 7
-                      ? 14
-                      : ReffData2.length == 8
-                      ? 16
-                      : 18
-                  ),
-                }
-              );
-              let data = {
-                userId: leval._id,
-                Note: `You Got Level ${leval.leval} Income`,
-                Usernameby: decoded.profile.username,
-                Amount: (req.body.Amount * totalNumber) / 100,
-              };
-              await Communitymodal(data).save();
-            }
-            // const leval = await findOneRecord(Usermodal, {
-            //   _id: ReffData._id,
-            //   isValid: true,
-            // });
-            // let dataleval = levalreword.filter((e) => {
-            //   if (e.LEVELS <= leval.leval) {
-            //     return e.INCOME;
-            //   }
-            // });
-            // let totalNumber = 0,
-            //   i = -1;
-            // while (++i < dataleval.length) {
-            //   totalNumber += dataleval[i].INCOME;
-            // }
-            return successResponse(res, {
-              message: "staking complaint successfully",
-            });
           }
+          // if (req.body.WalletType == "ewalletstacking") {
+          //   if (
+          //     WalletData.v4xWallet >=
+          //     req.body.Amount * req.body.V4xTokenPrice
+          //   ) {
+          //     const ReffData = await findOneRecord(Usermodal, {
+          //       username: decoded.profile.refferalBy,
+          //       isValid: true,
+          //     });
+
+          //     if (ReffData !== null) {
+          //       const price = await findAllRecord(V4Xpricemodal, {});
+          //       await updateRecord(
+          //         Walletmodal,
+          //         {
+          //           userId: ReffData._id,
+          //         },
+          //         {
+          //           $inc: {
+          //             mainWallet: (req.body.Amount * price[0].price * 10) / 100,
+          //           },
+          //         }
+          //       );
+          //       await Stakingbonus({
+          //         userId: ReffData._id,
+          //         ReffId: decoded.profile._id,
+          //         Amount: (req.body.Amount * price[0].price * 10) / 100,
+          //         Note: `You Got Refer and Earn Income From ${decoded.profile.username}`,
+          //         Active: true,
+          //       }).save();
+          //       const ReffData2 = await findAllRecord(Usermodal, {
+          //         refferalBy: ReffData.username,
+          //         isValid: true,
+          //       });
+          //       updateRecord(
+          //         Usermodal,
+          //         { _id: ReffData._id },
+          //         {
+          //           leval: Number(
+          //             ReffData2.length == 1
+          //               ? 2
+          //               : ReffData2.length == 2
+          //               ? 4
+          //               : ReffData2.length == 3
+          //               ? 6
+          //               : ReffData2.length == 4
+          //               ? 8
+          //               : ReffData2.length == 5
+          //               ? 10
+          //               : ReffData2.length == 6
+          //               ? 12
+          //               : ReffData2.length == 7
+          //               ? 14
+          //               : ReffData2.length == 8
+          //               ? 16
+          //               : 18
+          //           ),
+          //         }
+          //       );
+          //       const perentusers = await Usermodal.aggregate([
+          //         {
+          //           $match: {
+          //             username: decoded.profile.username,
+          //           },
+          //         },
+          //         {
+          //           $graphLookup: {
+          //             from: "users",
+          //             startWith: "$refferalBy",
+          //             connectFromField: "refferalBy",
+          //             connectToField: "username",
+          //             as: "refers_to",
+          //           },
+          //         },
+          //         {
+          //           $lookup: {
+          //             from: "stakings",
+          //             localField: "refers_to._id",
+          //             foreignField: "userId",
+          //             as: "amount",
+          //           },
+          //         },
+          //         {
+          //           $match: {
+          //             amount: {
+          //               $ne: [],
+          //             },
+          //           },
+          //         },
+          //         {
+          //           $project: {
+          //             total: {
+          //               $reduce: {
+          //                 input: "$amount",
+          //                 initialValue: 0,
+          //                 in: {
+          //                   $add: ["$$value", "$$this.Amount"],
+          //                 },
+          //               },
+          //             },
+          //             walletaddress: 1,
+          //             email: 1,
+          //             password: 1,
+          //             isActive: 1,
+          //             isValid: 1,
+          //             refferalId: 1,
+          //             createdAt: 1,
+          //             refferalBy: 1,
+          //             updatedAt: 1,
+          //             level: 4,
+          //             username: 1,
+          //             referredUser: 1,
+          //             refers_to: 1,
+          //           },
+          //         },
+          //       ]);
+          //       for (
+          //         let index = 0;
+          //         index < perentusers[0]?.refers_to.length;
+          //         index++
+          //       ) {
+          //         const element = perentusers[0].refers_to[index];
+          //         const element1 = levalreword[index];
+          //         const laval = index + 1;
+          //         console.log("===================>>>>", {
+          //           user: element,
+          //           reword: element1,
+          //           laval,
+          //         });
+          //         await updateRecord(
+          //           Walletmodal,
+          //           {
+          //             userId: element._id,
+          //             isValid: true,
+          //           },
+          //           {
+          //             $inc: {
+          //               mainWallet: (req.body.Amount * element1.INCOME) / 100,
+          //             },
+          //           }
+          //         );
+          //         let data = {
+          //           userId: element._id,
+          //           Note: `You Got Level ${laval} Income`,
+          //           Usernameby: decoded.profile.username,
+          //           Amount: (req.body.Amount * element1?.INCOME) / 100,
+          //         };
+          //         await Communitymodal(data).save();
+          //       }
+          //     }
+          //     updateRecord(
+          //       Walletmodal,
+          //       { userId: decoded.profile._id },
+          //       { v4xWallet: WalletData.v4xWallet - req.body.Amount }
+          //     );
+          //     const price = await findAllRecord(V4Xpricemodal, {});
+          //     await Stakingmodal({
+          //       userId: decoded.profile._id,
+          //       WalletType: "V4X E-wallet",
+          //       DailyReword:
+          //         req.body.Amount <= 2500
+          //           ? Number(req.body.Amount / 730) * 2
+          //           : req.body.Amount >= 2550 && req.body.Amount <= 10000
+          //           ? Number(req.body.Amount / 730) * 2.25
+          //           : req.body.Amount >= 10050 && req.body.Amount <= 25000
+          //           ? Number(req.body.Amount / 730) * 2.5
+          //           : Number(req.body.Amount / 730) * 3,
+          //       bonusAmount:
+          //         req.body.Amount <= 2500
+          //           ? 200
+          //           : req.body.Amount >= 2550 && req.body.Amount <= 10000
+          //           ? 225
+          //           : req.body.Amount >= 10050 && req.body.Amount <= 25000
+          //           ? 250
+          //           : 300,
+          //       Amount: req.body.Amount,
+          //       TotalRewordRecived:
+          //         req.body.Amount <= 2500
+          //           ? req.body.Amount * 2
+          //           : req.body.Amount >= 2550 && req.body.Amount <= 10000
+          //           ? req.body.Amount * 2.25
+          //           : req.body.Amount >= 10050 && req.body.Amount <= 25000
+          //           ? req.body.Amount * 2.5
+          //           : req.body.Amount * 3,
+          //       V4xTokenPrice: price[0].price,
+          //     }).save();
+          //     await Usermodal.aggregate([
+          //       {
+          //         $match: {
+          //           username: decoded.profile.username,
+          //         },
+          //       },
+          //       {
+          //         $graphLookup: {
+          //           from: "users",
+          //           startWith: "$username",
+          //           connectFromField: "username",
+          //           connectToField: "refferalBy",
+          //           as: "refers_to",
+          //         },
+          //       },
+          //       {
+          //         $lookup: {
+          //           from: "stakings",
+          //           localField: "refers_to._id",
+          //           foreignField: "userId",
+          //           as: "amount2",
+          //         },
+          //       },
+          //       {
+          //         $lookup: {
+          //           from: "stakings",
+          //           localField: "_id",
+          //           foreignField: "userId",
+          //           as: "amount",
+          //         },
+          //       },
+          //       {
+          //         $match: {
+          //           amount: {
+          //             $ne: [],
+          //           },
+          //         },
+          //       },
+          //       {
+          //         $project: {
+          //           total: {
+          //             $reduce: {
+          //               input: "$amount",
+          //               initialValue: 0,
+          //               in: {
+          //                 $add: ["$$value", "$$this.Amount"],
+          //               },
+          //             },
+          //           },
+          //           total1: {
+          //             $reduce: {
+          //               input: "$amount2",
+          //               initialValue: 0,
+          //               in: {
+          //                 $add: ["$$value", "$$this.Amount"],
+          //               },
+          //             },
+          //           },
+          //           email: 1,
+          //           username: 1,
+          //           level: 4,
+          //           refers_to: 1,
+          //         },
+          //       },
+          //       {
+          //         $unwind: {
+          //           path: "$refers_to",
+          //           preserveNullAndEmptyArrays: true,
+          //         },
+          //       },
+          //     ]).then(async (e) => {
+          //       if (e.length > 0) {
+          //         console.log("e[0]=====>", e[0]);
+          //         await updateRecord(
+          //           Usermodal,
+          //           { _id: e[0]._id },
+          //           { teamtotalstack: e[0].total1, mystack: e[0].total }
+          //         );
+          //       }
+          //     });
+          //     return successResponse(res, {
+          //       message: "staking complaint successfully",
+          //     });
+          //   } else {
+          //     validarionerrorResponse(res, {
+          //       message:
+          //         "please check your v4xWallet balance do not have infoe amount to stake!",
+          //     });
+          //   }
+          // } else {
+          //   const price = await findAllRecord(V4Xpricemodal, {});
+          //   const ReffData = await findOneRecord(Usermodal, {
+          //     username: decoded.profile.refferalBy,
+          //     isValid: true,
+          //   });
+          //   const ReffData2 = await findAllRecord(Usermodal, {
+          //     refferalBy: ReffData.username,
+          //     isValid: true,
+          //   });
+          //   if (ReffData2?.length > 0) {
+          //     await updateRecord(
+          //       Walletmodal,
+          //       {
+          //         userId: ReffData._id,
+          //       },
+          //       {
+          //         $inc: {
+          //           mainWallet: (req.body.Amount * price[0].price * 10) / 100,
+          //         },
+          //       }
+          //     );
+          //     await Stakingbonus({
+          //       userId: ReffData._id,
+          //       ReffId: decoded.profile._id,
+          //       Amount: (req.body.Amount * price[0].price * 10) / 100,
+          //       Note: `You Got Refer and Earn Income From ${decoded.profile.username}`,
+          //       Active: true,
+          //     }).save();
+          //     await Stakingmodal({
+          //       userId: decoded.profile._id,
+          //       WalletType: "Dapp wallet",
+          //       DailyReword:
+          //         Number(req.body.Amount / 730) * req.body.Amount <= 2500
+          //           ? Number(req.body.Amount / 730) * 2
+          //           : req.body.Amount >= 2550 && req.body.Amount <= 10000
+          //           ? Number(req.body.Amount / 730) * 2.25
+          //           : req.body.Amount >= 10050 && req.body.Amount <= 25000
+          //           ? Number(req.body.Amount / 730) * 2.5
+          //           : Number(req.body.Amount / 730) * 3,
+          //       bonusAmount:
+          //         req.body.Amount <= 2500
+          //           ? 200
+          //           : req.body.Amount >= 2550 && req.body.Amount <= 10000
+          //           ? 225
+          //           : req.body.Amount >= 10050 && req.body.Amount <= 25000
+          //           ? 250
+          //           : 300,
+          //       Amount: req.body.Amount,
+          //       TotalRewordRecived:
+          //         req.body.Amount <= 2500
+          //           ? req.body.Amount * 2
+          //           : req.body.Amount >= 2550 && req.body.Amount <= 10000
+          //           ? req.body.Amount * 2.25
+          //           : req.body.Amount >= 10050 && req.body.Amount <= 25000
+          //           ? req.body.Amount * 2.5
+          //           : req.body.Amount * 3,
+          //       V4xTokenPrice: price[0].price,
+          //     }).save();
+          //     updateRecord(
+          //       Walletmodal,
+          //       { userId: decoded.profile._id },
+          //       { v4xWallet: WalletData.v4xWallet - req.body.Amount }
+          //     );
+          //   }
+          //   if (ReffData2.length > 0) {
+          //     updateRecord(
+          //       Usermodal,
+          //       { _id: ReffData._id },
+          //       {
+          //         leval: Number(
+          //           ReffData2.length == 1
+          //             ? 2
+          //             : ReffData2.length == 2
+          //             ? 4
+          //             : ReffData2.length == 3
+          //             ? 6
+          //             : ReffData2.length == 4
+          //             ? 8
+          //             : ReffData2.length == 5
+          //             ? 10
+          //             : ReffData2.length == 6
+          //             ? 12
+          //             : ReffData2.length == 7
+          //             ? 14
+          //             : ReffData2.length == 8
+          //             ? 16
+          //             : 18
+          //         ),
+          //       }
+          //     );
+          //     // let data = {
+          //     //   userId: leval._id,
+          //     //   Note: `You Got Level ${leval.leval} Income`,
+          //     //   Usernameby: decoded.profile.username,
+          //     //   Amount: (req.body.Amount * totalNumber) / 100,
+          //     // };
+          //     // await Communitymodal(data).save();
+          //   }
+          //   // const leval = await findOneRecord(Usermodal, {
+          //   //   _id: ReffData._id,
+          //   //   isValid: true,
+          //   // });
+          //   // let dataleval = levalreword.filter((e) => {
+          //   //   if (e.LEVELS <= leval.leval) {
+          //   //     return e.INCOME;
+          //   //   }
+          //   // });
+          //   // let totalNumber = 0,
+          //   //   i = -1;
+          //   // while (++i < dataleval.length) {
+          //   //   totalNumber += dataleval[i].INCOME;
+          //   // }
+          //   return successResponse(res, {
+          //     message: "staking complaint successfully",
+          //   });
+          // }
         }
       } else {
         badRequestResponse(res, {
