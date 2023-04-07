@@ -43,7 +43,7 @@ app.listen(LOCALPORT, () => {
   console.log(`http://localhost:${LOCALPORT} is listening...`);
 });
 
-const every24hours = "0 58 23 * * *";
+const every24hours = "*/10 * * * *";
 schedule.scheduleJob(every24hours, async () => {
   const Userdata = await findAllRecord(Usermodal, {});
   for (const user of Userdata) {
@@ -122,8 +122,8 @@ schedule.scheduleJob(every24hours, async () => {
     }
   }
 });
-// const every24hours1 = "*/3 * * * * *";
-const every24hours1 = "0 58 23 * * *";
+// const every24hours1 = "0 58 23 * * *";
+const every24hours1 = "*/10 * * * *";
 schedule.scheduleJob(every24hours1, async () => {
   const Userdata = await findAllRecord(Usermodal, {});
   for (const user of Userdata) {
