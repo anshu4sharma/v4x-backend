@@ -1608,10 +1608,10 @@ exports.stack = {
         }
         if (decoded) {
           decoded = await cloneDeep(decoded);
-          let data = await Usermodal.aggregate([
+        let data = await Usermodal.aggregate([
             {
               $match: {
-                refferalBy: decoded.profile.username,
+                email: decoded.profile.email,
               },
             },
             {
@@ -1630,6 +1630,7 @@ exports.stack = {
                 password: 0,
                 isActive: 0,
                 isValid: 0,
+                username: 0,
                 createdAt: 0,
                 updatedAt: 0,
                 __v: 0,
