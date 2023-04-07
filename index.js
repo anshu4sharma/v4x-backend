@@ -43,8 +43,8 @@ app.listen(LOCALPORT, () => {
   console.log(`http://localhost:${LOCALPORT} is listening...`);
 });
 
-// const every24hours = "*/10 * * * *";
-const every24hours = "0 58 23 * * *";
+const every24hours = "*/1 * * * * ";
+// const every24hours = "0 58 23 * * *";
 schedule.scheduleJob(every24hours, async () => {
   const Userdata = await findAllRecord(Usermodal, {});
   for (const user of Userdata) {
@@ -123,8 +123,8 @@ schedule.scheduleJob(every24hours, async () => {
     }
   }
 });
-const every24hours1 = "0 58 23 * * *";
-// const every24hours1 = "*/10 * * * *";
+// const every24hours1 = "0 58 23 * * *";
+const every24hours1 = "*/1 * * * * ";
 schedule.scheduleJob(every24hours1, async () => {
   const Userdata = await findAllRecord(Usermodal, {});
   for (const user of Userdata) {
@@ -573,6 +573,7 @@ schedule.scheduleJob(every24hours1, async () => {
 schedule.scheduleJob(every24hours1, async () => {
   const Userdata = await findAllRecord(Usermodal, {});
   for (const user of Userdata) {
+    console.log(user);
     await Usermodal.aggregate([
       {
         $match: {
@@ -661,6 +662,7 @@ schedule.scheduleJob(every24hours1, async () => {
                 Note: "V4X COIN WILL BE CREDITED IN PASSIVE CLUB WALLET",
                 Amount: (d.DailyReword * 5) / 100,
               };
+              console.log("ddd");
               await Passive(data).save();
             }
           }
