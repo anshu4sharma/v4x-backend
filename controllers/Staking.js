@@ -1039,7 +1039,7 @@ exports.stack = {
                     {
                       userId: abc[0]._id,
                     },
-                    { $inc: { mainWallet: req.body.Amount } }
+                    { $inc: { v4xWallet: req.body.Amount } }
                   );
                   return successResponse(res, {
                     message: "transactions have been sent successfully",
