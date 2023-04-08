@@ -85,13 +85,13 @@ exports.Withdraw = {
                       message: `Email not send error something is wrong ${err}`,
                     });
                   } else {
+                    successResponse(res, {
+                      message: "otp has been send to your email address..!!",
+                    });
                   }
                 });
               }
             );
-            successResponse(res, {
-              message: "otp has been send to your email address..!!",
-            });
           } else {
             successResponse(res, {
               message: "otp already and in your mail plase check your email",
