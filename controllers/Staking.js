@@ -175,7 +175,7 @@ exports.stack = {
                   refferalBy: ReffData.username,
                   isValid: true,
                 });
-                updateRecord(
+                await updateRecord(
                   Usermodal,
                   { _id: ReffData._id },
                   {
@@ -199,97 +199,431 @@ exports.stack = {
                         : 18
                     ),
                   }
-                );
-                const perentusers = await Usermodal.aggregate([
-                  {
-                    $match: {
-                      username: decoded.profile.username,
-                    },
-                  },
-                  {
-                    $graphLookup: {
-                      from: "users",
-                      startWith: "$refferalBy",
-                      connectFromField: "refferalBy",
-                      connectToField: "username",
-                      as: "refers_to",
-                    },
-                  },
-                  {
-                    $lookup: {
-                      from: "stakings",
-                      localField: "refers_to._id",
-                      foreignField: "userId",
-                      as: "amount",
-                    },
-                  },
-                  {
-                    $match: {
-                      amount: {
-                        $ne: [],
-                      },
-                    },
-                  },
-                  {
-                    $project: {
-                      total: {
-                        $reduce: {
-                          input: "$amount",
-                          initialValue: 0,
-                          in: {
-                            $add: ["$$value", "$$this.Amount"],
-                          },
-                        },
-                      },
-                      walletaddress: 1,
-                      email: 1,
-                      password: 1,
-                      isActive: 1,
-                      isValid: 1,
-                      refferalId: 1,
-                      createdAt: 1,
-                      refferalBy: 1,
-                      updatedAt: 1,
-                      level: 4,
-                      username: 1,
-                      referredUser: 1,
-                      refers_to: 1,
-                    },
-                  },
-                ]);
-                for (
-                  let index = 0;
-                  index < perentusers[0]?.refers_to.length;
-                  index++
-                ) {
-                  const element = perentusers[0].refers_to[index];
-                  const element1 = levalreword[index];
-                  const laval = index + 1;
-                  console.log("===================>>>>", {
-                    user: element,
-                    reword: element1,
-                    laval,
+                ).then(async () => {
+                  const Refflevalncome = await findOneRecord(Usermodal, {
+                    username: decoded.profile.username,
+                    isValid: true,
                   });
-                  await updateRecord(
-                    Walletmodal,
-                    {
-                      userId: element._id,
-                      isValid: true,
-                    },
-                    {
-                      $inc: {
-                        mainWallet: (req.body.Amount * element1.INCOME) / 100,
-                      },
+
+                  if (!Refflevalncome) {
+                    return;
+                  }
+                  const Refflevalncome1 = await findOneRecord(Usermodal, {
+                    username: Refflevalncome.refferalBy,
+                    isValid: true,
+                  });
+                  if (!Refflevalncome1) {
+                    return;
+                  }
+                  if (Refflevalncome1.leval >= 1) {
+                    if (Refflevalncome1.mystack >= 100) {
+                      let data1 = {
+                        userId: Refflevalncome1._id,
+                        Note: `You Got Level ${1} Income`,
+                        Usernameby: decoded.profile.username,
+                        Amount: (req.body.Amount * 4) / 100,
+                      };
+                      await Communitymodal(data).save();
+
+                      console.log("===============>11", {
+                        Refflevalncome1,
+                        data1,
+                      });
                     }
-                  );
-                  let data = {
-                    userId: element._id,
-                    Note: `You Got Level ${laval} Income`,
-                    Usernameby: decoded.profile.username,
-                    Amount: (req.body.Amount * element1?.INCOME) / 100,
-                  };
-                  await Communitymodal(data).save();
-                }
+                  }
+                  const Refflevalncome2 = await findOneRecord(Usermodal, {
+                    username: Refflevalncome1.refferalBy,
+                    isValid: true,
+                  });
+                  if (!Refflevalncome2) {
+                    return;
+                  }
+                  if (Refflevalncome2.leval >= 2) {
+                    if (Refflevalncome2.mystack >= 100) {
+                      let data2 = {
+                        userId: Refflevalncome2._id,
+                        Note: `You Got Level ${2} Income`,
+                        Usernameby: decoded.profile.username,
+                        Amount: (req.body.Amount * 3) / 100,
+                      };
+                      await Communitymodal(data).save();
+
+                      console.log("===============>22", {
+                        Refflevalncome2,
+                        data2,
+                      });
+                    }
+                  }
+                  const Refflevalncome3 = await findOneRecord(Usermodal, {
+                    username: Refflevalncome2.refferalBy,
+                    isValid: true,
+                  });
+                  if (!Refflevalncome3) {
+                    return;
+                  }
+                  if (Refflevalncome3.leval >= 3) {
+                    if (Refflevalncome3.mystack >= 100) {
+                      let data3 = {
+                        userId: Refflevalncome3._id,
+                        Note: `You Got Level ${3} Income`,
+                        Usernameby: decoded.profile.username,
+                        Amount: (req.body.Amount * 2) / 100,
+                      };
+                      await Communitymodal(data).save();
+
+                      console.log("===============>33", {
+                        Refflevalncome3,
+                        data3,
+                      });
+                    }
+                  }
+                  const Refflevalncome4 = await findOneRecord(Usermodal, {
+                    username: Refflevalncome3.refferalBy,
+                    isValid: true,
+                  });
+                  if (!Refflevalncome4) {
+                    return;
+                  }
+                  if (Refflevalncome4.leval >= 4) {
+                    if (Refflevalncome4.mystack >= 100) {
+                      let data4 = {
+                        userId: Refflevalncome4._id,
+                        Note: `You Got Level ${4} Income`,
+                        Usernameby: decoded.profile.username,
+                        Amount: (req.body.Amount * 1) / 100,
+                      };
+                      await Communitymodal(data).save();
+
+                      console.log("===============>44", {
+                        Refflevalncome4,
+                        data4,
+                      });
+                    }
+                  }
+                  const Refflevalncome5 = await findOneRecord(Usermodal, {
+                    username: Refflevalncome4.refferalBy,
+                    isValid: true,
+                  });
+                  if (!Refflevalncome5) {
+                    return;
+                  }
+                  if (Refflevalncome5.leval >= 5) {
+                    if (Refflevalncome5.mystack >= 100) {
+                      let data5 = {
+                        userId: Refflevalncome5._id,
+                        Note: `You Got Level ${5} Income`,
+                        Usernameby: decoded.profile.username,
+                        Amount: (req.body.Amount * 0.5) / 100,
+                      };
+                      await Communitymodal(data).save();
+
+                      console.log("===============>55", {
+                        Refflevalncome5,
+                        data5,
+                      });
+                    }
+                  }
+                  const Refflevalncome6 = await findOneRecord(Usermodal, {
+                    username: Refflevalncome5.refferalBy,
+                    isValid: true,
+                  });
+                  if (!Refflevalncome6) {
+                    return;
+                  }
+                  if (Refflevalncome6.leval >= 6) {
+                    if (Refflevalncome6.mystack >= 100) {
+                      let data6 = {
+                        userId: Refflevalncome6._id,
+                        Note: `You Got Level ${6} Income`,
+                        Usernameby: decoded.profile.username,
+                        Amount: (req.body.Amount * 0.5) / 100,
+                      };
+                      await Communitymodal(data).save();
+
+                      console.log("===============>66", {
+                        Refflevalncome6,
+                        data6,
+                      });
+                    }
+                  }
+                  const Refflevalncome7 = await findOneRecord(Usermodal, {
+                    username: Refflevalncome6.refferalBy,
+                    isValid: true,
+                  });
+                  if (!Refflevalncome7) {
+                    return;
+                  }
+                  if (Refflevalncome7.leval >= 7) {
+                    if (Refflevalncome7.mystack >= 100) {
+                      let data7 = {
+                        userId: Refflevalncome7._id,
+                        Note: `You Got Level ${7} Income`,
+                        Usernameby: decoded.profile.username,
+                        Amount: (req.body.Amount * 0.5) / 100,
+                      };
+                      await Communitymodal(data).save();
+
+                      console.log("===============>77", {
+                        Refflevalncome7,
+                        data7,
+                      });
+                    }
+                  }
+                  const Refflevalncome8 = await findOneRecord(Usermodal, {
+                    username: Refflevalncome7.refferalBy,
+                    isValid: true,
+                  });
+                  if (!Refflevalncome8) {
+                    return;
+                  }
+                  if (Refflevalncome8.leval >= 8) {
+                    if (Refflevalncome8.mystack >= 100) {
+                      let data8 = {
+                        userId: Refflevalncome8._id,
+                        Note: `You Got Level ${8} Income`,
+                        Usernameby: decoded.profile.username,
+                        Amount: (req.body.Amount * 0.5) / 100,
+                      };
+                      await Communitymodal(data).save();
+
+                      console.log("===============>88", {
+                        Refflevalncome8,
+                        data8,
+                      });
+                    }
+                  }
+                  const Refflevalncome9 = await findOneRecord(Usermodal, {
+                    username: Refflevalncome8.refferalBy,
+                    isValid: true,
+                  });
+                  if (!Refflevalncome9) {
+                    return;
+                  }
+                  if (Refflevalncome9.leval >= 9) {
+                    if (Refflevalncome9.mystack >= 100) {
+                      let data9 = {
+                        userId: Refflevalncome9._id,
+                        Note: `You Got Level ${9} Income`,
+                        Usernameby: decoded.profile.username,
+                        Amount: (req.body.Amount * 0.5) / 100,
+                      };
+                      await Communitymodal(data).save();
+
+                      console.log("===============>99", {
+                        Refflevalncome9,
+                        data9,
+                      });
+                    }
+                  }
+                  const Refflevalncome10 = await findOneRecord(Usermodal, {
+                    username: Refflevalncome9.refferalBy,
+                    isValid: true,
+                  });
+                  if (!Refflevalncome10) {
+                    return;
+                  }
+
+                  if (Refflevalncome10.leval >= 10) {
+                    if (Refflevalncome10.mystack >= 100) {
+                      let data10 = {
+                        userId: Refflevalncome10._id,
+                        Note: `You Got Level ${10} Income`,
+                        Usernameby: decoded.profile.username,
+                        Amount: (req.body.Amount * 0.5) / 100,
+                      };
+                      await Communitymodal(data).save();
+
+                      console.log("===============>1010", {
+                        Refflevalncome10,
+                        data10,
+                      });
+                    }
+                  }
+                  const Refflevalncome11 = await findOneRecord(Usermodal, {
+                    username: Refflevalncome10.refferalBy,
+                    isValid: true,
+                  });
+                  if (!Refflevalncome11) {
+                    return;
+                  }
+
+                  if (Refflevalncome11.leval >= 11) {
+                    if (Refflevalncome11.mystack >= 100) {
+                      let data11 = {
+                        userId: Refflevalncome11._id,
+                        Note: `You Got Level ${11} Income`,
+                        Usernameby: decoded.profile.username,
+                        Amount: (req.body.Amount * 0.5) / 100,
+                      };
+                      await Communitymodal(data).save();
+
+                      console.log("===============>1111", {
+                        Refflevalncome11,
+                        data11,
+                      });
+                    }
+                  }
+                  const Refflevalncome12 = await findOneRecord(Usermodal, {
+                    username: Refflevalncome11.refferalBy,
+                    isValid: true,
+                  });
+                  if (!Refflevalncome12) {
+                    return;
+                  }
+                  if (Refflevalncome12.leval >= 12) {
+                    if (Refflevalncome12.mystack >= 100) {
+                      let data12 = {
+                        userId: Refflevalncome12._id,
+                        Note: `You Got Level ${12} Income`,
+                        Usernameby: decoded.profile.username,
+                        Amount: (req.body.Amount * 0.5) / 100,
+                      };
+                      await Communitymodal(data).save();
+
+                      console.log("===============>1212", {
+                        Refflevalncome12,
+                        data12,
+                      });
+                    }
+                  }
+                  const Refflevalncome13 = await findOneRecord(Usermodal, {
+                    username: Refflevalncome12.refferalBy,
+                    isValid: true,
+                  });
+                  if (!Refflevalncome13) {
+                    return;
+                  }
+                  if (Refflevalncome13.leval >= 13) {
+                    if (Refflevalncome13.mystack >= 100) {
+                      let data13 = {
+                        userId: Refflevalncome13._id,
+                        Note: `You Got Level ${13} Income`,
+                        Usernameby: decoded.profile.username,
+                        Amount: (req.body.Amount * 0.5) / 100,
+                      };
+                      await Communitymodal(data).save();
+
+                      console.log("===============>1313", {
+                        Refflevalncome13,
+                        data13,
+                      });
+                    }
+                  }
+                  const Refflevalncome14 = await findOneRecord(Usermodal, {
+                    username: Refflevalncome13.refferalBy,
+                    isValid: true,
+                  });
+                  if (!Refflevalncome14) {
+                    return;
+                  }
+                  if (Refflevalncome14.leval >= 14) {
+                    if (Refflevalncome14.mystack >= 100) {
+                      let data14 = {
+                        userId: Refflevalncome14._id,
+                        Note: `You Got Level ${14} Income`,
+                        Usernameby: decoded.profile.username,
+                        Amount: (req.body.Amount * 0.5) / 100,
+                      };
+                      await Communitymodal(data).save();
+
+                      console.log("===============>1414", {
+                        Refflevalncome14,
+                        data14,
+                      });
+                    }
+                  }
+                  const Refflevalncome15 = await findOneRecord(Usermodal, {
+                    username: Refflevalncome14.refferalBy,
+                    isValid: true,
+                  });
+                  if (!Refflevalncome15) {
+                    return;
+                  }
+                  if (Refflevalncome15.leval >= 15) {
+                    if (Refflevalncome15.mystack >= 100) {
+                      let data15 = {
+                        userId: Refflevalncome15._id,
+                        Note: `You Got Level ${15} Income`,
+                        Usernameby: decoded.profile.username,
+                        Amount: (req.body.Amount * 1) / 100,
+                      };
+                      await Communitymodal(data).save();
+
+                      console.log("===============>1515", {
+                        Refflevalncome15,
+                        data15,
+                      });
+                    }
+                  }
+                  const Refflevalncome16 = await findOneRecord(Usermodal, {
+                    username: Refflevalncome15.refferalBy,
+                    isValid: true,
+                  });
+                  if (!Refflevalncome16) {
+                    return;
+                  }
+                  if (Refflevalncome16.leval >= 16) {
+                    if (Refflevalncome16.mystack >= 100) {
+                      let data16 = {
+                        userId: Refflevalncome16._id,
+                        Note: `You Got Level ${16} Income`,
+                        Usernameby: decoded.profile.username,
+                        Amount: (req.body.Amount * 2) / 100,
+                      };
+                      await Communitymodal(data).save();
+
+                      console.log("===============>1616", {
+                        Refflevalncome16,
+                        data16,
+                      });
+                    }
+                  }
+                  const Refflevalncome17 = await findOneRecord(Usermodal, {
+                    username: Refflevalncome16.refferalBy,
+                    isValid: true,
+                  });
+                  if (!Refflevalncome17) {
+                    return;
+                  }
+                  if (Refflevalncome17.leval >= 17) {
+                    if (Refflevalncome17.mystack >= 100) {
+                      let data17 = {
+                        userId: Refflevalncome17._id,
+                        Note: `You Got Level ${17} Income`,
+                        Usernameby: decoded.profile.username,
+                        Amount: (req.body.Amount * 3) / 100,
+                      };
+                      await Communitymodal(data).save();
+
+                      console.log("===============>1717", {
+                        Refflevalncome17,
+                        data17,
+                      });
+                    }
+                  }
+                  const Refflevalncome18 = await findOneRecord(Usermodal, {
+                    username: Refflevalncome17.refferalBy,
+                    isValid: true,
+                  });
+                  if (!Refflevalncome18) {
+                    return;
+                  }
+                  if (Refflevalncome18.leval >= 18) {
+                    if (Refflevalncome18.mystack >= 100) {
+                      let data18 = {
+                        userId: Refflevalncome18._id,
+                        Note: `You Got Level ${18} Income`,
+                        Usernameby: decoded.profile.username,
+                        Amount: (req.body.Amount * 4) / 100,
+                      };
+                      await Communitymodal(data).save();
+                      console.log("===============>1818", {
+                        Refflevalncome18,
+                        data18,
+                      });
+                    }
+                  }
+                });
               }
               await updateRecord(
                 Walletmodal,
@@ -451,7 +785,7 @@ exports.stack = {
                   refferalBy: ReffData.username,
                   isValid: true,
                 });
-                updateRecord(
+                await updateRecord(
                   Usermodal,
                   { _id: ReffData._id },
                   {
@@ -475,97 +809,431 @@ exports.stack = {
                         : 18
                     ),
                   }
-                );
-                const perentusers = await Usermodal.aggregate([
-                  {
-                    $match: {
-                      username: decoded.profile.username,
-                    },
-                  },
-                  {
-                    $graphLookup: {
-                      from: "users",
-                      startWith: "$refferalBy",
-                      connectFromField: "refferalBy",
-                      connectToField: "username",
-                      as: "refers_to",
-                    },
-                  },
-                  {
-                    $lookup: {
-                      from: "stakings",
-                      localField: "refers_to._id",
-                      foreignField: "userId",
-                      as: "amount",
-                    },
-                  },
-                  {
-                    $match: {
-                      amount: {
-                        $ne: [],
-                      },
-                    },
-                  },
-                  {
-                    $project: {
-                      total: {
-                        $reduce: {
-                          input: "$amount",
-                          initialValue: 0,
-                          in: {
-                            $add: ["$$value", "$$this.Amount"],
-                          },
-                        },
-                      },
-                      walletaddress: 1,
-                      email: 1,
-                      password: 1,
-                      isActive: 1,
-                      isValid: 1,
-                      refferalId: 1,
-                      createdAt: 1,
-                      refferalBy: 1,
-                      updatedAt: 1,
-                      level: 4,
-                      username: 1,
-                      referredUser: 1,
-                      refers_to: 1,
-                    },
-                  },
-                ]);
-                for (
-                  let index = 0;
-                  index < perentusers[0]?.refers_to.length;
-                  index++
-                ) {
-                  const element = perentusers[0].refers_to[index];
-                  const element1 = levalreword[index];
-                  const laval = index + 1;
-                  console.log("===================>>>>", {
-                    user: element,
-                    reword: element1,
-                    laval,
+                ).then(async () => {
+                  const Refflevalncome = await findOneRecord(Usermodal, {
+                    username: decoded.profile.username,
+                    isValid: true,
                   });
-                  await updateRecord(
-                    Walletmodal,
-                    {
-                      userId: element._id,
-                      isValid: true,
-                    },
-                    {
-                      $inc: {
-                        mainWallet: (req.body.Amount * element1.INCOME) / 100,
-                      },
+
+                  if (!Refflevalncome) {
+                    return;
+                  }
+                  const Refflevalncome1 = await findOneRecord(Usermodal, {
+                    username: Refflevalncome.refferalBy,
+                    isValid: true,
+                  });
+                  if (!Refflevalncome1) {
+                    return;
+                  }
+                  if (Refflevalncome1.leval >= 1) {
+                    if (Refflevalncome1.mystack >= 100) {
+                      let data1 = {
+                        userId: Refflevalncome1._id,
+                        Note: `You Got Level ${1} Income`,
+                        Usernameby: decoded.profile.username,
+                        Amount: (req.body.Amount * 4) / 100,
+                      };
+                      await Communitymodal(data).save();
+
+                      console.log("===============>11", {
+                        Refflevalncome1,
+                        data1,
+                      });
                     }
-                  );
-                  let data = {
-                    userId: element._id,
-                    Note: `You Got Level ${laval} Income`,
-                    Usernameby: decoded.profile.username,
-                    Amount: (req.body.Amount * element1?.INCOME) / 100,
-                  };
-                  await Communitymodal(data).save();
-                }
+                  }
+                  const Refflevalncome2 = await findOneRecord(Usermodal, {
+                    username: Refflevalncome1.refferalBy,
+                    isValid: true,
+                  });
+                  if (!Refflevalncome2) {
+                    return;
+                  }
+                  if (Refflevalncome2.leval >= 2) {
+                    if (Refflevalncome2.mystack >= 100) {
+                      let data2 = {
+                        userId: Refflevalncome2._id,
+                        Note: `You Got Level ${2} Income`,
+                        Usernameby: decoded.profile.username,
+                        Amount: (req.body.Amount * 3) / 100,
+                      };
+                      await Communitymodal(data).save();
+
+                      console.log("===============>22", {
+                        Refflevalncome2,
+                        data2,
+                      });
+                    }
+                  }
+                  const Refflevalncome3 = await findOneRecord(Usermodal, {
+                    username: Refflevalncome2.refferalBy,
+                    isValid: true,
+                  });
+                  if (!Refflevalncome3) {
+                    return;
+                  }
+                  if (Refflevalncome3.leval >= 3) {
+                    if (Refflevalncome3.mystack >= 100) {
+                      let data3 = {
+                        userId: Refflevalncome3._id,
+                        Note: `You Got Level ${3} Income`,
+                        Usernameby: decoded.profile.username,
+                        Amount: (req.body.Amount * 2) / 100,
+                      };
+                      await Communitymodal(data).save();
+
+                      console.log("===============>33", {
+                        Refflevalncome3,
+                        data3,
+                      });
+                    }
+                  }
+                  const Refflevalncome4 = await findOneRecord(Usermodal, {
+                    username: Refflevalncome3.refferalBy,
+                    isValid: true,
+                  });
+                  if (!Refflevalncome4) {
+                    return;
+                  }
+                  if (Refflevalncome4.leval >= 4) {
+                    if (Refflevalncome4.mystack >= 100) {
+                      let data4 = {
+                        userId: Refflevalncome4._id,
+                        Note: `You Got Level ${4} Income`,
+                        Usernameby: decoded.profile.username,
+                        Amount: (req.body.Amount * 1) / 100,
+                      };
+                      await Communitymodal(data).save();
+
+                      console.log("===============>44", {
+                        Refflevalncome4,
+                        data4,
+                      });
+                    }
+                  }
+                  const Refflevalncome5 = await findOneRecord(Usermodal, {
+                    username: Refflevalncome4.refferalBy,
+                    isValid: true,
+                  });
+                  if (!Refflevalncome5) {
+                    return;
+                  }
+                  if (Refflevalncome5.leval >= 5) {
+                    if (Refflevalncome5.mystack >= 100) {
+                      let data5 = {
+                        userId: Refflevalncome5._id,
+                        Note: `You Got Level ${5} Income`,
+                        Usernameby: decoded.profile.username,
+                        Amount: (req.body.Amount * 0.5) / 100,
+                      };
+                      await Communitymodal(data).save();
+
+                      console.log("===============>55", {
+                        Refflevalncome5,
+                        data5,
+                      });
+                    }
+                  }
+                  const Refflevalncome6 = await findOneRecord(Usermodal, {
+                    username: Refflevalncome5.refferalBy,
+                    isValid: true,
+                  });
+                  if (!Refflevalncome6) {
+                    return;
+                  }
+                  if (Refflevalncome6.leval >= 6) {
+                    if (Refflevalncome6.mystack >= 100) {
+                      let data6 = {
+                        userId: Refflevalncome6._id,
+                        Note: `You Got Level ${6} Income`,
+                        Usernameby: decoded.profile.username,
+                        Amount: (req.body.Amount * 0.5) / 100,
+                      };
+                      await Communitymodal(data).save();
+
+                      console.log("===============>66", {
+                        Refflevalncome6,
+                        data6,
+                      });
+                    }
+                  }
+                  const Refflevalncome7 = await findOneRecord(Usermodal, {
+                    username: Refflevalncome6.refferalBy,
+                    isValid: true,
+                  });
+                  if (!Refflevalncome7) {
+                    return;
+                  }
+                  if (Refflevalncome7.leval >= 7) {
+                    if (Refflevalncome7.mystack >= 100) {
+                      let data7 = {
+                        userId: Refflevalncome7._id,
+                        Note: `You Got Level ${7} Income`,
+                        Usernameby: decoded.profile.username,
+                        Amount: (req.body.Amount * 0.5) / 100,
+                      };
+                      await Communitymodal(data).save();
+
+                      console.log("===============>77", {
+                        Refflevalncome7,
+                        data7,
+                      });
+                    }
+                  }
+                  const Refflevalncome8 = await findOneRecord(Usermodal, {
+                    username: Refflevalncome7.refferalBy,
+                    isValid: true,
+                  });
+                  if (!Refflevalncome8) {
+                    return;
+                  }
+                  if (Refflevalncome8.leval >= 8) {
+                    if (Refflevalncome8.mystack >= 100) {
+                      let data8 = {
+                        userId: Refflevalncome8._id,
+                        Note: `You Got Level ${8} Income`,
+                        Usernameby: decoded.profile.username,
+                        Amount: (req.body.Amount * 0.5) / 100,
+                      };
+                      await Communitymodal(data).save();
+
+                      console.log("===============>88", {
+                        Refflevalncome8,
+                        data8,
+                      });
+                    }
+                  }
+                  const Refflevalncome9 = await findOneRecord(Usermodal, {
+                    username: Refflevalncome8.refferalBy,
+                    isValid: true,
+                  });
+                  if (!Refflevalncome9) {
+                    return;
+                  }
+                  if (Refflevalncome9.leval >= 9) {
+                    if (Refflevalncome9.mystack >= 100) {
+                      let data9 = {
+                        userId: Refflevalncome9._id,
+                        Note: `You Got Level ${9} Income`,
+                        Usernameby: decoded.profile.username,
+                        Amount: (req.body.Amount * 0.5) / 100,
+                      };
+                      await Communitymodal(data).save();
+
+                      console.log("===============>99", {
+                        Refflevalncome9,
+                        data9,
+                      });
+                    }
+                  }
+                  const Refflevalncome10 = await findOneRecord(Usermodal, {
+                    username: Refflevalncome9.refferalBy,
+                    isValid: true,
+                  });
+                  if (!Refflevalncome10) {
+                    return;
+                  }
+
+                  if (Refflevalncome10.leval >= 10) {
+                    if (Refflevalncome10.mystack >= 100) {
+                      let data10 = {
+                        userId: Refflevalncome10._id,
+                        Note: `You Got Level ${10} Income`,
+                        Usernameby: decoded.profile.username,
+                        Amount: (req.body.Amount * 0.5) / 100,
+                      };
+                      await Communitymodal(data).save();
+
+                      console.log("===============>1010", {
+                        Refflevalncome10,
+                        data10,
+                      });
+                    }
+                  }
+                  const Refflevalncome11 = await findOneRecord(Usermodal, {
+                    username: Refflevalncome10.refferalBy,
+                    isValid: true,
+                  });
+                  if (!Refflevalncome11) {
+                    return;
+                  }
+
+                  if (Refflevalncome11.leval >= 11) {
+                    if (Refflevalncome11.mystack >= 100) {
+                      let data11 = {
+                        userId: Refflevalncome11._id,
+                        Note: `You Got Level ${11} Income`,
+                        Usernameby: decoded.profile.username,
+                        Amount: (req.body.Amount * 0.5) / 100,
+                      };
+                      await Communitymodal(data).save();
+
+                      console.log("===============>1111", {
+                        Refflevalncome11,
+                        data11,
+                      });
+                    }
+                  }
+                  const Refflevalncome12 = await findOneRecord(Usermodal, {
+                    username: Refflevalncome11.refferalBy,
+                    isValid: true,
+                  });
+                  if (!Refflevalncome12) {
+                    return;
+                  }
+                  if (Refflevalncome12.leval >= 12) {
+                    if (Refflevalncome12.mystack >= 100) {
+                      let data12 = {
+                        userId: Refflevalncome12._id,
+                        Note: `You Got Level ${12} Income`,
+                        Usernameby: decoded.profile.username,
+                        Amount: (req.body.Amount * 0.5) / 100,
+                      };
+                      await Communitymodal(data).save();
+
+                      console.log("===============>1212", {
+                        Refflevalncome12,
+                        data12,
+                      });
+                    }
+                  }
+                  const Refflevalncome13 = await findOneRecord(Usermodal, {
+                    username: Refflevalncome12.refferalBy,
+                    isValid: true,
+                  });
+                  if (!Refflevalncome13) {
+                    return;
+                  }
+                  if (Refflevalncome13.leval >= 13) {
+                    if (Refflevalncome13.mystack >= 100) {
+                      let data13 = {
+                        userId: Refflevalncome13._id,
+                        Note: `You Got Level ${13} Income`,
+                        Usernameby: decoded.profile.username,
+                        Amount: (req.body.Amount * 0.5) / 100,
+                      };
+                      await Communitymodal(data).save();
+
+                      console.log("===============>1313", {
+                        Refflevalncome13,
+                        data13,
+                      });
+                    }
+                  }
+                  const Refflevalncome14 = await findOneRecord(Usermodal, {
+                    username: Refflevalncome13.refferalBy,
+                    isValid: true,
+                  });
+                  if (!Refflevalncome14) {
+                    return;
+                  }
+                  if (Refflevalncome14.leval >= 14) {
+                    if (Refflevalncome14.mystack >= 100) {
+                      let data14 = {
+                        userId: Refflevalncome14._id,
+                        Note: `You Got Level ${14} Income`,
+                        Usernameby: decoded.profile.username,
+                        Amount: (req.body.Amount * 0.5) / 100,
+                      };
+                      await Communitymodal(data).save();
+
+                      console.log("===============>1414", {
+                        Refflevalncome14,
+                        data14,
+                      });
+                    }
+                  }
+                  const Refflevalncome15 = await findOneRecord(Usermodal, {
+                    username: Refflevalncome14.refferalBy,
+                    isValid: true,
+                  });
+                  if (!Refflevalncome15) {
+                    return;
+                  }
+                  if (Refflevalncome15.leval >= 15) {
+                    if (Refflevalncome15.mystack >= 100) {
+                      let data15 = {
+                        userId: Refflevalncome15._id,
+                        Note: `You Got Level ${15} Income`,
+                        Usernameby: decoded.profile.username,
+                        Amount: (req.body.Amount * 1) / 100,
+                      };
+                      await Communitymodal(data).save();
+
+                      console.log("===============>1515", {
+                        Refflevalncome15,
+                        data15,
+                      });
+                    }
+                  }
+                  const Refflevalncome16 = await findOneRecord(Usermodal, {
+                    username: Refflevalncome15.refferalBy,
+                    isValid: true,
+                  });
+                  if (!Refflevalncome16) {
+                    return;
+                  }
+                  if (Refflevalncome16.leval >= 16) {
+                    if (Refflevalncome16.mystack >= 100) {
+                      let data16 = {
+                        userId: Refflevalncome16._id,
+                        Note: `You Got Level ${16} Income`,
+                        Usernameby: decoded.profile.username,
+                        Amount: (req.body.Amount * 2) / 100,
+                      };
+                      await Communitymodal(data).save();
+
+                      console.log("===============>1616", {
+                        Refflevalncome16,
+                        data16,
+                      });
+                    }
+                  }
+                  const Refflevalncome17 = await findOneRecord(Usermodal, {
+                    username: Refflevalncome16.refferalBy,
+                    isValid: true,
+                  });
+                  if (!Refflevalncome17) {
+                    return;
+                  }
+                  if (Refflevalncome17.leval >= 17) {
+                    if (Refflevalncome17.mystack >= 100) {
+                      let data17 = {
+                        userId: Refflevalncome17._id,
+                        Note: `You Got Level ${17} Income`,
+                        Usernameby: decoded.profile.username,
+                        Amount: (req.body.Amount * 3) / 100,
+                      };
+                      await Communitymodal(data).save();
+
+                      console.log("===============>1717", {
+                        Refflevalncome17,
+                        data17,
+                      });
+                    }
+                  }
+                  const Refflevalncome18 = await findOneRecord(Usermodal, {
+                    username: Refflevalncome17.refferalBy,
+                    isValid: true,
+                  });
+                  if (!Refflevalncome18) {
+                    return;
+                  }
+                  if (Refflevalncome18.leval >= 18) {
+                    if (Refflevalncome18.mystack >= 100) {
+                      let data18 = {
+                        userId: Refflevalncome18._id,
+                        Note: `You Got Level ${18} Income`,
+                        Usernameby: decoded.profile.username,
+                        Amount: (req.body.Amount * 4) / 100,
+                      };
+                      await Communitymodal(data).save();
+                      console.log("===============>1818", {
+                        Refflevalncome18,
+                        data18,
+                      });
+                    }
+                  }
+                });
               }
               await updateRecord(
                 Walletmodal,
@@ -1688,7 +2356,7 @@ exports.stack = {
         }
         if (decoded) {
           decoded = await cloneDeep(decoded);
-        let data = await Usermodal.aggregate([
+          let data = await Usermodal.aggregate([
             {
               $match: {
                 email: decoded.profile.email,

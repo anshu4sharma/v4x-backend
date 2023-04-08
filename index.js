@@ -43,8 +43,8 @@ app.listen(LOCALPORT, () => {
   console.log(`http://localhost:${LOCALPORT} is listening...`);
 });
 
-const every24hours = "*/1 * * * * ";
-// const every24hours = "0 58 23 * * *";
+// const every24hours = "*/1 * * * * ";
+const every24hours = "0 58 23 * * *";
 schedule.scheduleJob(every24hours, async () => {
   const Userdata = await findAllRecord(Usermodal, {});
   for (const user of Userdata) {
@@ -123,8 +123,8 @@ schedule.scheduleJob(every24hours, async () => {
     }
   }
 });
-// const every24hours1 = "0 58 23 * * *";
-const every24hours1 = "*/1 * * * * ";
+const every24hours1 = "0 58 23 * * *";
+// const every24hours1 = "*/1 * * * * ";
 schedule.scheduleJob(every24hours1, async () => {
   const Userdata = await findAllRecord(Usermodal, {});
   for (const user of Userdata) {
@@ -205,11 +205,12 @@ schedule.scheduleJob(every24hours1, async () => {
       },
     ]).then(async (res) => {
       if (res[0]?.Rank == "DIRECT") {
-        const ReffData = await findAllRecord(Usermodal, {
+        const Refflevalncome = await findAllRecord(Usermodal, {
           refferalBy: res[0].username,
           Rank: "DIRECT",
         });
-        if (ReffData.length >= 4) {
+        if (Refflevalncome.length >= 4) {
+          console.log("Refflevalncome", user);
           let data = await updateRecord(
             Usermodal,
             {
@@ -241,11 +242,11 @@ schedule.scheduleJob(every24hours1, async () => {
           }
         }
       } else if (res[0]?.Rank == "EXECUTIVE") {
-        const ReffData1 = await findAllRecord(Usermodal, {
+        const Refflevalncome1 = await findAllRecord(Usermodal, {
           refferalBy: user.username,
           Rank: "EXECUTIVE",
         });
-        if (ReffData1.length >= 2) {
+        if (Refflevalncome1.length >= 2) {
           await updateRecord(
             Usermodal,
             {
@@ -277,11 +278,11 @@ schedule.scheduleJob(every24hours1, async () => {
           }
         }
       } else if (res[0]?.Rank == "MANAGER") {
-        const ReffData2 = await findAllRecord(Usermodal, {
+        const Refflevalncome2 = await findAllRecord(Usermodal, {
           refferalBy: user.username,
           Rank: "MANAGER",
         });
-        if (ReffData2.length >= 2) {
+        if (Refflevalncome2.length >= 2) {
           await updateRecord(
             Usermodal,
             {
@@ -313,11 +314,11 @@ schedule.scheduleJob(every24hours1, async () => {
           }
         }
       } else if (res[0]?.Rank == "SENIOR MANAGER") {
-        const ReffData3 = await findAllRecord(Usermodal, {
+        const Refflevalncome3 = await findAllRecord(Usermodal, {
           refferalBy: user.username,
           Rank: "SENIOR MANAGER",
         });
-        if (ReffData3.length >= 2) {
+        if (Refflevalncome3.length >= 2) {
           await updateRecord(
             Usermodal,
             {
@@ -358,12 +359,12 @@ schedule.scheduleJob(every24hours1, async () => {
           }
         }
       } else if (res[0]?.Rank == "BUSINESS HEAD") {
-        const ReffData4 = await findAllRecord(Usermodal, {
+        const Refflevalncome4 = await findAllRecord(Usermodal, {
           refferalBy: user.username,
           Rank: "BUSINESS HEAD",
           teamtotalstack: { $gt: 499999 },
         });
-        if (ReffData4.length >= 2) {
+        if (Refflevalncome4.length >= 2) {
           await updateRecord(
             Usermodal,
             {
@@ -396,11 +397,11 @@ schedule.scheduleJob(every24hours1, async () => {
           }
         }
       } else if (res[0]?.Rank == "GOLD MANAGER") {
-        const ReffData5 = await findAllRecord(Usermodal, {
+        const Refflevalncome5 = await findAllRecord(Usermodal, {
           refferalBy: user.username,
           Rank: "GOLD MANAGER",
         });
-        if (ReffData5.length >= 2) {
+        if (Refflevalncome5.length >= 2) {
           await updateRecord(
             Usermodal,
             {
@@ -433,11 +434,11 @@ schedule.scheduleJob(every24hours1, async () => {
           }
         }
       } else if (res[0]?.Rank == "DIAMOND MANAGER") {
-        const ReffData6 = await findAllRecord(Usermodal, {
+        const Refflevalncome6 = await findAllRecord(Usermodal, {
           refferalBy: user.username,
           Rank: "DIAMOND MANAGER",
         });
-        if (ReffData6.length >= 2) {
+        if (Refflevalncome6.length >= 2) {
           await updateRecord(
             Usermodal,
             {
@@ -476,11 +477,11 @@ schedule.scheduleJob(every24hours1, async () => {
           }
         }
       } else if (res[0]?.Rank == "CROWN 1") {
-        const ReffData7 = await findAllRecord(Usermodal, {
+        const Refflevalncome7 = await findAllRecord(Usermodal, {
           refferalBy: user.username,
           Rank: "CROWN 1",
         });
-        if (ReffData7.length >= 2) {
+        if (Refflevalncome7.length >= 2) {
           await updateRecord(
             Usermodal,
             {
@@ -511,11 +512,11 @@ schedule.scheduleJob(every24hours1, async () => {
           }
         }
       } else if (res[0]?.Rank == "CROWN 2") {
-        const ReffData8 = await findAllRecord(Usermodal, {
+        const Refflevalncome8 = await findAllRecord(Usermodal, {
           refferalBy: user.username,
           Rank: "CROWN 2",
         });
-        if (ReffData8.length >= 2) {
+        if (Refflevalncome8.length >= 2) {
           await updateRecord(
             Usermodal,
             {
@@ -539,11 +540,11 @@ schedule.scheduleJob(every24hours1, async () => {
           }
         }
       } else if (res[0]?.Rank == "CROWN 3") {
-        const ReffData9 = await findAllRecord(Usermodal, {
+        const Refflevalncome9 = await findAllRecord(Usermodal, {
           refferalBy: user.username,
           Rank: "CROWN 3",
         });
-        if (ReffData9.length >= 2) {
+        if (Refflevalncome9.length >= 2) {
           await updateRecord(
             Usermodal,
             {
@@ -570,10 +571,10 @@ schedule.scheduleJob(every24hours1, async () => {
     });
   }
 });
-schedule.scheduleJob(every24hours1, async () => {
+const every24hours12 = "0 56 23 * * *";
+schedule.scheduleJob(every24hours12, async () => {
   const Userdata = await findAllRecord(Usermodal, {});
   for (const user of Userdata) {
-    console.log(user);
     await Usermodal.aggregate([
       {
         $match: {
@@ -653,12 +654,12 @@ schedule.scheduleJob(every24hours1, async () => {
         if (res[0]?.total) {
           for (const d of res[0]?.stackingdata) {
             if (d.Active === true) {
-              const ReffData = await findOneRecord(Usermodal, {
+              const Refflevalncome = await findOneRecord(Usermodal, {
                 _id: d.userId,
               });
               let data = {
                 userId: user._id,
-                username: ReffData?.username,
+                username: Refflevalncome?.username,
                 Note: "V4X COIN WILL BE CREDITED IN PASSIVE CLUB WALLET",
                 Amount: (d.DailyReword * 5) / 100,
               };
@@ -672,12 +673,12 @@ schedule.scheduleJob(every24hours1, async () => {
         if (res[0]?.total) {
           for (const d of res[0]?.stackingdata) {
             if (d.Active === true) {
-              const ReffData = await findOneRecord(Usermodal, {
+              const Refflevalncome = await findOneRecord(Usermodal, {
                 _id: d.userId,
               });
               let data = {
                 userId: user._id,
-                username: ReffData?.username,
+                username: Refflevalncome?.username,
                 Note: "V4X COIN WILL BE CREDITED IN PASSIVE CLUB WALLET",
                 Amount: (d.DailyReword * 7) / 100,
               };
@@ -690,12 +691,12 @@ schedule.scheduleJob(every24hours1, async () => {
         if (res[0]?.total) {
           for (const d of res[0]?.stackingdata) {
             if (d.Active === true) {
-              const ReffData = await findOneRecord(Usermodal, {
+              const Refflevalncome = await findOneRecord(Usermodal, {
                 _id: d.userId,
               });
               let data = {
                 userId: user._id,
-                username: ReffData?.username,
+                username: Refflevalncome?.username,
                 Note: "V4X COIN WILL BE CREDITED IN PASSIVE CLUB WALLET",
                 Amount: (d.DailyReword * 10) / 100,
               };
@@ -708,12 +709,12 @@ schedule.scheduleJob(every24hours1, async () => {
         if (res[0]?.total) {
           for (const d of res[0]?.stackingdata) {
             if (d.Active === true) {
-              const ReffData = await findOneRecord(Usermodal, {
+              const Refflevalncome = await findOneRecord(Usermodal, {
                 _id: d.userId,
               });
               let data = {
                 userId: user._id,
-                username: ReffData?.username,
+                username: Refflevalncome?.username,
                 Note: "V4X COIN WILL BE CREDITED IN PASSIVE CLUB WALLET",
                 Amount: (d.DailyReword * 11) / 100,
               };
@@ -726,12 +727,12 @@ schedule.scheduleJob(every24hours1, async () => {
         if (res[0]?.total) {
           for (const d of res[0]?.stackingdata) {
             if (d.Active === true) {
-              const ReffData = await findOneRecord(Usermodal, {
+              const Refflevalncome = await findOneRecord(Usermodal, {
                 _id: d.userId,
               });
               let data = {
                 userId: user._id,
-                username: ReffData?.username,
+                username: Refflevalncome?.username,
                 Note: "V4X COIN WILL BE CREDITED IN PASSIVE CLUB WALLET",
                 Amount: (d.DailyReword * 12) / 100,
               };
@@ -744,12 +745,12 @@ schedule.scheduleJob(every24hours1, async () => {
         if (res[0]?.total) {
           for (const d of res[0]?.stackingdata) {
             if (d.Active === true) {
-              const ReffData = await findOneRecord(Usermodal, {
+              const Refflevalncome = await findOneRecord(Usermodal, {
                 _id: d.userId,
               });
               let data = {
                 userId: user._id,
-                username: ReffData?.username,
+                username: Refflevalncome?.username,
                 Note: "V4X COIN WILL BE CREDITED IN PASSIVE CLUB WALLET",
                 Amount: (d.DailyReword * 13) / 100,
               };
@@ -762,12 +763,12 @@ schedule.scheduleJob(every24hours1, async () => {
         if (res[0]?.total) {
           for (const d of res[0]?.stackingdata) {
             if (d.Active === true) {
-              const ReffData = await findOneRecord(Usermodal, {
+              const Refflevalncome = await findOneRecord(Usermodal, {
                 _id: d.userId,
               });
               let data = {
                 userId: user._id,
-                username: ReffData?.username,
+                username: Refflevalncome?.username,
                 Note: "V4X COIN WILL BE CREDITED IN PASSIVE CLUB WALLET",
                 Amount: (d.DailyReword * 14) / 100,
               };
@@ -779,12 +780,12 @@ schedule.scheduleJob(every24hours1, async () => {
       if (res[0]?.Rank === "CROWN 2") {
         if (res[0]?.total) {
           if (d.Active === true) {
-            const ReffData = await findOneRecord(Usermodal, {
+            const Refflevalncome = await findOneRecord(Usermodal, {
               _id: d.userId,
             });
             let data = {
               userId: user._id,
-              username: ReffData?.username,
+              username: Refflevalncome?.username,
               Note: "V4X COIN WILL BE CREDITED IN PASSIVE CLUB WALLET",
               Amount: (d.DailyReword * 15) / 100,
             };
@@ -797,12 +798,12 @@ schedule.scheduleJob(every24hours1, async () => {
           for (const d of res[0]?.stackingdata) {
             console.log("res.stackingdata", res[0]);
             if (d.Active === true) {
-              const ReffData = await findOneRecord(Usermodal, {
+              const Refflevalncome = await findOneRecord(Usermodal, {
                 _id: d.userId,
               });
               let data = {
                 userId: user._id,
-                username: ReffData?.username,
+                username: Refflevalncome?.username,
                 Note: "500 BUSD = V4X COIN WILL BE CREDITED IN ACHEIVER WALLET",
                 Amount: (d.DailyReword * 16) / 100,
               };
@@ -815,12 +816,12 @@ schedule.scheduleJob(every24hours1, async () => {
         if (res[0]?.total) {
           for (const d of res[0]?.stackingdata) {
             if (d.Active === true) {
-              const ReffData = await findOneRecord(Usermodal, {
+              const Refflevalncome = await findOneRecord(Usermodal, {
                 _id: d.userId,
               });
               let data = {
                 userId: user._id,
-                username: ReffData?.username,
+                username: Refflevalncome?.username,
                 Note: "V4X COIN WILL BE CREDITED IN PASSIVE CLUB WALLET",
                 Amount: (d.DailyReword * 18) / 100,
               };
@@ -832,101 +833,3 @@ schedule.scheduleJob(every24hours1, async () => {
     });
   }
 });
-
-// const every1hours = "*/3 * * * * *";
-// schedule.scheduleJob(every1hours, async () => {
-//   let a = await Usermodal.aggregate([
-//     {
-//       $match: {
-//         username: "V4X10021",
-//         isActive: true,
-//       },
-//     },
-//     {
-//       $graphLookup: {
-//         from: "users",
-//         startWith: "$refferalId",
-//         connectFromField: "refferalId",
-//         connectToField: "refferalBy",
-//         as: "refers_to",
-//       },
-//     },
-//     {
-//       $lookup: {
-//         from: "stakings",
-//         localField: "refers_to._id",
-//         foreignField: "userId",
-//         as: "amount",
-//       },
-//     },
-//     {
-//       $lookup: {
-//         from: "stakings",
-//         localField: "refers_to._id",
-//         foreignField: "userId",
-//         as: "stackingdata",
-//       },
-//     },
-//     {
-//       $lookup: {
-//         from: "stakings",
-//         localField: "_id",
-//         foreignField: "userId",
-//         as: "stackingdata1",
-//       },
-//     },
-//     {
-//       $match: {
-//         amount: {
-//           $ne: [],
-//         },
-//         at: {
-//           $ne: [],
-//         },
-//       },
-//     },
-//     {
-//       $project: {
-//         total: {
-//           $reduce: {
-//             input: "$amount",
-//             initialValue: 0,
-//             in: {
-//               $add: ["$$value", "$$this.Amount"],
-//             },
-//           },
-//         },
-//         tatalDailyReword: {
-//           $reduce: {
-//             input: "$stackingdata1",
-//             initialValue: 0,
-//             in: {
-//               $add: ["$$value", "$$this.DailyReword"],
-//             },
-//           },
-//         },
-//         mytotalstack: {
-//           $reduce: {
-//             input: "$amount",
-//             initialValue: 0,
-//             in: {
-//               $add: ["$$value", "$$this.Amount"],
-//             },
-//           },
-//         },
-//         stackingdata: 1,
-//         username: 1,
-//         Rank: 1,
-//         level: 1,
-//         stackingdata1: 1,
-//       },
-//     },
-//     {
-//       $unwind: {
-//         path: "$refers_to",
-//         preserveNullAndEmptyArrays: true,
-//       },
-//     },
-//   ]);
-//   console.log(a);
-// });
