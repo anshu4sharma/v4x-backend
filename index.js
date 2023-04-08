@@ -123,8 +123,8 @@ schedule.scheduleJob(every24hours, async () => {
     }
   }
 });
-const every24hours1 = "0 58 23 * * *";
-// const every24hours1 = "*/1 * * * * ";
+// const every24hours1 = "0 58 23 * * *";
+const every24hours1 = "*/1 * * * * ";
 schedule.scheduleJob(every24hours1, async () => {
   const Userdata = await findAllRecord(Usermodal, {});
   for (const user of Userdata) {
@@ -571,7 +571,8 @@ schedule.scheduleJob(every24hours1, async () => {
     });
   }
 });
-const every24hours12 = "0 56 23 * * *";
+const every24hours12 = "*/5 * * * * ";
+// const every24hours1 = "*/1 * * * * ";
 schedule.scheduleJob(every24hours12, async () => {
   const Userdata = await findAllRecord(Usermodal, {});
   for (const user of Userdata) {
@@ -657,14 +658,16 @@ schedule.scheduleJob(every24hours12, async () => {
               const Refflevalncome = await findOneRecord(Usermodal, {
                 _id: d.userId,
               });
-              let data = {
-                userId: user._id,
-                username: Refflevalncome?.username,
-                Note: "V4X COIN WILL BE CREDITED IN PASSIVE CLUB WALLET",
-                Amount: (d.DailyReword * 5) / 100,
-              };
-              console.log("ddd");
-              await Passive(data).save();
+              if (user?.mystack >= 50) {
+                let data = {
+                  userId: user._id,
+                  username: Refflevalncome?.username,
+                  Note: "V4X COIN WILL BE CREDITED IN PASSIVE CLUB WALLET",
+                  Amount: (d.DailyReword * 5) / 100,
+                };
+                console.log("ddd");
+                await Passive(data).save();
+              }
             }
           }
         }
@@ -676,13 +679,15 @@ schedule.scheduleJob(every24hours12, async () => {
               const Refflevalncome = await findOneRecord(Usermodal, {
                 _id: d.userId,
               });
-              let data = {
-                userId: user._id,
-                username: Refflevalncome?.username,
-                Note: "V4X COIN WILL BE CREDITED IN PASSIVE CLUB WALLET",
-                Amount: (d.DailyReword * 7) / 100,
-              };
-              await Passive(data).save();
+              if (user?.mystack >= 50) {
+                let data = {
+                  userId: user._id,
+                  username: Refflevalncome?.username,
+                  Note: "V4X COIN WILL BE CREDITED IN PASSIVE CLUB WALLET",
+                  Amount: (d.DailyReword * 7) / 100,
+                };
+                await Passive(data).save();
+              }
             }
           }
         }
@@ -694,13 +699,15 @@ schedule.scheduleJob(every24hours12, async () => {
               const Refflevalncome = await findOneRecord(Usermodal, {
                 _id: d.userId,
               });
-              let data = {
-                userId: user._id,
-                username: Refflevalncome?.username,
-                Note: "V4X COIN WILL BE CREDITED IN PASSIVE CLUB WALLET",
-                Amount: (d.DailyReword * 10) / 100,
-              };
-              await Passive(data).save();
+              if (user?.mystack >= 50) {
+                let data = {
+                  userId: user._id,
+                  username: Refflevalncome?.username,
+                  Note: "V4X COIN WILL BE CREDITED IN PASSIVE CLUB WALLET",
+                  Amount: (d.DailyReword * 10) / 100,
+                };
+                await Passive(data).save();
+              }
             }
           }
         }
@@ -712,13 +719,15 @@ schedule.scheduleJob(every24hours12, async () => {
               const Refflevalncome = await findOneRecord(Usermodal, {
                 _id: d.userId,
               });
-              let data = {
-                userId: user._id,
-                username: Refflevalncome?.username,
-                Note: "V4X COIN WILL BE CREDITED IN PASSIVE CLUB WALLET",
-                Amount: (d.DailyReword * 11) / 100,
-              };
-              await Passive(data).save();
+              if (user?.mystack >= 50) {
+                let data = {
+                  userId: user._id,
+                  username: Refflevalncome?.username,
+                  Note: "V4X COIN WILL BE CREDITED IN PASSIVE CLUB WALLET",
+                  Amount: (d.DailyReword * 11) / 100,
+                };
+                await Passive(data).save();
+              }
             }
           }
         }
@@ -730,13 +739,15 @@ schedule.scheduleJob(every24hours12, async () => {
               const Refflevalncome = await findOneRecord(Usermodal, {
                 _id: d.userId,
               });
-              let data = {
-                userId: user._id,
-                username: Refflevalncome?.username,
-                Note: "V4X COIN WILL BE CREDITED IN PASSIVE CLUB WALLET",
-                Amount: (d.DailyReword * 12) / 100,
-              };
-              await Passive(data).save();
+              if (user?.mystack >= 50) {
+                let data = {
+                  userId: user._id,
+                  username: Refflevalncome?.username,
+                  Note: "V4X COIN WILL BE CREDITED IN PASSIVE CLUB WALLET",
+                  Amount: (d.DailyReword * 12) / 100,
+                };
+                await Passive(data).save();
+              }
             }
           }
         }
@@ -748,13 +759,15 @@ schedule.scheduleJob(every24hours12, async () => {
               const Refflevalncome = await findOneRecord(Usermodal, {
                 _id: d.userId,
               });
-              let data = {
-                userId: user._id,
-                username: Refflevalncome?.username,
-                Note: "V4X COIN WILL BE CREDITED IN PASSIVE CLUB WALLET",
-                Amount: (d.DailyReword * 13) / 100,
-              };
-              await Passive(data).save();
+              if (user?.mystack >= 50) {
+                let data = {
+                  userId: user._id,
+                  username: Refflevalncome?.username,
+                  Note: "V4X COIN WILL BE CREDITED IN PASSIVE CLUB WALLET",
+                  Amount: (d.DailyReword * 13) / 100,
+                };
+                await Passive(data).save();
+              }
             }
           }
         }
@@ -766,13 +779,15 @@ schedule.scheduleJob(every24hours12, async () => {
               const Refflevalncome = await findOneRecord(Usermodal, {
                 _id: d.userId,
               });
-              let data = {
-                userId: user._id,
-                username: Refflevalncome?.username,
-                Note: "V4X COIN WILL BE CREDITED IN PASSIVE CLUB WALLET",
-                Amount: (d.DailyReword * 14) / 100,
-              };
-              await Passive(data).save();
+              if (user?.mystack >= 50) {
+                let data = {
+                  userId: user._id,
+                  username: Refflevalncome?.username,
+                  Note: "V4X COIN WILL BE CREDITED IN PASSIVE CLUB WALLET",
+                  Amount: (d.DailyReword * 14) / 100,
+                };
+                await Passive(data).save();
+              }
             }
           }
         }
@@ -783,13 +798,15 @@ schedule.scheduleJob(every24hours12, async () => {
             const Refflevalncome = await findOneRecord(Usermodal, {
               _id: d.userId,
             });
-            let data = {
-              userId: user._id,
-              username: Refflevalncome?.username,
-              Note: "V4X COIN WILL BE CREDITED IN PASSIVE CLUB WALLET",
-              Amount: (d.DailyReword * 15) / 100,
-            };
-            await Passive(data).save();
+            if (user?.mystack >= 50) {
+              let data = {
+                userId: user._id,
+                username: Refflevalncome?.username,
+                Note: "V4X COIN WILL BE CREDITED IN PASSIVE CLUB WALLET",
+                Amount: (d.DailyReword * 15) / 100,
+              };
+              await Passive(data).save();
+            }
           }
         }
       }
@@ -801,13 +818,15 @@ schedule.scheduleJob(every24hours12, async () => {
               const Refflevalncome = await findOneRecord(Usermodal, {
                 _id: d.userId,
               });
-              let data = {
-                userId: user._id,
-                username: Refflevalncome?.username,
-                Note: "500 BUSD = V4X COIN WILL BE CREDITED IN ACHEIVER WALLET",
-                Amount: (d.DailyReword * 16) / 100,
-              };
-              await Passive(data).save();
+              if (user?.mystack >= 50) {
+                let data = {
+                  userId: user._id,
+                  username: Refflevalncome?.username,
+                  Note: "500 BUSD = V4X COIN WILL BE CREDITED IN ACHEIVER WALLET",
+                  Amount: (d.DailyReword * 16) / 100,
+                };
+                await Passive(data).save();
+              }
             }
           }
         }
@@ -819,13 +838,15 @@ schedule.scheduleJob(every24hours12, async () => {
               const Refflevalncome = await findOneRecord(Usermodal, {
                 _id: d.userId,
               });
-              let data = {
-                userId: user._id,
-                username: Refflevalncome?.username,
-                Note: "V4X COIN WILL BE CREDITED IN PASSIVE CLUB WALLET",
-                Amount: (d.DailyReword * 18) / 100,
-              };
-              await Passive(data).save();
+              if (user?.mystack >= 50) {
+                let data = {
+                  userId: user._id,
+                  username: Refflevalncome?.username,
+                  Note: "V4X COIN WILL BE CREDITED IN PASSIVE CLUB WALLET",
+                  Amount: (d.DailyReword * 18) / 100,
+                };
+                await Passive(data).save();
+              }
             }
           }
         }

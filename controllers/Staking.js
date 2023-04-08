@@ -147,25 +147,27 @@ exports.stack = {
               });
               if (ReffData !== null) {
                 const price = await findAllRecord(V4Xpricemodal, {});
-                await updateRecord(
-                  Walletmodal,
-                  {
-                    userId: ReffData._id,
-                  },
-                  {
-                    $inc: {
-                      mainWallet: (req.body.Amount * price[0].price * 10) / 100,
+                if (ReffData.mystack >= 50) {
+                  await updateRecord(
+                    Walletmodal,
+                    {
+                      userId: ReffData._id,
                     },
-                  }
-                );
-                await Stakingbonus({
-                  userId: ReffData._id,
-                  ReffId: decoded.profile._id,
-                  Amount: (req.body.Amount * price[0].price * 10) / 100,
-                  Note: `You Got Refer and Earn Income From ${decoded.profile.username}`,
-                  Active: true,
-                }).save();
-
+                    {
+                      $inc: {
+                        mainWallet:
+                          (req.body.Amount * price[0].price * 10) / 100,
+                      },
+                    }
+                  );
+                  await Stakingbonus({
+                    userId: ReffData._id,
+                    ReffId: decoded.profile._id,
+                    Amount: (req.body.Amount * price[0].price * 10) / 100,
+                    Note: `You Got Refer and Earn Income From ${decoded.profile.username}`,
+                    Active: true,
+                  }).save();
+                }
                 updateRecord(
                   Walletmodal,
                   { userId: decoded.profile._id },
@@ -215,9 +217,9 @@ exports.stack = {
                   if (!Refflevalncome1) {
                     return;
                   }
-                  console.log("Refflevalncome1",Refflevalncome1);
+                  console.log("Refflevalncome1", Refflevalncome1);
                   if (Refflevalncome1.leval >= 1) {
-                    if (Refflevalncome1.mystack >= 100) {
+                    if (Refflevalncome1.mystack >= 50) {
                       let data1 = {
                         userId: Refflevalncome1._id,
                         Note: `You Got Level ${1} Income`,
@@ -240,7 +242,7 @@ exports.stack = {
                     return;
                   }
                   if (Refflevalncome2.leval >= 2) {
-                    if (Refflevalncome2.mystack >= 100) {
+                    if (Refflevalncome2.mystack >= 50) {
                       let data2 = {
                         userId: Refflevalncome2._id,
                         Note: `You Got Level ${2} Income`,
@@ -263,7 +265,7 @@ exports.stack = {
                     return;
                   }
                   if (Refflevalncome3.leval >= 3) {
-                    if (Refflevalncome3.mystack >= 100) {
+                    if (Refflevalncome3.mystack >= 50) {
                       let data3 = {
                         userId: Refflevalncome3._id,
                         Note: `You Got Level ${3} Income`,
@@ -286,7 +288,7 @@ exports.stack = {
                     return;
                   }
                   if (Refflevalncome4.leval >= 4) {
-                    if (Refflevalncome4.mystack >= 100) {
+                    if (Refflevalncome4.mystack >= 50) {
                       let data4 = {
                         userId: Refflevalncome4._id,
                         Note: `You Got Level ${4} Income`,
@@ -309,7 +311,7 @@ exports.stack = {
                     return;
                   }
                   if (Refflevalncome5.leval >= 5) {
-                    if (Refflevalncome5.mystack >= 100) {
+                    if (Refflevalncome5.mystack >= 50) {
                       let data5 = {
                         userId: Refflevalncome5._id,
                         Note: `You Got Level ${5} Income`,
@@ -332,7 +334,7 @@ exports.stack = {
                     return;
                   }
                   if (Refflevalncome6.leval >= 6) {
-                    if (Refflevalncome6.mystack >= 100) {
+                    if (Refflevalncome6.mystack >= 50) {
                       let data6 = {
                         userId: Refflevalncome6._id,
                         Note: `You Got Level ${6} Income`,
@@ -355,7 +357,7 @@ exports.stack = {
                     return;
                   }
                   if (Refflevalncome7.leval >= 7) {
-                    if (Refflevalncome7.mystack >= 100) {
+                    if (Refflevalncome7.mystack >= 50) {
                       let data7 = {
                         userId: Refflevalncome7._id,
                         Note: `You Got Level ${7} Income`,
@@ -378,7 +380,7 @@ exports.stack = {
                     return;
                   }
                   if (Refflevalncome8.leval >= 8) {
-                    if (Refflevalncome8.mystack >= 100) {
+                    if (Refflevalncome8.mystack >= 50) {
                       let data8 = {
                         userId: Refflevalncome8._id,
                         Note: `You Got Level ${8} Income`,
@@ -401,7 +403,7 @@ exports.stack = {
                     return;
                   }
                   if (Refflevalncome9.leval >= 9) {
-                    if (Refflevalncome9.mystack >= 100) {
+                    if (Refflevalncome9.mystack >= 50) {
                       let data9 = {
                         userId: Refflevalncome9._id,
                         Note: `You Got Level ${9} Income`,
@@ -425,7 +427,7 @@ exports.stack = {
                   }
 
                   if (Refflevalncome10.leval >= 10) {
-                    if (Refflevalncome10.mystack >= 100) {
+                    if (Refflevalncome10.mystack >= 50) {
                       let data10 = {
                         userId: Refflevalncome10._id,
                         Note: `You Got Level ${10} Income`,
@@ -449,7 +451,7 @@ exports.stack = {
                   }
 
                   if (Refflevalncome11.leval >= 11) {
-                    if (Refflevalncome11.mystack >= 100) {
+                    if (Refflevalncome11.mystack >= 50) {
                       let data11 = {
                         userId: Refflevalncome11._id,
                         Note: `You Got Level ${11} Income`,
@@ -472,7 +474,7 @@ exports.stack = {
                     return;
                   }
                   if (Refflevalncome12.leval >= 12) {
-                    if (Refflevalncome12.mystack >= 100) {
+                    if (Refflevalncome12.mystack >= 50) {
                       let data12 = {
                         userId: Refflevalncome12._id,
                         Note: `You Got Level ${12} Income`,
@@ -495,7 +497,7 @@ exports.stack = {
                     return;
                   }
                   if (Refflevalncome13.leval >= 13) {
-                    if (Refflevalncome13.mystack >= 100) {
+                    if (Refflevalncome13.mystack >= 50) {
                       let data13 = {
                         userId: Refflevalncome13._id,
                         Note: `You Got Level ${13} Income`,
@@ -518,7 +520,7 @@ exports.stack = {
                     return;
                   }
                   if (Refflevalncome14.leval >= 14) {
-                    if (Refflevalncome14.mystack >= 100) {
+                    if (Refflevalncome14.mystack >= 50) {
                       let data14 = {
                         userId: Refflevalncome14._id,
                         Note: `You Got Level ${14} Income`,
@@ -541,7 +543,7 @@ exports.stack = {
                     return;
                   }
                   if (Refflevalncome15.leval >= 15) {
-                    if (Refflevalncome15.mystack >= 100) {
+                    if (Refflevalncome15.mystack >= 50) {
                       let data15 = {
                         userId: Refflevalncome15._id,
                         Note: `You Got Level ${15} Income`,
@@ -564,7 +566,7 @@ exports.stack = {
                     return;
                   }
                   if (Refflevalncome16.leval >= 16) {
-                    if (Refflevalncome16.mystack >= 100) {
+                    if (Refflevalncome16.mystack >= 50) {
                       let data16 = {
                         userId: Refflevalncome16._id,
                         Note: `You Got Level ${16} Income`,
@@ -587,7 +589,7 @@ exports.stack = {
                     return;
                   }
                   if (Refflevalncome17.leval >= 17) {
-                    if (Refflevalncome17.mystack >= 100) {
+                    if (Refflevalncome17.mystack >= 50) {
                       let data17 = {
                         userId: Refflevalncome17._id,
                         Note: `You Got Level ${17} Income`,
@@ -610,7 +612,7 @@ exports.stack = {
                     return;
                   }
                   if (Refflevalncome18.leval >= 18) {
-                    if (Refflevalncome18.mystack >= 100) {
+                    if (Refflevalncome18.mystack >= 50) {
                       let data18 = {
                         userId: Refflevalncome18._id,
                         Note: `You Got Level ${18} Income`,
@@ -764,24 +766,27 @@ exports.stack = {
               });
               if (ReffData !== null) {
                 const price = await findAllRecord(V4Xpricemodal, {});
-                await updateRecord(
-                  Walletmodal,
-                  {
-                    userId: ReffData._id,
-                  },
-                  {
-                    $inc: {
-                      mainWallet: (req.body.Amount * price[0].price * 10) / 100,
+                if (ReffData.mystack >= 50) {
+                  await updateRecord(
+                    Walletmodal,
+                    {
+                      userId: ReffData._id,
                     },
-                  }
-                );
-                await Stakingbonus({
-                  userId: ReffData._id,
-                  ReffId: decoded.profile._id,
-                  Amount: (req.body.Amount * price[0].price * 10) / 100,
-                  Note: `You Got Refer and Earn Income From ${decoded.profile.username}`,
-                  Active: true,
-                }).save();
+                    {
+                      $inc: {
+                        mainWallet:
+                          (req.body.Amount * price[0].price * 10) / 100,
+                      },
+                    }
+                  );
+                  await Stakingbonus({
+                    userId: ReffData._id,
+                    ReffId: decoded.profile._id,
+                    Amount: (req.body.Amount * price[0].price * 10) / 100,
+                    Note: `You Got Refer and Earn Income From ${decoded.profile.username}`,
+                    Active: true,
+                  }).save();
+                }
                 const ReffData2 = await findAllRecord(Usermodal, {
                   refferalBy: ReffData.username,
                   isValid: true,
@@ -826,9 +831,9 @@ exports.stack = {
                   if (!Refflevalncome1) {
                     return;
                   }
-                  console.log("Refflevalncome1",Refflevalncome1);
+                  console.log("Refflevalncome1", Refflevalncome1);
                   if (Refflevalncome1.leval >= 1) {
-                    if (Refflevalncome1.mystack >= 100) {
+                    if (Refflevalncome1.mystack >= 50) {
                       let data1 = {
                         userId: Refflevalncome1._id,
                         Note: `You Got Level ${1} Income`,
@@ -851,7 +856,7 @@ exports.stack = {
                     return;
                   }
                   if (Refflevalncome2.leval >= 2) {
-                    if (Refflevalncome2.mystack >= 100) {
+                    if (Refflevalncome2.mystack >= 50) {
                       let data2 = {
                         userId: Refflevalncome2._id,
                         Note: `You Got Level ${2} Income`,
@@ -874,7 +879,7 @@ exports.stack = {
                     return;
                   }
                   if (Refflevalncome3.leval >= 3) {
-                    if (Refflevalncome3.mystack >= 100) {
+                    if (Refflevalncome3.mystack >= 50) {
                       let data3 = {
                         userId: Refflevalncome3._id,
                         Note: `You Got Level ${3} Income`,
@@ -897,7 +902,7 @@ exports.stack = {
                     return;
                   }
                   if (Refflevalncome4.leval >= 4) {
-                    if (Refflevalncome4.mystack >= 100) {
+                    if (Refflevalncome4.mystack >= 50) {
                       let data4 = {
                         userId: Refflevalncome4._id,
                         Note: `You Got Level ${4} Income`,
@@ -920,7 +925,7 @@ exports.stack = {
                     return;
                   }
                   if (Refflevalncome5.leval >= 5) {
-                    if (Refflevalncome5.mystack >= 100) {
+                    if (Refflevalncome5.mystack >= 50) {
                       let data5 = {
                         userId: Refflevalncome5._id,
                         Note: `You Got Level ${5} Income`,
@@ -943,7 +948,7 @@ exports.stack = {
                     return;
                   }
                   if (Refflevalncome6.leval >= 6) {
-                    if (Refflevalncome6.mystack >= 100) {
+                    if (Refflevalncome6.mystack >= 50) {
                       let data6 = {
                         userId: Refflevalncome6._id,
                         Note: `You Got Level ${6} Income`,
@@ -966,7 +971,7 @@ exports.stack = {
                     return;
                   }
                   if (Refflevalncome7.leval >= 7) {
-                    if (Refflevalncome7.mystack >= 100) {
+                    if (Refflevalncome7.mystack >= 50) {
                       let data7 = {
                         userId: Refflevalncome7._id,
                         Note: `You Got Level ${7} Income`,
@@ -989,7 +994,7 @@ exports.stack = {
                     return;
                   }
                   if (Refflevalncome8.leval >= 8) {
-                    if (Refflevalncome8.mystack >= 100) {
+                    if (Refflevalncome8.mystack >= 50) {
                       let data8 = {
                         userId: Refflevalncome8._id,
                         Note: `You Got Level ${8} Income`,
@@ -1012,7 +1017,7 @@ exports.stack = {
                     return;
                   }
                   if (Refflevalncome9.leval >= 9) {
-                    if (Refflevalncome9.mystack >= 100) {
+                    if (Refflevalncome9.mystack >= 50) {
                       let data9 = {
                         userId: Refflevalncome9._id,
                         Note: `You Got Level ${9} Income`,
@@ -1036,7 +1041,7 @@ exports.stack = {
                   }
 
                   if (Refflevalncome10.leval >= 10) {
-                    if (Refflevalncome10.mystack >= 100) {
+                    if (Refflevalncome10.mystack >= 50) {
                       let data10 = {
                         userId: Refflevalncome10._id,
                         Note: `You Got Level ${10} Income`,
@@ -1060,7 +1065,7 @@ exports.stack = {
                   }
 
                   if (Refflevalncome11.leval >= 11) {
-                    if (Refflevalncome11.mystack >= 100) {
+                    if (Refflevalncome11.mystack >= 50) {
                       let data11 = {
                         userId: Refflevalncome11._id,
                         Note: `You Got Level ${11} Income`,
@@ -1083,7 +1088,7 @@ exports.stack = {
                     return;
                   }
                   if (Refflevalncome12.leval >= 12) {
-                    if (Refflevalncome12.mystack >= 100) {
+                    if (Refflevalncome12.mystack >= 50) {
                       let data12 = {
                         userId: Refflevalncome12._id,
                         Note: `You Got Level ${12} Income`,
@@ -1106,7 +1111,7 @@ exports.stack = {
                     return;
                   }
                   if (Refflevalncome13.leval >= 13) {
-                    if (Refflevalncome13.mystack >= 100) {
+                    if (Refflevalncome13.mystack >= 50) {
                       let data13 = {
                         userId: Refflevalncome13._id,
                         Note: `You Got Level ${13} Income`,
@@ -1129,7 +1134,7 @@ exports.stack = {
                     return;
                   }
                   if (Refflevalncome14.leval >= 14) {
-                    if (Refflevalncome14.mystack >= 100) {
+                    if (Refflevalncome14.mystack >= 50) {
                       let data14 = {
                         userId: Refflevalncome14._id,
                         Note: `You Got Level ${14} Income`,
@@ -1152,7 +1157,7 @@ exports.stack = {
                     return;
                   }
                   if (Refflevalncome15.leval >= 15) {
-                    if (Refflevalncome15.mystack >= 100) {
+                    if (Refflevalncome15.mystack >= 50) {
                       let data15 = {
                         userId: Refflevalncome15._id,
                         Note: `You Got Level ${15} Income`,
@@ -1175,7 +1180,7 @@ exports.stack = {
                     return;
                   }
                   if (Refflevalncome16.leval >= 16) {
-                    if (Refflevalncome16.mystack >= 100) {
+                    if (Refflevalncome16.mystack >= 50) {
                       let data16 = {
                         userId: Refflevalncome16._id,
                         Note: `You Got Level ${16} Income`,
@@ -1198,7 +1203,7 @@ exports.stack = {
                     return;
                   }
                   if (Refflevalncome17.leval >= 17) {
-                    if (Refflevalncome17.mystack >= 100) {
+                    if (Refflevalncome17.mystack >= 50) {
                       let data17 = {
                         userId: Refflevalncome17._id,
                         Note: `You Got Level ${17} Income`,
@@ -1221,7 +1226,7 @@ exports.stack = {
                     return;
                   }
                   if (Refflevalncome18.leval >= 18) {
-                    if (Refflevalncome18.mystack >= 100) {
+                    if (Refflevalncome18.mystack >= 50) {
                       let data18 = {
                         userId: Refflevalncome18._id,
                         Note: `You Got Level ${18} Income`,
