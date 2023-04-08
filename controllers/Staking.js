@@ -215,6 +215,7 @@ exports.stack = {
                   if (!Refflevalncome1) {
                     return;
                   }
+                  console.log("Refflevalncome1",Refflevalncome1);
                   if (Refflevalncome1.leval >= 1) {
                     if (Refflevalncome1.mystack >= 100) {
                       let data1 = {
@@ -223,7 +224,7 @@ exports.stack = {
                         Usernameby: decoded.profile.username,
                         Amount: (req.body.Amount * 4) / 100,
                       };
-                      await Communitymodal(data).save();
+                      await Communitymodal(data1).save();
 
                       console.log("===============>11", {
                         Refflevalncome1,
@@ -246,7 +247,7 @@ exports.stack = {
                         Usernameby: decoded.profile.username,
                         Amount: (req.body.Amount * 3) / 100,
                       };
-                      await Communitymodal(data).save();
+                      await Communitymodal(data2).save();
 
                       console.log("===============>22", {
                         Refflevalncome2,
@@ -269,7 +270,7 @@ exports.stack = {
                         Usernameby: decoded.profile.username,
                         Amount: (req.body.Amount * 2) / 100,
                       };
-                      await Communitymodal(data).save();
+                      await Communitymodal(data3).save();
 
                       console.log("===============>33", {
                         Refflevalncome3,
@@ -292,7 +293,7 @@ exports.stack = {
                         Usernameby: decoded.profile.username,
                         Amount: (req.body.Amount * 1) / 100,
                       };
-                      await Communitymodal(data).save();
+                      await Communitymodal(data4).save();
 
                       console.log("===============>44", {
                         Refflevalncome4,
@@ -315,7 +316,7 @@ exports.stack = {
                         Usernameby: decoded.profile.username,
                         Amount: (req.body.Amount * 0.5) / 100,
                       };
-                      await Communitymodal(data).save();
+                      await Communitymodal(data5).save();
 
                       console.log("===============>55", {
                         Refflevalncome5,
@@ -338,7 +339,7 @@ exports.stack = {
                         Usernameby: decoded.profile.username,
                         Amount: (req.body.Amount * 0.5) / 100,
                       };
-                      await Communitymodal(data).save();
+                      await Communitymodal(data6).save();
 
                       console.log("===============>66", {
                         Refflevalncome6,
@@ -361,7 +362,7 @@ exports.stack = {
                         Usernameby: decoded.profile.username,
                         Amount: (req.body.Amount * 0.5) / 100,
                       };
-                      await Communitymodal(data).save();
+                      await Communitymodal(data7).save();
 
                       console.log("===============>77", {
                         Refflevalncome7,
@@ -384,7 +385,7 @@ exports.stack = {
                         Usernameby: decoded.profile.username,
                         Amount: (req.body.Amount * 0.5) / 100,
                       };
-                      await Communitymodal(data).save();
+                      await Communitymodal(data8).save();
 
                       console.log("===============>88", {
                         Refflevalncome8,
@@ -407,7 +408,7 @@ exports.stack = {
                         Usernameby: decoded.profile.username,
                         Amount: (req.body.Amount * 0.5) / 100,
                       };
-                      await Communitymodal(data).save();
+                      await Communitymodal(data9).save();
 
                       console.log("===============>99", {
                         Refflevalncome9,
@@ -431,7 +432,7 @@ exports.stack = {
                         Usernameby: decoded.profile.username,
                         Amount: (req.body.Amount * 0.5) / 100,
                       };
-                      await Communitymodal(data).save();
+                      await Communitymodal(data10).save();
 
                       console.log("===============>1010", {
                         Refflevalncome10,
@@ -455,7 +456,7 @@ exports.stack = {
                         Usernameby: decoded.profile.username,
                         Amount: (req.body.Amount * 0.5) / 100,
                       };
-                      await Communitymodal(data).save();
+                      await Communitymodal(data11).save();
 
                       console.log("===============>1111", {
                         Refflevalncome11,
@@ -478,7 +479,7 @@ exports.stack = {
                         Usernameby: decoded.profile.username,
                         Amount: (req.body.Amount * 0.5) / 100,
                       };
-                      await Communitymodal(data).save();
+                      await Communitymodal(data12).save();
 
                       console.log("===============>1212", {
                         Refflevalncome12,
@@ -501,7 +502,7 @@ exports.stack = {
                         Usernameby: decoded.profile.username,
                         Amount: (req.body.Amount * 0.5) / 100,
                       };
-                      await Communitymodal(data).save();
+                      await Communitymodal(data13).save();
 
                       console.log("===============>1313", {
                         Refflevalncome13,
@@ -524,7 +525,7 @@ exports.stack = {
                         Usernameby: decoded.profile.username,
                         Amount: (req.body.Amount * 0.5) / 100,
                       };
-                      await Communitymodal(data).save();
+                      await Communitymodal(data14).save();
 
                       console.log("===============>1414", {
                         Refflevalncome14,
@@ -547,7 +548,7 @@ exports.stack = {
                         Usernameby: decoded.profile.username,
                         Amount: (req.body.Amount * 1) / 100,
                       };
-                      await Communitymodal(data).save();
+                      await Communitymodal(data15).save();
 
                       console.log("===============>1515", {
                         Refflevalncome15,
@@ -570,7 +571,7 @@ exports.stack = {
                         Usernameby: decoded.profile.username,
                         Amount: (req.body.Amount * 2) / 100,
                       };
-                      await Communitymodal(data).save();
+                      await Communitymodal(data16).save();
 
                       console.log("===============>1616", {
                         Refflevalncome16,
@@ -593,7 +594,7 @@ exports.stack = {
                         Usernameby: decoded.profile.username,
                         Amount: (req.body.Amount * 3) / 100,
                       };
-                      await Communitymodal(data).save();
+                      await Communitymodal(data17).save();
 
                       console.log("===============>1717", {
                         Refflevalncome17,
@@ -616,7 +617,7 @@ exports.stack = {
                         Usernameby: decoded.profile.username,
                         Amount: (req.body.Amount * 4) / 100,
                       };
-                      await Communitymodal(data).save();
+                      await Communitymodal(data18).save();
                       console.log("===============>1818", {
                         Refflevalncome18,
                         data18,
@@ -825,6 +826,7 @@ exports.stack = {
                   if (!Refflevalncome1) {
                     return;
                   }
+                  console.log("Refflevalncome1",Refflevalncome1);
                   if (Refflevalncome1.leval >= 1) {
                     if (Refflevalncome1.mystack >= 100) {
                       let data1 = {
@@ -833,7 +835,7 @@ exports.stack = {
                         Usernameby: decoded.profile.username,
                         Amount: (req.body.Amount * 4) / 100,
                       };
-                      await Communitymodal(data).save();
+                      await Communitymodal(data1).save();
 
                       console.log("===============>11", {
                         Refflevalncome1,
@@ -856,7 +858,7 @@ exports.stack = {
                         Usernameby: decoded.profile.username,
                         Amount: (req.body.Amount * 3) / 100,
                       };
-                      await Communitymodal(data).save();
+                      await Communitymodal(data2).save();
 
                       console.log("===============>22", {
                         Refflevalncome2,
@@ -879,7 +881,7 @@ exports.stack = {
                         Usernameby: decoded.profile.username,
                         Amount: (req.body.Amount * 2) / 100,
                       };
-                      await Communitymodal(data).save();
+                      await Communitymodal(data3).save();
 
                       console.log("===============>33", {
                         Refflevalncome3,
@@ -902,7 +904,7 @@ exports.stack = {
                         Usernameby: decoded.profile.username,
                         Amount: (req.body.Amount * 1) / 100,
                       };
-                      await Communitymodal(data).save();
+                      await Communitymodal(data4).save();
 
                       console.log("===============>44", {
                         Refflevalncome4,
@@ -925,7 +927,7 @@ exports.stack = {
                         Usernameby: decoded.profile.username,
                         Amount: (req.body.Amount * 0.5) / 100,
                       };
-                      await Communitymodal(data).save();
+                      await Communitymodal(data5).save();
 
                       console.log("===============>55", {
                         Refflevalncome5,
@@ -948,7 +950,7 @@ exports.stack = {
                         Usernameby: decoded.profile.username,
                         Amount: (req.body.Amount * 0.5) / 100,
                       };
-                      await Communitymodal(data).save();
+                      await Communitymodal(data6).save();
 
                       console.log("===============>66", {
                         Refflevalncome6,
@@ -971,7 +973,7 @@ exports.stack = {
                         Usernameby: decoded.profile.username,
                         Amount: (req.body.Amount * 0.5) / 100,
                       };
-                      await Communitymodal(data).save();
+                      await Communitymodal(data7).save();
 
                       console.log("===============>77", {
                         Refflevalncome7,
@@ -994,7 +996,7 @@ exports.stack = {
                         Usernameby: decoded.profile.username,
                         Amount: (req.body.Amount * 0.5) / 100,
                       };
-                      await Communitymodal(data).save();
+                      await Communitymodal(data8).save();
 
                       console.log("===============>88", {
                         Refflevalncome8,
@@ -1017,7 +1019,7 @@ exports.stack = {
                         Usernameby: decoded.profile.username,
                         Amount: (req.body.Amount * 0.5) / 100,
                       };
-                      await Communitymodal(data).save();
+                      await Communitymodal(data9).save();
 
                       console.log("===============>99", {
                         Refflevalncome9,
@@ -1041,7 +1043,7 @@ exports.stack = {
                         Usernameby: decoded.profile.username,
                         Amount: (req.body.Amount * 0.5) / 100,
                       };
-                      await Communitymodal(data).save();
+                      await Communitymodal(data10).save();
 
                       console.log("===============>1010", {
                         Refflevalncome10,
@@ -1065,7 +1067,7 @@ exports.stack = {
                         Usernameby: decoded.profile.username,
                         Amount: (req.body.Amount * 0.5) / 100,
                       };
-                      await Communitymodal(data).save();
+                      await Communitymodal(data11).save();
 
                       console.log("===============>1111", {
                         Refflevalncome11,
@@ -1088,7 +1090,7 @@ exports.stack = {
                         Usernameby: decoded.profile.username,
                         Amount: (req.body.Amount * 0.5) / 100,
                       };
-                      await Communitymodal(data).save();
+                      await Communitymodal(data12).save();
 
                       console.log("===============>1212", {
                         Refflevalncome12,
@@ -1111,7 +1113,7 @@ exports.stack = {
                         Usernameby: decoded.profile.username,
                         Amount: (req.body.Amount * 0.5) / 100,
                       };
-                      await Communitymodal(data).save();
+                      await Communitymodal(data13).save();
 
                       console.log("===============>1313", {
                         Refflevalncome13,
@@ -1134,7 +1136,7 @@ exports.stack = {
                         Usernameby: decoded.profile.username,
                         Amount: (req.body.Amount * 0.5) / 100,
                       };
-                      await Communitymodal(data).save();
+                      await Communitymodal(data14).save();
 
                       console.log("===============>1414", {
                         Refflevalncome14,
@@ -1157,7 +1159,7 @@ exports.stack = {
                         Usernameby: decoded.profile.username,
                         Amount: (req.body.Amount * 1) / 100,
                       };
-                      await Communitymodal(data).save();
+                      await Communitymodal(data15).save();
 
                       console.log("===============>1515", {
                         Refflevalncome15,
@@ -1180,7 +1182,7 @@ exports.stack = {
                         Usernameby: decoded.profile.username,
                         Amount: (req.body.Amount * 2) / 100,
                       };
-                      await Communitymodal(data).save();
+                      await Communitymodal(data16).save();
 
                       console.log("===============>1616", {
                         Refflevalncome16,
@@ -1203,7 +1205,7 @@ exports.stack = {
                         Usernameby: decoded.profile.username,
                         Amount: (req.body.Amount * 3) / 100,
                       };
-                      await Communitymodal(data).save();
+                      await Communitymodal(data17).save();
 
                       console.log("===============>1717", {
                         Refflevalncome17,
@@ -1226,7 +1228,7 @@ exports.stack = {
                         Usernameby: decoded.profile.username,
                         Amount: (req.body.Amount * 4) / 100,
                       };
-                      await Communitymodal(data).save();
+                      await Communitymodal(data18).save();
                       console.log("===============>1818", {
                         Refflevalncome18,
                         data18,
