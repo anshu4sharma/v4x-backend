@@ -2379,13 +2379,20 @@ exports.stack = {
               },
             },
             {
+              $lookup: {
+                from: "users",
+                localField: "referBY.username",
+                foreignField: "refferalBy",
+                as: "result",
+              },
+            },
+            {
               $project: {
                 referredUser: 0,
                 walletaddress: 0,
                 password: 0,
                 isActive: 0,
                 isValid: 0,
-                username: 0,
                 createdAt: 0,
                 updatedAt: 0,
                 __v: 0,
