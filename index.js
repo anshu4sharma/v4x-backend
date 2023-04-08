@@ -18,7 +18,6 @@ const {
 } = require("./library/commonQueries");
 const Walletmodal = require("./models/Wallet");
 const Stakingbonus = require("./models/Stakingbonus");
-const Achivement = require("./models/Achivement");
 const V4Xpricemodal = require("./models/V4XLiveRate");
 const Passive = require("./models/Passive");
 

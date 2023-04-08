@@ -26,6 +26,7 @@ const Communitymodal = require("../models/Community");
 const Achivementmodal = require("../models/Achivement");
 const Passivemodal = require("../models/Passive");
 const V4Xpricemodal = require("../models/V4XLiveRate");
+const Achivement = require("../models/Achivement");
 
 let levalreword = [
   {
@@ -1424,7 +1425,6 @@ exports.stack = {
             _id: decoded.profile._id,
             isValid: true,
           });
-          if (ReffData !== null) {
             await Usermodal.aggregate([
               {
                 $match: {
@@ -1501,13 +1501,13 @@ exports.stack = {
                 },
               },
             ]).then(async (res) => {
-              console.log(res[0]);
               if (res[0]?.Rank == "DIRECT") {
                 const Refflevalncome = await findAllRecord(Usermodal, {
                   refferalBy: res[0].username,
                   Rank: "DIRECT",
                 });
                 if (Refflevalncome.length >= 4) {
+                  console.log(res[0]);
                   let data = await updateRecord(
                     Usermodal,
                     {
@@ -1867,7 +1867,6 @@ exports.stack = {
                 }
               }
             });
-          }
           const price = await findAllRecord(V4Xpricemodal, {});
           return successResponse(res, {
             message: "wallet data get successfully",
