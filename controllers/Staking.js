@@ -1800,7 +1800,7 @@ exports.stack = {
                   userId: decoded.profile._id,
                   Note: `Staking`,
                   Amount: req.body.Amount,
-                  balace: res.mainWallet,
+                  balace: res.v4xWallet,
                   type: 0,
                   Active: true,
                 }).save();
