@@ -52,7 +52,7 @@ exports.register = {
       const walletaddress = await findOneRecord(Usermodal, {
         walletaddress: req.body.walletaddress,
       });
-      if (refferalBygetdata === null) {
+      if (walletaddress === null) {
         if (refferalBygetdata !== null) {
           const userdata = await findOneRecord(Usermodal, {
             email: req.body.email,
