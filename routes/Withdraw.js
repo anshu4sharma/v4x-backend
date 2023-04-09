@@ -9,5 +9,11 @@ router.get("/stackingbouns", (req, res) => {
 router.post("/checkotp", (req, res) => {
   return WithdrawController.Withdraw.Withdrawotpcheck(req, res);
 });
+router.get("/mainWallet", (req, res) => {
+  return WithdrawController.Withdraw.MainWallet(req, res);
+});
+router.get("/v4xWallet", (req, res) => {
+  return WithdrawController.Withdraw.V4xWallet(req, res);
+});
 
 module.exports = router;

@@ -21,6 +21,8 @@ const {
 const Token = require("../models/Token");
 const { tokenverify } = require("../middleware/token");
 const otp = require("../models/otp");
+const Mainwallatesc = require("../models/Mainwallate");
+const Ewallateesc = require("../models/Ewallate");
 let transport = nodemailer.createTransport({
   host: "smtp.gmail.com",
   port: 465,
@@ -132,6 +134,50 @@ exports.Withdraw = {
           });
         }
       }
+    }
+  },
+  MainWallet: async (req, res) => {
+    if (req.headers.authorization) {
+      let { err, decoded } = await tokenverify(
+        req.headers.authorization.split(" ")[1]
+      );
+      if (err) {
+        notFoundResponse(res, {
+          message: "user not found",
+        });
+      }
+      if (decoded) {
+        let data = await findAllRecord(Mainwallatesc, {
+          userId: decoded.profile._id,
+        });
+        return successResponse(res, {
+          message: "Mainwallatesc get successfully",
+          data: data,
+        });
+      }
+    } else {
+    }
+  },
+  V4xWallet: async (req, res) => {
+    if (req.headers.authorization) {
+      let { err, decoded } = await tokenverify(
+        req.headers.authorization.split(" ")[1]
+      );
+      if (err) {
+        notFoundResponse(res, {
+          message: "user not found",
+        });
+      }
+      if (decoded) {
+        let data = await findAllRecord(Ewallateesc, {
+          userId: decoded.profile._id,
+        });
+        return successResponse(res, {
+          message: "Mainwallatesc get successfully",
+          data: data,
+        });
+      }
+    } else {
     }
   },
 };

@@ -27,6 +27,8 @@ const Achivementmodal = require("../models/Achivement");
 const Passivemodal = require("../models/Passive");
 const V4Xpricemodal = require("../models/V4XLiveRate");
 const Achivement = require("../models/Achivement");
+const Mainwallatesc = require("../models/Mainwallate");
+const Ewallateesc = require("../models/Ewallate");
 
 let levalreword = [
   {
@@ -146,6 +148,22 @@ exports.stack = {
                 username: decoded.profile.refferalBy,
                 isValid: true,
               });
+              await updateRecord(
+                Walletmodal,
+                {
+                  userId: decoded.profile._id,
+                },
+                {
+                  mainWallet: WalletData.mainWallet - req.body.Amount,
+                }
+              );
+              await Mainwallatesc({
+                userId: decoded.profile._id,
+                Note: `stacking`,
+                Amount: req.body.Amount,
+                type: 0,
+                Active: true,
+              }).save();
               if (ReffData !== null) {
                 const price = await findAllRecord(V4Xpricemodal, {});
                 if (ReffData.mystack >= 50) {
@@ -161,6 +179,13 @@ exports.stack = {
                       },
                     }
                   );
+                  await Mainwallatesc({
+                    userId: ReffData._id,
+                    Note: `You Got Refer and Earn Income From ${decoded.profile.username}`,
+                    Amount: (req.body.Amount * price[0].price * 10) / 100,
+                    type: 1,
+                    Active: true,
+                  }).save();
                   await Stakingbonus({
                     userId: ReffData._id,
                     ReffId: decoded.profile._id,
@@ -170,7 +195,7 @@ exports.stack = {
                   }).save();
                 }
                 updateRecord(
-                  Walletmodal,
+                  await Walletmodal,
                   { userId: decoded.profile._id },
                   { mainWallet: WalletData.mainWallet - req.body.Amount }
                 );
@@ -227,6 +252,14 @@ exports.stack = {
                         Usernameby: decoded.profile.username,
                         Amount: (req.body.Amount * 4) / 100,
                       };
+                      await Mainwallatesc({
+                        userId: Refflevalncome1._id,
+                        Note: `You Got Level ${1} Income`,
+                        Usernameby: decoded.profile.username,
+                        Amount: (req.body.Amount * 4) / 100,
+                        type: 1,
+                        Active: true,
+                      }).save();
                       await Communitymodal(data1).save();
 
                       console.log("===============>11", {
@@ -250,8 +283,16 @@ exports.stack = {
                         Usernameby: decoded.profile.username,
                         Amount: (req.body.Amount * 3) / 100,
                       };
-                      await Communitymodal(data2).save();
 
+                      await Mainwallatesc({
+                        userId: Refflevalncome2._id,
+                        Note: `You Got Level ${2} Income`,
+                        Usernameby: decoded.profile.username,
+                        Amount: (req.body.Amount * 3) / 100,
+                        type: 1,
+                        Active: true,
+                      }).save();
+                      await Communitymodal(data2).save();
                       console.log("===============>22", {
                         Refflevalncome2,
                         data2,
@@ -273,6 +314,14 @@ exports.stack = {
                         Usernameby: decoded.profile.username,
                         Amount: (req.body.Amount * 2) / 100,
                       };
+                      await Mainwallatesc({
+                        userId: Refflevalncome3._id,
+                        Note: `You Got Level ${3} Income`,
+                        Usernameby: decoded.profile.username,
+                        Amount: (req.body.Amount * 2) / 100,
+                        type: 1,
+                        Active: true,
+                      }).save();
                       await Communitymodal(data3).save();
 
                       console.log("===============>33", {
@@ -296,6 +345,14 @@ exports.stack = {
                         Usernameby: decoded.profile.username,
                         Amount: (req.body.Amount * 1) / 100,
                       };
+                      await Mainwallatesc({
+                        userId: Refflevalncome4._id,
+                        Note: `You Got Level ${4} Income`,
+                        Usernameby: decoded.profile.username,
+                        Amount: (req.body.Amount * 1) / 100,
+                        type: 1,
+                        Active: true,
+                      }).save();
                       await Communitymodal(data4).save();
 
                       console.log("===============>44", {
@@ -319,6 +376,14 @@ exports.stack = {
                         Usernameby: decoded.profile.username,
                         Amount: (req.body.Amount * 0.5) / 100,
                       };
+                      await Mainwallatesc({
+                        userId: Refflevalncome5._id,
+                        Note: `You Got Level ${5} Income`,
+                        Usernameby: decoded.profile.username,
+                        Amount: (req.body.Amount * 0.5) / 100,
+                        type: 1,
+                        Active: true,
+                      }).save();
                       await Communitymodal(data5).save();
 
                       console.log("===============>55", {
@@ -342,6 +407,14 @@ exports.stack = {
                         Usernameby: decoded.profile.username,
                         Amount: (req.body.Amount * 0.5) / 100,
                       };
+                      await Mainwallatesc({
+                        userId: Refflevalncome6._id,
+                        Note: `You Got Level ${6} Income`,
+                        Usernameby: decoded.profile.username,
+                        Amount: (req.body.Amount * 0.5) / 100,
+                        type: 1,
+                        Active: true,
+                      }).save();
                       await Communitymodal(data6).save();
 
                       console.log("===============>66", {
@@ -365,6 +438,14 @@ exports.stack = {
                         Usernameby: decoded.profile.username,
                         Amount: (req.body.Amount * 0.5) / 100,
                       };
+                      await Mainwallatesc({
+                        userId: Refflevalncome7._id,
+                        Note: `You Got Level ${7} Income`,
+                        Usernameby: decoded.profile.username,
+                        Amount: (req.body.Amount * 0.5) / 100,
+                        type: 1,
+                        Active: true,
+                      }).save();
                       await Communitymodal(data7).save();
 
                       console.log("===============>77", {
@@ -388,6 +469,14 @@ exports.stack = {
                         Usernameby: decoded.profile.username,
                         Amount: (req.body.Amount * 0.5) / 100,
                       };
+                      await Mainwallatesc({
+                        userId: Refflevalncome8._id,
+                        Note: `You Got Level ${8} Income`,
+                        Usernameby: decoded.profile.username,
+                        Amount: (req.body.Amount * 0.5) / 100,
+                        type: 1,
+                        Active: true,
+                      }).save();
                       await Communitymodal(data8).save();
 
                       console.log("===============>88", {
@@ -411,6 +500,14 @@ exports.stack = {
                         Usernameby: decoded.profile.username,
                         Amount: (req.body.Amount * 0.5) / 100,
                       };
+                      await Mainwallatesc({
+                        userId: Refflevalncome9._id,
+                        Note: `You Got Level ${9} Income`,
+                        Usernameby: decoded.profile.username,
+                        Amount: (req.body.Amount * 0.5) / 100,
+                        type: 1,
+                        Active: true,
+                      }).save();
                       await Communitymodal(data9).save();
 
                       console.log("===============>99", {
@@ -435,6 +532,14 @@ exports.stack = {
                         Usernameby: decoded.profile.username,
                         Amount: (req.body.Amount * 0.5) / 100,
                       };
+                      await Mainwallatesc({
+                        userId: Refflevalncome10._id,
+                        Note: `You Got Level ${10} Income`,
+                        Usernameby: decoded.profile.username,
+                        Amount: (req.body.Amount * 0.5) / 100,
+                        type: 1,
+                        Active: true,
+                      }).save();
                       await Communitymodal(data10).save();
 
                       console.log("===============>1010", {
@@ -459,6 +564,14 @@ exports.stack = {
                         Usernameby: decoded.profile.username,
                         Amount: (req.body.Amount * 0.5) / 100,
                       };
+                      await Mainwallatesc({
+                        userId: Refflevalncome11._id,
+                        Note: `You Got Level ${11} Income`,
+                        Usernameby: decoded.profile.username,
+                        Amount: (req.body.Amount * 0.5) / 100,
+                        type: 1,
+                        Active: true,
+                      }).save();
                       await Communitymodal(data11).save();
 
                       console.log("===============>1111", {
@@ -482,6 +595,14 @@ exports.stack = {
                         Usernameby: decoded.profile.username,
                         Amount: (req.body.Amount * 0.5) / 100,
                       };
+                      await Mainwallatesc({
+                        userId: Refflevalncome12._id,
+                        Note: `You Got Level ${12} Income`,
+                        Usernameby: decoded.profile.username,
+                        Amount: (req.body.Amount * 0.5) / 100,
+                        type: 1,
+                        Active: true,
+                      }).save();
                       await Communitymodal(data12).save();
 
                       console.log("===============>1212", {
@@ -505,6 +626,14 @@ exports.stack = {
                         Usernameby: decoded.profile.username,
                         Amount: (req.body.Amount * 0.5) / 100,
                       };
+                      await Mainwallatesc({
+                        userId: Refflevalncome13._id,
+                        Note: `You Got Level ${13} Income`,
+                        Usernameby: decoded.profile.username,
+                        Amount: (req.body.Amount * 0.5) / 100,
+                        type: 1,
+                        Active: true,
+                      }).save();
                       await Communitymodal(data13).save();
 
                       console.log("===============>1313", {
@@ -528,6 +657,14 @@ exports.stack = {
                         Usernameby: decoded.profile.username,
                         Amount: (req.body.Amount * 0.5) / 100,
                       };
+                      await Mainwallatesc({
+                        userId: Refflevalncome14._id,
+                        Note: `You Got Level ${14} Income`,
+                        Usernameby: decoded.profile.username,
+                        Amount: (req.body.Amount * 0.5) / 100,
+                        type: 1,
+                        Active: true,
+                      }).save();
                       await Communitymodal(data14).save();
 
                       console.log("===============>1414", {
@@ -551,6 +688,14 @@ exports.stack = {
                         Usernameby: decoded.profile.username,
                         Amount: (req.body.Amount * 1) / 100,
                       };
+                      await Mainwallatesc({
+                        userId: Refflevalncome15._id,
+                        Note: `You Got Level ${15} Income`,
+                        Usernameby: decoded.profile.username,
+                        Amount: (req.body.Amount * 1) / 100,
+                        type: 1,
+                        Active: true,
+                      }).save();
                       await Communitymodal(data15).save();
 
                       console.log("===============>1515", {
@@ -574,6 +719,14 @@ exports.stack = {
                         Usernameby: decoded.profile.username,
                         Amount: (req.body.Amount * 2) / 100,
                       };
+                      await Mainwallatesc({
+                        userId: Refflevalncome16._id,
+                        Note: `You Got Level ${16} Income`,
+                        Usernameby: decoded.profile.username,
+                        Amount: (req.body.Amount * 2) / 100,
+                        type: 1,
+                        Active: true,
+                      }).save();
                       await Communitymodal(data16).save();
 
                       console.log("===============>1616", {
@@ -597,6 +750,14 @@ exports.stack = {
                         Usernameby: decoded.profile.username,
                         Amount: (req.body.Amount * 3) / 100,
                       };
+                      await Mainwallatesc({
+                        userId: Refflevalncome17._id,
+                        Note: `You Got Level ${17} Income`,
+                        Usernameby: decoded.profile.username,
+                        Amount: (req.body.Amount * 3) / 100,
+                        type: 1,
+                        Active: true,
+                      }).save();
                       await Communitymodal(data17).save();
 
                       console.log("===============>1717", {
@@ -620,6 +781,14 @@ exports.stack = {
                         Usernameby: decoded.profile.username,
                         Amount: (req.body.Amount * 4) / 100,
                       };
+                      await Mainwallatesc({
+                        userId: Refflevalncome18._id,
+                        Note: `You Got Level ${18} Income`,
+                        Usernameby: decoded.profile.username,
+                        Amount: (req.body.Amount * 4) / 100,
+                        type: 1,
+                        Active: true,
+                      }).save();
                       await Communitymodal(data18).save();
                       console.log("===============>1818", {
                         Refflevalncome18,
@@ -629,11 +798,6 @@ exports.stack = {
                   }
                 });
               }
-              await updateRecord(
-                Walletmodal,
-                { userId: decoded.profile._id },
-                { mainWallet: WalletData.mainWallet - req.body.Amount }
-              );
               const price = await findAllRecord(V4Xpricemodal, {});
               await Stakingmodal({
                 userId: decoded.profile._id,
@@ -699,6 +863,13 @@ exports.stack = {
                       },
                     }
                   );
+                  await Mainwallatesc({
+                    userId: ReffData._id,
+                    Note: `You Got Refer and Earn Income From ${decoded.profile.username}`,
+                    Amount: (req.body.Amount * price[0].price * 10) / 100,
+                    type: 1,
+                    Active: true,
+                  }).save();
                   await Stakingbonus({
                     userId: ReffData._id,
                     ReffId: decoded.profile._id,
@@ -760,6 +931,14 @@ exports.stack = {
                         Usernameby: decoded.profile.username,
                         Amount: (req.body.Amount * 4) / 100,
                       };
+                      await Mainwallatesc({
+                        userId: Refflevalncome1._id,
+                        Note: `You Got Level ${1} Income`,
+                        Usernameby: decoded.profile.username,
+                        Amount: (req.body.Amount * 4) / 100,
+                        type: 1,
+                        Active: true,
+                      }).save();
                       await Communitymodal(data1).save();
 
                       console.log("===============>11", {
@@ -783,8 +962,16 @@ exports.stack = {
                         Usernameby: decoded.profile.username,
                         Amount: (req.body.Amount * 3) / 100,
                       };
-                      await Communitymodal(data2).save();
 
+                      await Mainwallatesc({
+                        userId: Refflevalncome2._id,
+                        Note: `You Got Level ${2} Income`,
+                        Usernameby: decoded.profile.username,
+                        Amount: (req.body.Amount * 3) / 100,
+                        type: 1,
+                        Active: true,
+                      }).save();
+                      await Communitymodal(data2).save();
                       console.log("===============>22", {
                         Refflevalncome2,
                         data2,
@@ -806,6 +993,14 @@ exports.stack = {
                         Usernameby: decoded.profile.username,
                         Amount: (req.body.Amount * 2) / 100,
                       };
+                      await Mainwallatesc({
+                        userId: Refflevalncome3._id,
+                        Note: `You Got Level ${3} Income`,
+                        Usernameby: decoded.profile.username,
+                        Amount: (req.body.Amount * 2) / 100,
+                        type: 1,
+                        Active: true,
+                      }).save();
                       await Communitymodal(data3).save();
 
                       console.log("===============>33", {
@@ -829,6 +1024,14 @@ exports.stack = {
                         Usernameby: decoded.profile.username,
                         Amount: (req.body.Amount * 1) / 100,
                       };
+                      await Mainwallatesc({
+                        userId: Refflevalncome4._id,
+                        Note: `You Got Level ${4} Income`,
+                        Usernameby: decoded.profile.username,
+                        Amount: (req.body.Amount * 1) / 100,
+                        type: 1,
+                        Active: true,
+                      }).save();
                       await Communitymodal(data4).save();
 
                       console.log("===============>44", {
@@ -852,6 +1055,14 @@ exports.stack = {
                         Usernameby: decoded.profile.username,
                         Amount: (req.body.Amount * 0.5) / 100,
                       };
+                      await Mainwallatesc({
+                        userId: Refflevalncome5._id,
+                        Note: `You Got Level ${5} Income`,
+                        Usernameby: decoded.profile.username,
+                        Amount: (req.body.Amount * 0.5) / 100,
+                        type: 1,
+                        Active: true,
+                      }).save();
                       await Communitymodal(data5).save();
 
                       console.log("===============>55", {
@@ -875,6 +1086,14 @@ exports.stack = {
                         Usernameby: decoded.profile.username,
                         Amount: (req.body.Amount * 0.5) / 100,
                       };
+                      await Mainwallatesc({
+                        userId: Refflevalncome6._id,
+                        Note: `You Got Level ${6} Income`,
+                        Usernameby: decoded.profile.username,
+                        Amount: (req.body.Amount * 0.5) / 100,
+                        type: 1,
+                        Active: true,
+                      }).save();
                       await Communitymodal(data6).save();
 
                       console.log("===============>66", {
@@ -898,6 +1117,14 @@ exports.stack = {
                         Usernameby: decoded.profile.username,
                         Amount: (req.body.Amount * 0.5) / 100,
                       };
+                      await Mainwallatesc({
+                        userId: Refflevalncome7._id,
+                        Note: `You Got Level ${7} Income`,
+                        Usernameby: decoded.profile.username,
+                        Amount: (req.body.Amount * 0.5) / 100,
+                        type: 1,
+                        Active: true,
+                      }).save();
                       await Communitymodal(data7).save();
 
                       console.log("===============>77", {
@@ -921,6 +1148,14 @@ exports.stack = {
                         Usernameby: decoded.profile.username,
                         Amount: (req.body.Amount * 0.5) / 100,
                       };
+                      await Mainwallatesc({
+                        userId: Refflevalncome8._id,
+                        Note: `You Got Level ${8} Income`,
+                        Usernameby: decoded.profile.username,
+                        Amount: (req.body.Amount * 0.5) / 100,
+                        type: 1,
+                        Active: true,
+                      }).save();
                       await Communitymodal(data8).save();
 
                       console.log("===============>88", {
@@ -944,6 +1179,14 @@ exports.stack = {
                         Usernameby: decoded.profile.username,
                         Amount: (req.body.Amount * 0.5) / 100,
                       };
+                      await Mainwallatesc({
+                        userId: Refflevalncome9._id,
+                        Note: `You Got Level ${9} Income`,
+                        Usernameby: decoded.profile.username,
+                        Amount: (req.body.Amount * 0.5) / 100,
+                        type: 1,
+                        Active: true,
+                      }).save();
                       await Communitymodal(data9).save();
 
                       console.log("===============>99", {
@@ -968,6 +1211,14 @@ exports.stack = {
                         Usernameby: decoded.profile.username,
                         Amount: (req.body.Amount * 0.5) / 100,
                       };
+                      await Mainwallatesc({
+                        userId: Refflevalncome10._id,
+                        Note: `You Got Level ${10} Income`,
+                        Usernameby: decoded.profile.username,
+                        Amount: (req.body.Amount * 0.5) / 100,
+                        type: 1,
+                        Active: true,
+                      }).save();
                       await Communitymodal(data10).save();
 
                       console.log("===============>1010", {
@@ -992,6 +1243,14 @@ exports.stack = {
                         Usernameby: decoded.profile.username,
                         Amount: (req.body.Amount * 0.5) / 100,
                       };
+                      await Mainwallatesc({
+                        userId: Refflevalncome11._id,
+                        Note: `You Got Level ${11} Income`,
+                        Usernameby: decoded.profile.username,
+                        Amount: (req.body.Amount * 0.5) / 100,
+                        type: 1,
+                        Active: true,
+                      }).save();
                       await Communitymodal(data11).save();
 
                       console.log("===============>1111", {
@@ -1015,6 +1274,14 @@ exports.stack = {
                         Usernameby: decoded.profile.username,
                         Amount: (req.body.Amount * 0.5) / 100,
                       };
+                      await Mainwallatesc({
+                        userId: Refflevalncome12._id,
+                        Note: `You Got Level ${12} Income`,
+                        Usernameby: decoded.profile.username,
+                        Amount: (req.body.Amount * 0.5) / 100,
+                        type: 1,
+                        Active: true,
+                      }).save();
                       await Communitymodal(data12).save();
 
                       console.log("===============>1212", {
@@ -1038,6 +1305,14 @@ exports.stack = {
                         Usernameby: decoded.profile.username,
                         Amount: (req.body.Amount * 0.5) / 100,
                       };
+                      await Mainwallatesc({
+                        userId: Refflevalncome13._id,
+                        Note: `You Got Level ${13} Income`,
+                        Usernameby: decoded.profile.username,
+                        Amount: (req.body.Amount * 0.5) / 100,
+                        type: 1,
+                        Active: true,
+                      }).save();
                       await Communitymodal(data13).save();
 
                       console.log("===============>1313", {
@@ -1061,6 +1336,14 @@ exports.stack = {
                         Usernameby: decoded.profile.username,
                         Amount: (req.body.Amount * 0.5) / 100,
                       };
+                      await Mainwallatesc({
+                        userId: Refflevalncome14._id,
+                        Note: `You Got Level ${14} Income`,
+                        Usernameby: decoded.profile.username,
+                        Amount: (req.body.Amount * 0.5) / 100,
+                        type: 1,
+                        Active: true,
+                      }).save();
                       await Communitymodal(data14).save();
 
                       console.log("===============>1414", {
@@ -1084,6 +1367,14 @@ exports.stack = {
                         Usernameby: decoded.profile.username,
                         Amount: (req.body.Amount * 1) / 100,
                       };
+                      await Mainwallatesc({
+                        userId: Refflevalncome15._id,
+                        Note: `You Got Level ${15} Income`,
+                        Usernameby: decoded.profile.username,
+                        Amount: (req.body.Amount * 1) / 100,
+                        type: 1,
+                        Active: true,
+                      }).save();
                       await Communitymodal(data15).save();
 
                       console.log("===============>1515", {
@@ -1107,6 +1398,14 @@ exports.stack = {
                         Usernameby: decoded.profile.username,
                         Amount: (req.body.Amount * 2) / 100,
                       };
+                      await Mainwallatesc({
+                        userId: Refflevalncome16._id,
+                        Note: `You Got Level ${16} Income`,
+                        Usernameby: decoded.profile.username,
+                        Amount: (req.body.Amount * 2) / 100,
+                        type: 1,
+                        Active: true,
+                      }).save();
                       await Communitymodal(data16).save();
 
                       console.log("===============>1616", {
@@ -1130,6 +1429,14 @@ exports.stack = {
                         Usernameby: decoded.profile.username,
                         Amount: (req.body.Amount * 3) / 100,
                       };
+                      await Mainwallatesc({
+                        userId: Refflevalncome17._id,
+                        Note: `You Got Level ${17} Income`,
+                        Usernameby: decoded.profile.username,
+                        Amount: (req.body.Amount * 3) / 100,
+                        type: 1,
+                        Active: true,
+                      }).save();
                       await Communitymodal(data17).save();
 
                       console.log("===============>1717", {
@@ -1153,6 +1460,14 @@ exports.stack = {
                         Usernameby: decoded.profile.username,
                         Amount: (req.body.Amount * 4) / 100,
                       };
+                      await Mainwallatesc({
+                        userId: Refflevalncome18._id,
+                        Note: `You Got Level ${18} Income`,
+                        Usernameby: decoded.profile.username,
+                        Amount: (req.body.Amount * 4) / 100,
+                        type: 1,
+                        Active: true,
+                      }).save();
                       await Communitymodal(data18).save();
                       console.log("===============>1818", {
                         Refflevalncome18,
@@ -1167,6 +1482,13 @@ exports.stack = {
                 { userId: decoded.profile._id },
                 { v4xWallet: WalletData.v4xWallet - req.body.Amount }
               );
+              await Ewallateesc({
+                userId: decoded.profile._id ,
+                Note: `Staking`,
+                Amount: req.body.Amount,
+                type: 0,
+                Active: true,
+              }).save();
               const price = await findAllRecord(V4Xpricemodal, {});
               await Stakingmodal({
                 userId: decoded.profile._id,
@@ -1425,448 +1747,448 @@ exports.stack = {
             _id: decoded.profile._id,
             isValid: true,
           });
-            await Usermodal.aggregate([
-              {
-                $match: {
-                  _id: ReffData._id,
-                  isActive: true,
+          await Usermodal.aggregate([
+            {
+              $match: {
+                _id: ReffData._id,
+                isActive: true,
+              },
+            },
+            {
+              $graphLookup: {
+                from: "users",
+                startWith: "$username",
+                connectFromField: "username",
+                connectToField: "refferalBy",
+                as: "refers_to",
+              },
+            },
+            {
+              $lookup: {
+                from: "stakings",
+                localField: "refers_to._id",
+                foreignField: "userId",
+                as: "amount",
+              },
+            },
+            {
+              $lookup: {
+                from: "stakings",
+                localField: "refers_to._id",
+                foreignField: "userId",
+                as: "stackingdata",
+              },
+            },
+            {
+              $match: {
+                amount: {
+                  $ne: [],
+                },
+                at: {
+                  $ne: [],
                 },
               },
-              {
-                $graphLookup: {
-                  from: "users",
-                  startWith: "$username",
-                  connectFromField: "username",
-                  connectToField: "refferalBy",
-                  as: "refers_to",
-                },
-              },
-              {
-                $lookup: {
-                  from: "stakings",
-                  localField: "refers_to._id",
-                  foreignField: "userId",
-                  as: "amount",
-                },
-              },
-              {
-                $lookup: {
-                  from: "stakings",
-                  localField: "refers_to._id",
-                  foreignField: "userId",
-                  as: "stackingdata",
-                },
-              },
-              {
-                $match: {
-                  amount: {
-                    $ne: [],
-                  },
-                  at: {
-                    $ne: [],
-                  },
-                },
-              },
-              {
-                $project: {
-                  total: {
-                    $reduce: {
-                      input: "$amount",
-                      initialValue: 0,
-                      in: {
-                        $add: ["$$value", "$$this.Amount"],
-                      },
+            },
+            {
+              $project: {
+                total: {
+                  $reduce: {
+                    input: "$amount",
+                    initialValue: 0,
+                    in: {
+                      $add: ["$$value", "$$this.Amount"],
                     },
                   },
-                  tatalDailyReword: {
-                    $reduce: {
-                      input: "$amount",
-                      initialValue: 0,
-                      in: {
-                        $add: ["$$value", "$$this.DailyReword"],
-                      },
+                },
+                tatalDailyReword: {
+                  $reduce: {
+                    input: "$amount",
+                    initialValue: 0,
+                    in: {
+                      $add: ["$$value", "$$this.DailyReword"],
                     },
                   },
-                  stackingdata: 1,
-                  username: 1,
-                  Rank: 1,
-                  level: 1,
-                  username: 1,
                 },
+                stackingdata: 1,
+                username: 1,
+                Rank: 1,
+                level: 1,
+                username: 1,
               },
-              {
-                $unwind: {
-                  path: "$refers_to",
-                  preserveNullAndEmptyArrays: true,
-                },
+            },
+            {
+              $unwind: {
+                path: "$refers_to",
+                preserveNullAndEmptyArrays: true,
               },
-            ]).then(async (res) => {
-              if (res[0]?.Rank == "DIRECT") {
-                const Refflevalncome = await findAllRecord(Usermodal, {
-                  refferalBy: res[0].username,
-                  Rank: "DIRECT",
-                });
-                if (Refflevalncome.length >= 4) {
-                  console.log(res[0]);
-                  let data = await updateRecord(
-                    Usermodal,
-                    {
-                      _id: ReffData._id,
-                      Rank: "DIRECT",
-                      teamtotalstack: { $gt: 2499 },
-                    },
-                    { Rank: "EXECUTIVE" }
-                  );
-                  const da = await findAllRecord(Usermodal, {
+            },
+          ]).then(async (res) => {
+            if (res[0]?.Rank == "DIRECT") {
+              const Refflevalncome = await findAllRecord(Usermodal, {
+                refferalBy: res[0].username,
+                Rank: "DIRECT",
+              });
+              if (Refflevalncome.length >= 4) {
+                console.log(res[0]);
+                let data = await updateRecord(
+                  Usermodal,
+                  {
                     _id: ReffData._id,
-                    Rank: "EXECUTIVE",
+                    Rank: "DIRECT",
                     teamtotalstack: { $gt: 2499 },
-                  });
-                  if (da.length > 0) {
-                    let data = {
-                      userId: ReffData._id,
-                      Note: "50 BUSD = V4X COIN WILL BE CREDITED IN ACHEIVER WALLET",
-                      Amount: 50,
-                    };
-                    await updateRecord(
-                      Walletmodal,
-                      {
-                        userId: ReffData._id,
-                      },
-                      { $inc: { mainWallet: 50 } }
-                    );
-                    await Achivement(data).save();
-                  }
-                }
-              } else if (res[0]?.Rank == "EXECUTIVE") {
-                const Refflevalncome1 = await findAllRecord(Usermodal, {
-                  refferalBy: ReffData.username,
+                  },
+                  { Rank: "EXECUTIVE" }
+                );
+                const da = await findAllRecord(Usermodal, {
+                  _id: ReffData._id,
                   Rank: "EXECUTIVE",
+                  teamtotalstack: { $gt: 2499 },
                 });
-                // console.log("========================>Refflevalncome1",Refflevalncome1);
-                if (Refflevalncome1.length >= 2) {
+                if (da.length > 0) {
+                  let data = {
+                    userId: ReffData._id,
+                    Note: "50 BUSD = V4X COIN WILL BE CREDITED IN ACHEIVER WALLET",
+                    Amount: 50,
+                  };
                   await updateRecord(
-                    Usermodal,
+                    Walletmodal,
                     {
-                      _id: ReffData._id,
-                      Rank: "EXECUTIVE",
-                      teamtotalstack: { $gt: 9999 },
-                    },
-                    { Rank: "MANAGER" }
-                  );
-                  const da = await findAllRecord(Usermodal, {
-                    _id: ReffData._id,
-                    Rank: "MANAGER",
-                    teamtotalstack: { $gt: 9999 },
-                  });
-                  if (da.length > 0) {
-                    let data = {
                       userId: ReffData._id,
-                      Note: "100 BUSD = V4X COIN WILL BE CREDITED IN ACHEIVER WALLET",
-                      Amount: 100,
-                    };
-                    await updateRecord(
-                      Walletmodal,
-                      {
-                        userId: ReffData._id,
-                      },
-                      { $inc: { mainWallet: 100 } }
-                    );
-                    await Achivement(data).save();
-                  }
-                }
-              } else if (res[0]?.Rank == "MANAGER") {
-                const Refflevalncome2 = await findAllRecord(Usermodal, {
-                  refferalBy: ReffData.username,
-                  Rank: "MANAGER",
-                });
-                if (Refflevalncome2.length >= 2) {
-                  await updateRecord(
-                    Usermodal,
-                    {
-                      _id: ReffData._id,
-                      Rank: "MANAGER",
-                      teamtotalstack: { $gt: 39999 },
                     },
-                    { Rank: "SENIOR MANAGER" }
+                    { $inc: { mainWallet: 50 } }
                   );
-                  const da = await findAllRecord(Usermodal, {
-                    _id: ReffData._id,
-                    Rank: "SENIOR MANAGER",
-                    teamtotalstack: { $gt: 39999 },
-                  });
-                  if (da.length > 0) {
-                    let data = {
-                      userId: ReffData._id,
-                      Note: "250 BUSD = V4X COIN WILL BE CREDITED IN ACHEIVER WALLET",
-                      Amount: 250,
-                    };
-                    await updateRecord(
-                      Walletmodal,
-                      {
-                        userId: ReffData._id,
-                      },
-                      { $inc: { mainWallet: 250 } }
-                    );
-                    await Achivement(data).save();
-                  }
-                }
-              } else if (res[0]?.Rank == "SENIOR MANAGER") {
-                const Refflevalncome3 = await findAllRecord(Usermodal, {
-                  refferalBy: ReffData.username,
-                  Rank: "SENIOR MANAGER",
-                });
-                if (Refflevalncome3.length >= 2) {
-                  await updateRecord(
-                    Usermodal,
-                    {
-                      _id: ReffData._id,
-                      Rank: "SENIOR MANAGER",
-                      teamtotalstack: { $gt: 159999 },
-                    },
-                    { Rank: "BUSINESS HEAD" }
-                  );
-
-                  const da = await findAllRecord(Usermodal, {
-                    _id: ReffData._id,
-                    Rank: "BUSINESS HEAD",
-                    teamtotalstack: { $gt: 159999 },
-                  });
-
-                  if (da.length > 0) {
-                    await updateRecord(
-                      Walletmodal,
-                      {
-                        userId: ReffData._id,
-                      },
-                      { $inc: { mainWallet: 500 } }
-                    );
-                    let data = {
-                      userId: ReffData._id,
-                      Note: "500 BUSD = V4X COIN WILL BE CREDITED IN ACHEIVER WALLET",
-                      Amount: 500,
-                    };
-                    await updateRecord(
-                      Walletmodal,
-                      {
-                        userId: ReffData._id,
-                      },
-                      { $inc: { mainWallet: 159999 } }
-                    );
-                    await Achivement(data).save();
-                  }
-                }
-              } else if (res[0]?.Rank == "BUSINESS HEAD") {
-                const Refflevalncome4 = await findAllRecord(Usermodal, {
-                  refferalBy: ReffData.username,
-                  Rank: "BUSINESS HEAD",
-                  teamtotalstack: { $gt: 499999 },
-                });
-                if (Refflevalncome4.length >= 2) {
-                  await updateRecord(
-                    Usermodal,
-                    {
-                      _id: ReffData._id,
-                      Rank: "BUSINESS HEAD",
-                      teamtotalstack: { $gt: 499999 },
-                    },
-                    { Rank: "GOLD MANAGER" }
-                  );
-                  const da = await findAllRecord(Usermodal, {
-                    _id: ReffData._id,
-                    Rank: "GOLD MANAGER",
-                    teamtotalstack: { $gt: 499999 },
-                  });
-
-                  if (da.length > 0) {
-                    await updateRecord(
-                      Walletmodal,
-                      {
-                        userId: ReffData._id,
-                      },
-                      { $inc: { mainWallet: 1500 } }
-                    );
-                    let data = {
-                      userId: ReffData._id,
-                      Note: "1,500 BUSD = V4X COIN WILL BE CREDITED IN ACHEIVER WALLET",
-                      Amount: 1500,
-                    };
-                    await Achivement(data).save();
-                  }
-                }
-              } else if (res[0]?.Rank == "GOLD MANAGER") {
-                const Refflevalncome5 = await findAllRecord(Usermodal, {
-                  refferalBy: ReffData.username,
-                  Rank: "GOLD MANAGER",
-                });
-                if (Refflevalncome5.length >= 2) {
-                  await updateRecord(
-                    Usermodal,
-                    {
-                      _id: ReffData._id,
-                      Rank: "GOLD MANAGER",
-                      teamtotalstack: { $gt: 999999 },
-                    },
-                    { Rank: "DIAMOND MANAGER" }
-                  );
-
-                  const da = await findAllRecord(Usermodal, {
-                    _id: ReffData._id,
-                    Rank: "DIAMOND MANAGER",
-                    teamtotalstack: { $gt: 999999 },
-                  });
-                  if (da.length > 0) {
-                    await updateRecord(
-                      Walletmodal,
-                      {
-                        userId: ReffData._id,
-                      },
-                      { $inc: { mainWallet: 5000 } }
-                    );
-                    let data = {
-                      userId: user._id,
-                      Note: "5,000 BUSD = V4X COIN WILL BE CREDITED IN ACHEIVER WALLET",
-                      Amount: 5000,
-                    };
-                    await Achivement(data).save();
-                  }
-                }
-              } else if (res[0]?.Rank == "DIAMOND MANAGER") {
-                const Refflevalncome6 = await findAllRecord(Usermodal, {
-                  refferalBy: ReffData.username,
-                  Rank: "DIAMOND MANAGER",
-                });
-                if (Refflevalncome6.length >= 2) {
-                  await updateRecord(
-                    Usermodal,
-                    {
-                      _id: ReffData._id,
-                      Rank: "DIAMOND MANAGER",
-                      teamtotalstack: { $gt: 2999999 },
-                    },
-                    { Rank: "CROWN 1" }
-                  );
-                  const da = await findAllRecord(Usermodal, {
-                    _id: ReffData._id,
-                    Rank: "CROWN 1",
-                    teamtotalstack: { $gt: 2999999 },
-                  });
-                  if (da.length > 0) {
-                    await updateRecord(
-                      Walletmodal,
-                      {
-                        userId: ReffData._id,
-                      },
-                      { $inc: { mainWallet: 15000 } }
-                    );
-                    let data = {
-                      userId: ReffData._id,
-                      Note: "15,000 BUSD = V4X COIN WILL BE CREDITED IN ACHEIVER WALLET",
-                      Amount: 15000,
-                    };
-                    await updateRecord(
-                      Walletmodal,
-                      {
-                        userId: ReffData._id,
-                      },
-                      { $inc: { mainWallet: 15000 } }
-                    );
-                    await Achivement(data).save();
-                  }
-                }
-              } else if (res[0]?.Rank == "CROWN 1") {
-                const Refflevalncome7 = await findAllRecord(Usermodal, {
-                  refferalBy: user.username,
-                  Rank: "CROWN 1",
-                });
-                if (Refflevalncome7.length >= 2) {
-                  await updateRecord(
-                    Usermodal,
-                    {
-                      _id: ReffData._id,
-                      Rank: "CROWN 1",
-                      teamtotalstack: { $gt: 5999999 },
-                    },
-                    { Rank: "CROWN 2" }
-                  );
-                  const da = await findAllRecord(Usermodal, {
-                    Rank: "CROWN 2",
-                    teamtotalstack: { $gt: 5999999 },
-                  });
-                  if (da.length > 0) {
-                    let data = {
-                      userId: ReffData._id,
-                      Note: "75,000 BUSD = BMW CAR",
-                      Amount: 75000,
-                    };
-                    await updateRecord(
-                      Walletmodal,
-                      {
-                        userId: ReffData._id,
-                      },
-                      { $inc: { mainWallet: 75000 } }
-                    );
-                    await Achivement(data).save();
-                  }
-                }
-              } else if (res[0]?.Rank == "CROWN 2") {
-                const Refflevalncome8 = await findAllRecord(Usermodal, {
-                  refferalBy: ReffData.username,
-                  Rank: "CROWN 2",
-                });
-                if (Refflevalncome8.length >= 2) {
-                  await updateRecord(
-                    Usermodal,
-                    {
-                      _id: ReffData._id,
-                      Rank: "CROWN 2",
-                      teamtotalstack: { $gt: 9999999 },
-                    },
-                    { Rank: "CROWN 3" }
-                  );
-                  const da = await findAllRecord(Usermodal, {
-                    Rank: "CROWN 3",
-                    teamtotalstack: { $gt: 9999999 },
-                  });
-                  if (da.length > 0) {
-                    let data = {
-                      userId: ReffData._id,
-                      Note: "1,50,000 BUSD = SECOND HOME IN UAE / INDIA/ MALASIYA",
-                      Amount: 150000,
-                    };
-                    await Achivement(data).save();
-                  }
-                }
-              } else if (res[0]?.Rank == "CROWN 3") {
-                const Refflevalncome9 = await findAllRecord(Usermodal, {
-                  refferalBy: ReffData.username,
-                  Rank: "CROWN 3",
-                });
-                if (Refflevalncome9.length >= 2) {
-                  await updateRecord(
-                    Usermodal,
-                    {
-                      _id: ReffData._id,
-                      Rank: "CROWN 3",
-                      teamtotalstack: { $gt: 14999999 },
-                    },
-                    { Rank: "AMBASSADOR" }
-                  );
-                  const da = await findAllRecord(Usermodal, {
-                    Rank: "AMBASSADOR",
-                    teamtotalstack: { $gt: 14999999 },
-                  });
-                  if (da.length > 0) {
-                    let data = {
-                      userId: ReffData._id,
-                      Note: "5,00,000 BUSD = BENTLEY CAR",
-                      Amount: 500000,
-                    };
-                    await Achivement(data).save();
-                  }
+                  await Achivement(data).save();
                 }
               }
-            });
+            } else if (res[0]?.Rank == "EXECUTIVE") {
+              const Refflevalncome1 = await findAllRecord(Usermodal, {
+                refferalBy: ReffData.username,
+                Rank: "EXECUTIVE",
+              });
+              // console.log("========================>Refflevalncome1",Refflevalncome1);
+              if (Refflevalncome1.length >= 2) {
+                await updateRecord(
+                  Usermodal,
+                  {
+                    _id: ReffData._id,
+                    Rank: "EXECUTIVE",
+                    teamtotalstack: { $gt: 9999 },
+                  },
+                  { Rank: "MANAGER" }
+                );
+                const da = await findAllRecord(Usermodal, {
+                  _id: ReffData._id,
+                  Rank: "MANAGER",
+                  teamtotalstack: { $gt: 9999 },
+                });
+                if (da.length > 0) {
+                  let data = {
+                    userId: ReffData._id,
+                    Note: "100 BUSD = V4X COIN WILL BE CREDITED IN ACHEIVER WALLET",
+                    Amount: 100,
+                  };
+                  await updateRecord(
+                    Walletmodal,
+                    {
+                      userId: ReffData._id,
+                    },
+                    { $inc: { mainWallet: 100 } }
+                  );
+                  await Achivement(data).save();
+                }
+              }
+            } else if (res[0]?.Rank == "MANAGER") {
+              const Refflevalncome2 = await findAllRecord(Usermodal, {
+                refferalBy: ReffData.username,
+                Rank: "MANAGER",
+              });
+              if (Refflevalncome2.length >= 2) {
+                await updateRecord(
+                  Usermodal,
+                  {
+                    _id: ReffData._id,
+                    Rank: "MANAGER",
+                    teamtotalstack: { $gt: 39999 },
+                  },
+                  { Rank: "SENIOR MANAGER" }
+                );
+                const da = await findAllRecord(Usermodal, {
+                  _id: ReffData._id,
+                  Rank: "SENIOR MANAGER",
+                  teamtotalstack: { $gt: 39999 },
+                });
+                if (da.length > 0) {
+                  let data = {
+                    userId: ReffData._id,
+                    Note: "250 BUSD = V4X COIN WILL BE CREDITED IN ACHEIVER WALLET",
+                    Amount: 250,
+                  };
+                  await updateRecord(
+                    Walletmodal,
+                    {
+                      userId: ReffData._id,
+                    },
+                    { $inc: { mainWallet: 250 } }
+                  );
+                  await Achivement(data).save();
+                }
+              }
+            } else if (res[0]?.Rank == "SENIOR MANAGER") {
+              const Refflevalncome3 = await findAllRecord(Usermodal, {
+                refferalBy: ReffData.username,
+                Rank: "SENIOR MANAGER",
+              });
+              if (Refflevalncome3.length >= 2) {
+                await updateRecord(
+                  Usermodal,
+                  {
+                    _id: ReffData._id,
+                    Rank: "SENIOR MANAGER",
+                    teamtotalstack: { $gt: 159999 },
+                  },
+                  { Rank: "BUSINESS HEAD" }
+                );
+
+                const da = await findAllRecord(Usermodal, {
+                  _id: ReffData._id,
+                  Rank: "BUSINESS HEAD",
+                  teamtotalstack: { $gt: 159999 },
+                });
+
+                if (da.length > 0) {
+                  await updateRecord(
+                    Walletmodal,
+                    {
+                      userId: ReffData._id,
+                    },
+                    { $inc: { mainWallet: 500 } }
+                  );
+                  let data = {
+                    userId: ReffData._id,
+                    Note: "500 BUSD = V4X COIN WILL BE CREDITED IN ACHEIVER WALLET",
+                    Amount: 500,
+                  };
+                  await updateRecord(
+                    Walletmodal,
+                    {
+                      userId: ReffData._id,
+                    },
+                    { $inc: { mainWallet: 159999 } }
+                  );
+                  await Achivement(data).save();
+                }
+              }
+            } else if (res[0]?.Rank == "BUSINESS HEAD") {
+              const Refflevalncome4 = await findAllRecord(Usermodal, {
+                refferalBy: ReffData.username,
+                Rank: "BUSINESS HEAD",
+                teamtotalstack: { $gt: 499999 },
+              });
+              if (Refflevalncome4.length >= 2) {
+                await updateRecord(
+                  Usermodal,
+                  {
+                    _id: ReffData._id,
+                    Rank: "BUSINESS HEAD",
+                    teamtotalstack: { $gt: 499999 },
+                  },
+                  { Rank: "GOLD MANAGER" }
+                );
+                const da = await findAllRecord(Usermodal, {
+                  _id: ReffData._id,
+                  Rank: "GOLD MANAGER",
+                  teamtotalstack: { $gt: 499999 },
+                });
+
+                if (da.length > 0) {
+                  await updateRecord(
+                    Walletmodal,
+                    {
+                      userId: ReffData._id,
+                    },
+                    { $inc: { mainWallet: 1500 } }
+                  );
+                  let data = {
+                    userId: ReffData._id,
+                    Note: "1,500 BUSD = V4X COIN WILL BE CREDITED IN ACHEIVER WALLET",
+                    Amount: 1500,
+                  };
+                  await Achivement(data).save();
+                }
+              }
+            } else if (res[0]?.Rank == "GOLD MANAGER") {
+              const Refflevalncome5 = await findAllRecord(Usermodal, {
+                refferalBy: ReffData.username,
+                Rank: "GOLD MANAGER",
+              });
+              if (Refflevalncome5.length >= 2) {
+                await updateRecord(
+                  Usermodal,
+                  {
+                    _id: ReffData._id,
+                    Rank: "GOLD MANAGER",
+                    teamtotalstack: { $gt: 999999 },
+                  },
+                  { Rank: "DIAMOND MANAGER" }
+                );
+
+                const da = await findAllRecord(Usermodal, {
+                  _id: ReffData._id,
+                  Rank: "DIAMOND MANAGER",
+                  teamtotalstack: { $gt: 999999 },
+                });
+                if (da.length > 0) {
+                  await updateRecord(
+                    Walletmodal,
+                    {
+                      userId: ReffData._id,
+                    },
+                    { $inc: { mainWallet: 5000 } }
+                  );
+                  let data = {
+                    userId: user._id,
+                    Note: "5,000 BUSD = V4X COIN WILL BE CREDITED IN ACHEIVER WALLET",
+                    Amount: 5000,
+                  };
+                  await Achivement(data).save();
+                }
+              }
+            } else if (res[0]?.Rank == "DIAMOND MANAGER") {
+              const Refflevalncome6 = await findAllRecord(Usermodal, {
+                refferalBy: ReffData.username,
+                Rank: "DIAMOND MANAGER",
+              });
+              if (Refflevalncome6.length >= 2) {
+                await updateRecord(
+                  Usermodal,
+                  {
+                    _id: ReffData._id,
+                    Rank: "DIAMOND MANAGER",
+                    teamtotalstack: { $gt: 2999999 },
+                  },
+                  { Rank: "CROWN 1" }
+                );
+                const da = await findAllRecord(Usermodal, {
+                  _id: ReffData._id,
+                  Rank: "CROWN 1",
+                  teamtotalstack: { $gt: 2999999 },
+                });
+                if (da.length > 0) {
+                  await updateRecord(
+                    Walletmodal,
+                    {
+                      userId: ReffData._id,
+                    },
+                    { $inc: { mainWallet: 15000 } }
+                  );
+                  let data = {
+                    userId: ReffData._id,
+                    Note: "15,000 BUSD = V4X COIN WILL BE CREDITED IN ACHEIVER WALLET",
+                    Amount: 15000,
+                  };
+                  await updateRecord(
+                    Walletmodal,
+                    {
+                      userId: ReffData._id,
+                    },
+                    { $inc: { mainWallet: 15000 } }
+                  );
+                  await Achivement(data).save();
+                }
+              }
+            } else if (res[0]?.Rank == "CROWN 1") {
+              const Refflevalncome7 = await findAllRecord(Usermodal, {
+                refferalBy: user.username,
+                Rank: "CROWN 1",
+              });
+              if (Refflevalncome7.length >= 2) {
+                await updateRecord(
+                  Usermodal,
+                  {
+                    _id: ReffData._id,
+                    Rank: "CROWN 1",
+                    teamtotalstack: { $gt: 5999999 },
+                  },
+                  { Rank: "CROWN 2" }
+                );
+                const da = await findAllRecord(Usermodal, {
+                  Rank: "CROWN 2",
+                  teamtotalstack: { $gt: 5999999 },
+                });
+                if (da.length > 0) {
+                  let data = {
+                    userId: ReffData._id,
+                    Note: "75,000 BUSD = BMW CAR",
+                    Amount: 75000,
+                  };
+                  await updateRecord(
+                    Walletmodal,
+                    {
+                      userId: ReffData._id,
+                    },
+                    { $inc: { mainWallet: 75000 } }
+                  );
+                  await Achivement(data).save();
+                }
+              }
+            } else if (res[0]?.Rank == "CROWN 2") {
+              const Refflevalncome8 = await findAllRecord(Usermodal, {
+                refferalBy: ReffData.username,
+                Rank: "CROWN 2",
+              });
+              if (Refflevalncome8.length >= 2) {
+                await updateRecord(
+                  Usermodal,
+                  {
+                    _id: ReffData._id,
+                    Rank: "CROWN 2",
+                    teamtotalstack: { $gt: 9999999 },
+                  },
+                  { Rank: "CROWN 3" }
+                );
+                const da = await findAllRecord(Usermodal, {
+                  Rank: "CROWN 3",
+                  teamtotalstack: { $gt: 9999999 },
+                });
+                if (da.length > 0) {
+                  let data = {
+                    userId: ReffData._id,
+                    Note: "1,50,000 BUSD = SECOND HOME IN UAE / INDIA/ MALASIYA",
+                    Amount: 150000,
+                  };
+                  await Achivement(data).save();
+                }
+              }
+            } else if (res[0]?.Rank == "CROWN 3") {
+              const Refflevalncome9 = await findAllRecord(Usermodal, {
+                refferalBy: ReffData.username,
+                Rank: "CROWN 3",
+              });
+              if (Refflevalncome9.length >= 2) {
+                await updateRecord(
+                  Usermodal,
+                  {
+                    _id: ReffData._id,
+                    Rank: "CROWN 3",
+                    teamtotalstack: { $gt: 14999999 },
+                  },
+                  { Rank: "AMBASSADOR" }
+                );
+                const da = await findAllRecord(Usermodal, {
+                  Rank: "AMBASSADOR",
+                  teamtotalstack: { $gt: 14999999 },
+                });
+                if (da.length > 0) {
+                  let data = {
+                    userId: ReffData._id,
+                    Note: "5,00,000 BUSD = BENTLEY CAR",
+                    Amount: 500000,
+                  };
+                  await Achivement(data).save();
+                }
+              }
+            }
+          });
           const price = await findAllRecord(V4Xpricemodal, {});
           return successResponse(res, {
             message: "wallet data get successfully",
@@ -1945,6 +2267,13 @@ exports.stack = {
                 };
                 if (req.body.Username1 !== "") {
                   await Transactionmodal(tdata).save();
+                  await Mainwallatesc({
+                    userId: decoded.profile._id,
+                    Note: `You Transfer token from ${decoded.profile.Username1}`,
+                    Amount: req.body.Amount,
+                    type: 0,
+                    Active: true,
+                  }).save();
                   await updateRecord(
                     Walletmodal,
                     {
@@ -1957,6 +2286,14 @@ exports.stack = {
                   let abc = await Usermodal.find({
                     username: req.body.Username1,
                   });
+                  /// E-wallate
+                  await Ewallateesc({
+                    userId: abc[0]._id,
+                    Note: `You Received Coins from ${decoded.profile.username}`,
+                    Amount: req.body.Amount,
+                    type: 1,
+                    Active: true,
+                  }).save();
                   await updateRecord(
                     Walletmodal,
                     {
@@ -1985,6 +2322,21 @@ exports.stack = {
                 };
 
                 if (req.body.Username1 !== "") {
+                  // E-waallate
+                  // await Mainwallatesc({
+                  //   userId: decoded.profile._id,
+                  //   Note: `Transfer coins from ${decoded.profile.username}`,
+                  //   Amount: req.body.Amount,
+                  //   type: 0,
+                  //   Active: true,
+                  // }).save();
+                  await Ewallateesc({
+                    userId: decoded.profile._id,
+                    Note: `You Transfer token from ${decoded.profile.Username1}`,
+                    Amount: req.body.Amount,
+                    type: 0,
+                    Active: true,
+                  }).save();
                   await Transactionmodal(tdata).save();
                   await updateRecord(
                     Walletmodal,
@@ -1998,6 +2350,13 @@ exports.stack = {
                   let abc = await Usermodal.find({
                     username: req.body.Username1,
                   });
+                  await Ewallateesc({
+                    userId: abc[0]._id,
+                    Note: `You Received Coins from ${decoded.profile.username}`,
+                    Amount: req.body.Amount,
+                    type: 1,
+                    Active: true,
+                  }).save();
                   await updateRecord(
                     Walletmodal,
                     {

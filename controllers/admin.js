@@ -296,6 +296,13 @@ exports.admin = {
           },
           { $inc: { mainWallet: req.body.price } }
         );
+        await Mainwallatesc({
+          userId: data._id,
+          Note: `coins transfer by admin`,
+          Amount: (req.body.Amount * 4) / 100,
+          type: 1,
+          Active: true,
+        }).save();
         return successResponse(res, {
           message: "V4X price chenge successfully!",
         });
