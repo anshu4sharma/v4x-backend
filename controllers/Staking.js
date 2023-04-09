@@ -156,14 +156,17 @@ exports.stack = {
                 {
                   mainWallet: WalletData.mainWallet - req.body.Amount,
                 }
-              );
-              await Mainwallatesc({
-                userId: decoded.profile._id,
-                Note: `stacking`,
-                Amount: req.body.Amount,
-                type: 0,
-                Active: true,
-              }).save();
+              ).then(async (res) => {
+                console.log("------------>", res);
+                await Mainwallatesc({
+                  userId: decoded.profile._id,
+                  Note: `stacking`,
+                  Amount: req.body.Amount,
+                  balace: res.mainWallet,
+                  type: 0,
+                  Active: true,
+                }).save();
+              });
               if (ReffData !== null) {
                 const price = await findAllRecord(V4Xpricemodal, {});
                 if (ReffData.mystack >= 50) {
@@ -178,14 +181,16 @@ exports.stack = {
                           (req.body.Amount * price[0].price * 10) / 100,
                       },
                     }
-                  );
-                  await Mainwallatesc({
-                    userId: ReffData._id,
-                    Note: `You Got Refer and Earn Income From ${decoded.profile.username}`,
-                    Amount: (req.body.Amount * price[0].price * 10) / 100,
-                    type: 1,
-                    Active: true,
-                  }).save();
+                  ).then(async (res) => {
+                    await Mainwallatesc({
+                      userId: ReffData._id,
+                      Note: `You Got Refer and Earn Income From ${decoded.profile.username}`,
+                      Amount: (req.body.Amount * price[0].price * 10) / 100,
+                      type: 1,
+                      balace: res.mainWallet,
+                      Active: true,
+                    }).save();
+                  });
                   await Stakingbonus({
                     userId: ReffData._id,
                     ReffId: decoded.profile._id,
@@ -194,11 +199,6 @@ exports.stack = {
                     Active: true,
                   }).save();
                 }
-                updateRecord(
-                  await Walletmodal,
-                  { userId: decoded.profile._id },
-                  { mainWallet: WalletData.mainWallet - req.body.Amount }
-                );
                 const ReffData2 = await findAllRecord(Usermodal, {
                   refferalBy: ReffData.username,
                   isValid: true,
@@ -252,20 +252,24 @@ exports.stack = {
                         Usernameby: decoded.profile.username,
                         Amount: (req.body.Amount * 4) / 100,
                       };
-                      await Mainwallatesc({
-                        userId: Refflevalncome1._id,
-                        Note: `You Got Level ${1} Income`,
-                        Usernameby: decoded.profile.username,
-                        Amount: (req.body.Amount * 4) / 100,
-                        type: 1,
-                        Active: true,
-                      }).save();
-                      await Communitymodal(data1).save();
-
-                      console.log("===============>11", {
-                        Refflevalncome1,
-                        data1,
+                      await updateRecord(
+                        Walletmodal,
+                        {
+                          userId: Refflevalncome1._id,
+                        },
+                        { $inc: { mainWallet: (req.body.Amount * 4) / 100 } }
+                      ).then(async (res) => {
+                        await Mainwallatesc({
+                          userId: Refflevalncome1._id,
+                          Note: `You Got Level ${1} Income`,
+                          Amount: (req.body.Amount * 4) / 100,
+                          Usernameby: decoded.profile.username,
+                          balace: res.mainWallet,
+                          type: 1,
+                          Active: true,
+                        }).save();
                       });
+                      await Communitymodal(data1).save();
                     }
                   }
                   const Refflevalncome2 = await findOneRecord(Usermodal, {
@@ -283,15 +287,24 @@ exports.stack = {
                         Usernameby: decoded.profile.username,
                         Amount: (req.body.Amount * 3) / 100,
                       };
+                      await updateRecord(
+                        Walletmodal,
+                        {
+                          userId: Refflevalncome2._id,
+                        },
+                        { $inc: { mainWallet: (req.body.Amount * 3) / 100 } }
+                      ).then(async (res) => {
+                        await Mainwallatesc({
+                          userId: Refflevalncome2._id,
+                          Note: `You Got Level ${2} Income`,
+                          Amount: (req.body.Amount * 3) / 100,
+                          Usernameby: decoded.profile.username,
+                          balace: res.mainWallet,
+                          type: 1,
+                          Active: true,
+                        }).save();
+                      });
 
-                      await Mainwallatesc({
-                        userId: Refflevalncome2._id,
-                        Note: `You Got Level ${2} Income`,
-                        Usernameby: decoded.profile.username,
-                        Amount: (req.body.Amount * 3) / 100,
-                        type: 1,
-                        Active: true,
-                      }).save();
                       await Communitymodal(data2).save();
                       console.log("===============>22", {
                         Refflevalncome2,
@@ -314,14 +327,23 @@ exports.stack = {
                         Usernameby: decoded.profile.username,
                         Amount: (req.body.Amount * 2) / 100,
                       };
-                      await Mainwallatesc({
-                        userId: Refflevalncome3._id,
-                        Note: `You Got Level ${3} Income`,
-                        Usernameby: decoded.profile.username,
-                        Amount: (req.body.Amount * 2) / 100,
-                        type: 1,
-                        Active: true,
-                      }).save();
+                      await updateRecord(
+                        Walletmodal,
+                        {
+                          userId: Refflevalncome3._id,
+                        },
+                        { $inc: { mainWallet: (req.body.Amount * 3) / 100 } }
+                      ).then(async (res) => {
+                        await Mainwallatesc({
+                          userId: Refflevalncome3._id,
+                          Note: `You Got Level ${3} Income`,
+                          Usernameby: decoded.profile.username,
+                          Amount: (req.body.Amount * 2) / 100,
+                          balace: res.mainWallet,
+                          type: 1,
+                          Active: true,
+                        }).save();
+                      });
                       await Communitymodal(data3).save();
 
                       console.log("===============>33", {
@@ -345,14 +367,23 @@ exports.stack = {
                         Usernameby: decoded.profile.username,
                         Amount: (req.body.Amount * 1) / 100,
                       };
-                      await Mainwallatesc({
-                        userId: Refflevalncome4._id,
-                        Note: `You Got Level ${4} Income`,
-                        Usernameby: decoded.profile.username,
-                        Amount: (req.body.Amount * 1) / 100,
-                        type: 1,
-                        Active: true,
-                      }).save();
+                      await updateRecord(
+                        Walletmodal,
+                        {
+                          userId: Refflevalncome4._id,
+                        },
+                        { $inc: { mainWallet: (req.body.Amount * 3) / 100 } }
+                      ).then(async (res) => {
+                        await Mainwallatesc({
+                          userId: Refflevalncome4._id,
+                          Note: `You Got Level ${4} Income`,
+                          Usernameby: decoded.profile.username,
+                          Amount: (req.body.Amount * 1) / 100,
+                          balace: res.mainWallet,
+                          type: 1,
+                          Active: true,
+                        }).save();
+                      });
                       await Communitymodal(data4).save();
 
                       console.log("===============>44", {
@@ -376,14 +407,23 @@ exports.stack = {
                         Usernameby: decoded.profile.username,
                         Amount: (req.body.Amount * 0.5) / 100,
                       };
-                      await Mainwallatesc({
-                        userId: Refflevalncome5._id,
-                        Note: `You Got Level ${5} Income`,
-                        Usernameby: decoded.profile.username,
-                        Amount: (req.body.Amount * 0.5) / 100,
-                        type: 1,
-                        Active: true,
-                      }).save();
+                      await updateRecord(
+                        Walletmodal,
+                        {
+                          userId: Refflevalncome5._id,
+                        },
+                        { $inc: { mainWallet: (req.body.Amount * 3) / 100 } }
+                      ).then(async (res) => {
+                        await Mainwallatesc({
+                          userId: Refflevalncome5._id,
+                          Note: `You Got Level ${5} Income`,
+                          Usernameby: decoded.profile.username,
+                          Amount: (req.body.Amount * 0.5) / 100,
+                          balace: res.mainWallet,
+                          type: 1,
+                          Active: true,
+                        }).save();
+                      });
                       await Communitymodal(data5).save();
 
                       console.log("===============>55", {
@@ -407,14 +447,23 @@ exports.stack = {
                         Usernameby: decoded.profile.username,
                         Amount: (req.body.Amount * 0.5) / 100,
                       };
-                      await Mainwallatesc({
-                        userId: Refflevalncome6._id,
-                        Note: `You Got Level ${6} Income`,
-                        Usernameby: decoded.profile.username,
-                        Amount: (req.body.Amount * 0.5) / 100,
-                        type: 1,
-                        Active: true,
-                      }).save();
+                      await updateRecord(
+                        Walletmodal,
+                        {
+                          userId: Refflevalncome6._id,
+                        },
+                        { $inc: { mainWallet: (req.body.Amount * 3) / 100 } }
+                      ).then(async (res) => {
+                        await Mainwallatesc({
+                          userId: Refflevalncome6._id,
+                          Note: `You Got Level ${6} Income`,
+                          Usernameby: decoded.profile.username,
+                          Amount: (req.body.Amount * 0.5) / 100,
+                          balace: res.mainWallet,
+                          type: 1,
+                          Active: true,
+                        }).save();
+                      });
                       await Communitymodal(data6).save();
 
                       console.log("===============>66", {
@@ -438,14 +487,23 @@ exports.stack = {
                         Usernameby: decoded.profile.username,
                         Amount: (req.body.Amount * 0.5) / 100,
                       };
-                      await Mainwallatesc({
-                        userId: Refflevalncome7._id,
-                        Note: `You Got Level ${7} Income`,
-                        Usernameby: decoded.profile.username,
-                        Amount: (req.body.Amount * 0.5) / 100,
-                        type: 1,
-                        Active: true,
-                      }).save();
+                      await updateRecord(
+                        Walletmodal,
+                        {
+                          userId: Refflevalncome7._id,
+                        },
+                        { $inc: { mainWallet: (req.body.Amount * 3) / 100 } }
+                      ).then(async (res) => {
+                        await Mainwallatesc({
+                          userId: Refflevalncome7._id,
+                          Note: `You Got Level ${7} Income`,
+                          Usernameby: decoded.profile.username,
+                          Amount: (req.body.Amount * 0.5) / 100,
+                          balace: res.mainWallet,
+                          type: 1,
+                          Active: true,
+                        }).save();
+                      });
                       await Communitymodal(data7).save();
 
                       console.log("===============>77", {
@@ -469,14 +527,23 @@ exports.stack = {
                         Usernameby: decoded.profile.username,
                         Amount: (req.body.Amount * 0.5) / 100,
                       };
-                      await Mainwallatesc({
-                        userId: Refflevalncome8._id,
-                        Note: `You Got Level ${8} Income`,
-                        Usernameby: decoded.profile.username,
-                        Amount: (req.body.Amount * 0.5) / 100,
-                        type: 1,
-                        Active: true,
-                      }).save();
+                      await updateRecord(
+                        Walletmodal,
+                        {
+                          userId: Refflevalncome8._id,
+                        },
+                        { $inc: { mainWallet: (req.body.Amount * 3) / 100 } }
+                      ).then(async (res) => {
+                        await Mainwallatesc({
+                          userId: Refflevalncome8._id,
+                          Note: `You Got Level ${8} Income`,
+                          Usernameby: decoded.profile.username,
+                          Amount: (req.body.Amount * 0.5) / 100,
+                          balace: res.mainWallet,
+                          type: 1,
+                          Active: true,
+                        }).save();
+                      });
                       await Communitymodal(data8).save();
 
                       console.log("===============>88", {
@@ -500,14 +567,23 @@ exports.stack = {
                         Usernameby: decoded.profile.username,
                         Amount: (req.body.Amount * 0.5) / 100,
                       };
-                      await Mainwallatesc({
-                        userId: Refflevalncome9._id,
-                        Note: `You Got Level ${9} Income`,
-                        Usernameby: decoded.profile.username,
-                        Amount: (req.body.Amount * 0.5) / 100,
-                        type: 1,
-                        Active: true,
-                      }).save();
+                      await updateRecord(
+                        Walletmodal,
+                        {
+                          userId: Refflevalncome9._id,
+                        },
+                        { $inc: { mainWallet: (req.body.Amount * 3) / 100 } }
+                      ).then(async (res) => {
+                        await Mainwallatesc({
+                          userId: Refflevalncome9._id,
+                          Note: `You Got Level ${9} Income`,
+                          Usernameby: decoded.profile.username,
+                          Amount: (req.body.Amount * 0.5) / 100,
+                          balace: res.mainWallet,
+                          type: 1,
+                          Active: true,
+                        }).save();
+                      });
                       await Communitymodal(data9).save();
 
                       console.log("===============>99", {
@@ -532,14 +608,23 @@ exports.stack = {
                         Usernameby: decoded.profile.username,
                         Amount: (req.body.Amount * 0.5) / 100,
                       };
-                      await Mainwallatesc({
-                        userId: Refflevalncome10._id,
-                        Note: `You Got Level ${10} Income`,
-                        Usernameby: decoded.profile.username,
-                        Amount: (req.body.Amount * 0.5) / 100,
-                        type: 1,
-                        Active: true,
-                      }).save();
+                      await updateRecord(
+                        Walletmodal,
+                        {
+                          userId: Refflevalncome10._id,
+                        },
+                        { $inc: { mainWallet: (req.body.Amount * 3) / 100 } }
+                      ).then(async (res) => {
+                        await Mainwallatesc({
+                          userId: Refflevalncome10._id,
+                          Note: `You Got Level ${10} Income`,
+                          Usernameby: decoded.profile.username,
+                          Amount: (req.body.Amount * 0.5) / 100,
+                          balace: res.mainWallet,
+                          type: 1,
+                          Active: true,
+                        }).save();
+                      });
                       await Communitymodal(data10).save();
 
                       console.log("===============>1010", {
@@ -564,14 +649,23 @@ exports.stack = {
                         Usernameby: decoded.profile.username,
                         Amount: (req.body.Amount * 0.5) / 100,
                       };
-                      await Mainwallatesc({
-                        userId: Refflevalncome11._id,
-                        Note: `You Got Level ${11} Income`,
-                        Usernameby: decoded.profile.username,
-                        Amount: (req.body.Amount * 0.5) / 100,
-                        type: 1,
-                        Active: true,
-                      }).save();
+                      await updateRecord(
+                        Walletmodal,
+                        {
+                          userId: Refflevalncome11._id,
+                        },
+                        { $inc: { mainWallet: (req.body.Amount * 3) / 100 } }
+                      ).then(async (res) => {
+                        await Mainwallatesc({
+                          userId: Refflevalncome11._id,
+                          Note: `You Got Level ${11} Income`,
+                          Usernameby: decoded.profile.username,
+                          Amount: (req.body.Amount * 0.5) / 100,
+                          balace: res.mainWallet,
+                          type: 1,
+                          Active: true,
+                        }).save();
+                      });
                       await Communitymodal(data11).save();
 
                       console.log("===============>1111", {
@@ -595,14 +689,23 @@ exports.stack = {
                         Usernameby: decoded.profile.username,
                         Amount: (req.body.Amount * 0.5) / 100,
                       };
-                      await Mainwallatesc({
-                        userId: Refflevalncome12._id,
-                        Note: `You Got Level ${12} Income`,
-                        Usernameby: decoded.profile.username,
-                        Amount: (req.body.Amount * 0.5) / 100,
-                        type: 1,
-                        Active: true,
-                      }).save();
+                      await updateRecord(
+                        Walletmodal,
+                        {
+                          userId: Refflevalncome12._id,
+                        },
+                        { $inc: { mainWallet: (req.body.Amount * 3) / 100 } }
+                      ).then(async (res) => {
+                        await Mainwallatesc({
+                          userId: Refflevalncome12._id,
+                          Note: `You Got Level ${12} Income`,
+                          Usernameby: decoded.profile.username,
+                          Amount: (req.body.Amount * 0.5) / 100,
+                          balace: res.mainWallet,
+                          type: 1,
+                          Active: true,
+                        }).save();
+                      });
                       await Communitymodal(data12).save();
 
                       console.log("===============>1212", {
@@ -626,14 +729,23 @@ exports.stack = {
                         Usernameby: decoded.profile.username,
                         Amount: (req.body.Amount * 0.5) / 100,
                       };
-                      await Mainwallatesc({
-                        userId: Refflevalncome13._id,
-                        Note: `You Got Level ${13} Income`,
-                        Usernameby: decoded.profile.username,
-                        Amount: (req.body.Amount * 0.5) / 100,
-                        type: 1,
-                        Active: true,
-                      }).save();
+                      await updateRecord(
+                        Walletmodal,
+                        {
+                          userId: Refflevalncome13._id,
+                        },
+                        { $inc: { mainWallet: (req.body.Amount * 3) / 100 } }
+                      ).then(async (res) => {
+                        await Mainwallatesc({
+                          userId: Refflevalncome13._id,
+                          Note: `You Got Level ${13} Income`,
+                          Usernameby: decoded.profile.username,
+                          Amount: (req.body.Amount * 0.5) / 100,
+                          balace: res.mainWallet,
+                          type: 1,
+                          Active: true,
+                        }).save();
+                      });
                       await Communitymodal(data13).save();
 
                       console.log("===============>1313", {
@@ -657,14 +769,23 @@ exports.stack = {
                         Usernameby: decoded.profile.username,
                         Amount: (req.body.Amount * 0.5) / 100,
                       };
-                      await Mainwallatesc({
-                        userId: Refflevalncome14._id,
-                        Note: `You Got Level ${14} Income`,
-                        Usernameby: decoded.profile.username,
-                        Amount: (req.body.Amount * 0.5) / 100,
-                        type: 1,
-                        Active: true,
-                      }).save();
+                      await updateRecord(
+                        Walletmodal,
+                        {
+                          userId: Refflevalncome13._id,
+                        },
+                        { $inc: { mainWallet: (req.body.Amount * 3) / 100 } }
+                      ).then(async (res) => {
+                        await Mainwallatesc({
+                          userId: Refflevalncome14._id,
+                          Note: `You Got Level ${14} Income`,
+                          Usernameby: decoded.profile.username,
+                          Amount: (req.body.Amount * 0.5) / 100,
+                          balace: res.mainWallet,
+                          type: 1,
+                          Active: true,
+                        }).save();
+                      });
                       await Communitymodal(data14).save();
 
                       console.log("===============>1414", {
@@ -688,14 +809,23 @@ exports.stack = {
                         Usernameby: decoded.profile.username,
                         Amount: (req.body.Amount * 1) / 100,
                       };
-                      await Mainwallatesc({
-                        userId: Refflevalncome15._id,
-                        Note: `You Got Level ${15} Income`,
-                        Usernameby: decoded.profile.username,
-                        Amount: (req.body.Amount * 1) / 100,
-                        type: 1,
-                        Active: true,
-                      }).save();
+                      await updateRecord(
+                        Walletmodal,
+                        {
+                          userId: Refflevalncome15._id,
+                        },
+                        { $inc: { mainWallet: (req.body.Amount * 3) / 100 } }
+                      ).then(async (res) => {
+                        await Mainwallatesc({
+                          userId: Refflevalncome15._id,
+                          Note: `You Got Level ${15} Income`,
+                          Usernameby: decoded.profile.username,
+                          Amount: (req.body.Amount * 1) / 100,
+                          balace: res.mainWallet,
+                          type: 1,
+                          Active: true,
+                        }).save();
+                      });
                       await Communitymodal(data15).save();
 
                       console.log("===============>1515", {
@@ -719,14 +849,23 @@ exports.stack = {
                         Usernameby: decoded.profile.username,
                         Amount: (req.body.Amount * 2) / 100,
                       };
-                      await Mainwallatesc({
-                        userId: Refflevalncome16._id,
-                        Note: `You Got Level ${16} Income`,
-                        Usernameby: decoded.profile.username,
-                        Amount: (req.body.Amount * 2) / 100,
-                        type: 1,
-                        Active: true,
-                      }).save();
+                      await updateRecord(
+                        Walletmodal,
+                        {
+                          userId: Refflevalncome16._id,
+                        },
+                        { $inc: { mainWallet: (req.body.Amount * 3) / 100 } }
+                      ).then(async (res) => {
+                        await Mainwallatesc({
+                          userId: Refflevalncome16._id,
+                          Note: `You Got Level ${16} Income`,
+                          Usernameby: decoded.profile.username,
+                          Amount: (req.body.Amount * 2) / 100,
+                          balace: res.mainWallet,
+                          type: 1,
+                          Active: true,
+                        }).save();
+                      });
                       await Communitymodal(data16).save();
 
                       console.log("===============>1616", {
@@ -750,14 +889,23 @@ exports.stack = {
                         Usernameby: decoded.profile.username,
                         Amount: (req.body.Amount * 3) / 100,
                       };
-                      await Mainwallatesc({
-                        userId: Refflevalncome17._id,
-                        Note: `You Got Level ${17} Income`,
-                        Usernameby: decoded.profile.username,
-                        Amount: (req.body.Amount * 3) / 100,
-                        type: 1,
-                        Active: true,
-                      }).save();
+                      await updateRecord(
+                        Walletmodal,
+                        {
+                          userId: Refflevalncome17._id,
+                        },
+                        { $inc: { mainWallet: (req.body.Amount * 3) / 100 } }
+                      ).then(async (res) => {
+                        await Mainwallatesc({
+                          userId: Refflevalncome17._id,
+                          Note: `You Got Level ${17} Income`,
+                          Usernameby: decoded.profile.username,
+                          Amount: (req.body.Amount * 3) / 100,
+                          balace: res.mainWallet,
+                          type: 1,
+                          Active: true,
+                        }).save();
+                      });
                       await Communitymodal(data17).save();
 
                       console.log("===============>1717", {
@@ -781,14 +929,23 @@ exports.stack = {
                         Usernameby: decoded.profile.username,
                         Amount: (req.body.Amount * 4) / 100,
                       };
-                      await Mainwallatesc({
-                        userId: Refflevalncome18._id,
-                        Note: `You Got Level ${18} Income`,
-                        Usernameby: decoded.profile.username,
-                        Amount: (req.body.Amount * 4) / 100,
-                        type: 1,
-                        Active: true,
-                      }).save();
+                      await updateRecord(
+                        Walletmodal,
+                        {
+                          userId: Refflevalncome18._id,
+                        },
+                        { $inc: { mainWallet: (req.body.Amount * 3) / 100 } }
+                      ).then(async (res) => {
+                        await Mainwallatesc({
+                          userId: Refflevalncome18._id,
+                          Note: `You Got Level ${18} Income`,
+                          Usernameby: decoded.profile.username,
+                          Amount: (req.body.Amount * 4) / 100,
+                          balace: res.mainWallet,
+                          type: 1,
+                          Active: true,
+                        }).save();
+                      });
                       await Communitymodal(data18).save();
                       console.log("===============>1818", {
                         Refflevalncome18,
@@ -931,20 +1088,24 @@ exports.stack = {
                         Usernameby: decoded.profile.username,
                         Amount: (req.body.Amount * 4) / 100,
                       };
-                      await Mainwallatesc({
-                        userId: Refflevalncome1._id,
-                        Note: `You Got Level ${1} Income`,
-                        Usernameby: decoded.profile.username,
-                        Amount: (req.body.Amount * 4) / 100,
-                        type: 1,
-                        Active: true,
-                      }).save();
-                      await Communitymodal(data1).save();
-
-                      console.log("===============>11", {
-                        Refflevalncome1,
-                        data1,
+                      await updateRecord(
+                        Walletmodal,
+                        {
+                          userId: Refflevalncome1._id,
+                        },
+                        { $inc: { mainWallet: (req.body.Amount * 4) / 100 } }
+                      ).then(async (res) => {
+                        await Mainwallatesc({
+                          userId: Refflevalncome1._id,
+                          Note: `You Got Level ${1} Income`,
+                          Amount: (req.body.Amount * 4) / 100,
+                          Usernameby: decoded.profile.username,
+                          balace: res.mainWallet,
+                          type: 1,
+                          Active: true,
+                        }).save();
                       });
+                      await Communitymodal(data1).save();
                     }
                   }
                   const Refflevalncome2 = await findOneRecord(Usermodal, {
@@ -962,15 +1123,24 @@ exports.stack = {
                         Usernameby: decoded.profile.username,
                         Amount: (req.body.Amount * 3) / 100,
                       };
+                      await updateRecord(
+                        Walletmodal,
+                        {
+                          userId: Refflevalncome2._id,
+                        },
+                        { $inc: { mainWallet: (req.body.Amount * 3) / 100 } }
+                      ).then(async (res) => {
+                        await Mainwallatesc({
+                          userId: Refflevalncome2._id,
+                          Note: `You Got Level ${2} Income`,
+                          Amount: (req.body.Amount * 3) / 100,
+                          Usernameby: decoded.profile.username,
+                          balace: res.mainWallet,
+                          type: 1,
+                          Active: true,
+                        }).save();
+                      });
 
-                      await Mainwallatesc({
-                        userId: Refflevalncome2._id,
-                        Note: `You Got Level ${2} Income`,
-                        Usernameby: decoded.profile.username,
-                        Amount: (req.body.Amount * 3) / 100,
-                        type: 1,
-                        Active: true,
-                      }).save();
                       await Communitymodal(data2).save();
                       console.log("===============>22", {
                         Refflevalncome2,
@@ -993,14 +1163,23 @@ exports.stack = {
                         Usernameby: decoded.profile.username,
                         Amount: (req.body.Amount * 2) / 100,
                       };
-                      await Mainwallatesc({
-                        userId: Refflevalncome3._id,
-                        Note: `You Got Level ${3} Income`,
-                        Usernameby: decoded.profile.username,
-                        Amount: (req.body.Amount * 2) / 100,
-                        type: 1,
-                        Active: true,
-                      }).save();
+                      await updateRecord(
+                        Walletmodal,
+                        {
+                          userId: Refflevalncome3._id,
+                        },
+                        { $inc: { mainWallet: (req.body.Amount * 3) / 100 } }
+                      ).then(async (res) => {
+                        await Mainwallatesc({
+                          userId: Refflevalncome3._id,
+                          Note: `You Got Level ${3} Income`,
+                          Usernameby: decoded.profile.username,
+                          Amount: (req.body.Amount * 2) / 100,
+                          balace: res.mainWallet,
+                          type: 1,
+                          Active: true,
+                        }).save();
+                      });
                       await Communitymodal(data3).save();
 
                       console.log("===============>33", {
@@ -1024,14 +1203,23 @@ exports.stack = {
                         Usernameby: decoded.profile.username,
                         Amount: (req.body.Amount * 1) / 100,
                       };
-                      await Mainwallatesc({
-                        userId: Refflevalncome4._id,
-                        Note: `You Got Level ${4} Income`,
-                        Usernameby: decoded.profile.username,
-                        Amount: (req.body.Amount * 1) / 100,
-                        type: 1,
-                        Active: true,
-                      }).save();
+                      await updateRecord(
+                        Walletmodal,
+                        {
+                          userId: Refflevalncome4._id,
+                        },
+                        { $inc: { mainWallet: (req.body.Amount * 3) / 100 } }
+                      ).then(async (res) => {
+                        await Mainwallatesc({
+                          userId: Refflevalncome4._id,
+                          Note: `You Got Level ${4} Income`,
+                          Usernameby: decoded.profile.username,
+                          Amount: (req.body.Amount * 1) / 100,
+                          balace: res.mainWallet,
+                          type: 1,
+                          Active: true,
+                        }).save();
+                      });
                       await Communitymodal(data4).save();
 
                       console.log("===============>44", {
@@ -1055,14 +1243,23 @@ exports.stack = {
                         Usernameby: decoded.profile.username,
                         Amount: (req.body.Amount * 0.5) / 100,
                       };
-                      await Mainwallatesc({
-                        userId: Refflevalncome5._id,
-                        Note: `You Got Level ${5} Income`,
-                        Usernameby: decoded.profile.username,
-                        Amount: (req.body.Amount * 0.5) / 100,
-                        type: 1,
-                        Active: true,
-                      }).save();
+                      await updateRecord(
+                        Walletmodal,
+                        {
+                          userId: Refflevalncome5._id,
+                        },
+                        { $inc: { mainWallet: (req.body.Amount * 3) / 100 } }
+                      ).then(async (res) => {
+                        await Mainwallatesc({
+                          userId: Refflevalncome5._id,
+                          Note: `You Got Level ${5} Income`,
+                          Usernameby: decoded.profile.username,
+                          Amount: (req.body.Amount * 0.5) / 100,
+                          balace: res.mainWallet,
+                          type: 1,
+                          Active: true,
+                        }).save();
+                      });
                       await Communitymodal(data5).save();
 
                       console.log("===============>55", {
@@ -1086,14 +1283,23 @@ exports.stack = {
                         Usernameby: decoded.profile.username,
                         Amount: (req.body.Amount * 0.5) / 100,
                       };
-                      await Mainwallatesc({
-                        userId: Refflevalncome6._id,
-                        Note: `You Got Level ${6} Income`,
-                        Usernameby: decoded.profile.username,
-                        Amount: (req.body.Amount * 0.5) / 100,
-                        type: 1,
-                        Active: true,
-                      }).save();
+                      await updateRecord(
+                        Walletmodal,
+                        {
+                          userId: Refflevalncome6._id,
+                        },
+                        { $inc: { mainWallet: (req.body.Amount * 3) / 100 } }
+                      ).then(async (res) => {
+                        await Mainwallatesc({
+                          userId: Refflevalncome6._id,
+                          Note: `You Got Level ${6} Income`,
+                          Usernameby: decoded.profile.username,
+                          Amount: (req.body.Amount * 0.5) / 100,
+                          balace: res.mainWallet,
+                          type: 1,
+                          Active: true,
+                        }).save();
+                      });
                       await Communitymodal(data6).save();
 
                       console.log("===============>66", {
@@ -1117,14 +1323,23 @@ exports.stack = {
                         Usernameby: decoded.profile.username,
                         Amount: (req.body.Amount * 0.5) / 100,
                       };
-                      await Mainwallatesc({
-                        userId: Refflevalncome7._id,
-                        Note: `You Got Level ${7} Income`,
-                        Usernameby: decoded.profile.username,
-                        Amount: (req.body.Amount * 0.5) / 100,
-                        type: 1,
-                        Active: true,
-                      }).save();
+                      await updateRecord(
+                        Walletmodal,
+                        {
+                          userId: Refflevalncome7._id,
+                        },
+                        { $inc: { mainWallet: (req.body.Amount * 3) / 100 } }
+                      ).then(async (res) => {
+                        await Mainwallatesc({
+                          userId: Refflevalncome7._id,
+                          Note: `You Got Level ${7} Income`,
+                          Usernameby: decoded.profile.username,
+                          Amount: (req.body.Amount * 0.5) / 100,
+                          balace: res.mainWallet,
+                          type: 1,
+                          Active: true,
+                        }).save();
+                      });
                       await Communitymodal(data7).save();
 
                       console.log("===============>77", {
@@ -1148,14 +1363,23 @@ exports.stack = {
                         Usernameby: decoded.profile.username,
                         Amount: (req.body.Amount * 0.5) / 100,
                       };
-                      await Mainwallatesc({
-                        userId: Refflevalncome8._id,
-                        Note: `You Got Level ${8} Income`,
-                        Usernameby: decoded.profile.username,
-                        Amount: (req.body.Amount * 0.5) / 100,
-                        type: 1,
-                        Active: true,
-                      }).save();
+                      await updateRecord(
+                        Walletmodal,
+                        {
+                          userId: Refflevalncome8._id,
+                        },
+                        { $inc: { mainWallet: (req.body.Amount * 3) / 100 } }
+                      ).then(async (res) => {
+                        await Mainwallatesc({
+                          userId: Refflevalncome8._id,
+                          Note: `You Got Level ${8} Income`,
+                          Usernameby: decoded.profile.username,
+                          Amount: (req.body.Amount * 0.5) / 100,
+                          balace: res.mainWallet,
+                          type: 1,
+                          Active: true,
+                        }).save();
+                      });
                       await Communitymodal(data8).save();
 
                       console.log("===============>88", {
@@ -1179,14 +1403,23 @@ exports.stack = {
                         Usernameby: decoded.profile.username,
                         Amount: (req.body.Amount * 0.5) / 100,
                       };
-                      await Mainwallatesc({
-                        userId: Refflevalncome9._id,
-                        Note: `You Got Level ${9} Income`,
-                        Usernameby: decoded.profile.username,
-                        Amount: (req.body.Amount * 0.5) / 100,
-                        type: 1,
-                        Active: true,
-                      }).save();
+                      await updateRecord(
+                        Walletmodal,
+                        {
+                          userId: Refflevalncome9._id,
+                        },
+                        { $inc: { mainWallet: (req.body.Amount * 3) / 100 } }
+                      ).then(async (res) => {
+                        await Mainwallatesc({
+                          userId: Refflevalncome9._id,
+                          Note: `You Got Level ${9} Income`,
+                          Usernameby: decoded.profile.username,
+                          Amount: (req.body.Amount * 0.5) / 100,
+                          balace: res.mainWallet,
+                          type: 1,
+                          Active: true,
+                        }).save();
+                      });
                       await Communitymodal(data9).save();
 
                       console.log("===============>99", {
@@ -1211,14 +1444,23 @@ exports.stack = {
                         Usernameby: decoded.profile.username,
                         Amount: (req.body.Amount * 0.5) / 100,
                       };
-                      await Mainwallatesc({
-                        userId: Refflevalncome10._id,
-                        Note: `You Got Level ${10} Income`,
-                        Usernameby: decoded.profile.username,
-                        Amount: (req.body.Amount * 0.5) / 100,
-                        type: 1,
-                        Active: true,
-                      }).save();
+                      await updateRecord(
+                        Walletmodal,
+                        {
+                          userId: Refflevalncome10._id,
+                        },
+                        { $inc: { mainWallet: (req.body.Amount * 3) / 100 } }
+                      ).then(async (res) => {
+                        await Mainwallatesc({
+                          userId: Refflevalncome10._id,
+                          Note: `You Got Level ${10} Income`,
+                          Usernameby: decoded.profile.username,
+                          Amount: (req.body.Amount * 0.5) / 100,
+                          balace: res.mainWallet,
+                          type: 1,
+                          Active: true,
+                        }).save();
+                      });
                       await Communitymodal(data10).save();
 
                       console.log("===============>1010", {
@@ -1243,14 +1485,23 @@ exports.stack = {
                         Usernameby: decoded.profile.username,
                         Amount: (req.body.Amount * 0.5) / 100,
                       };
-                      await Mainwallatesc({
-                        userId: Refflevalncome11._id,
-                        Note: `You Got Level ${11} Income`,
-                        Usernameby: decoded.profile.username,
-                        Amount: (req.body.Amount * 0.5) / 100,
-                        type: 1,
-                        Active: true,
-                      }).save();
+                      await updateRecord(
+                        Walletmodal,
+                        {
+                          userId: Refflevalncome11._id,
+                        },
+                        { $inc: { mainWallet: (req.body.Amount * 3) / 100 } }
+                      ).then(async (res) => {
+                        await Mainwallatesc({
+                          userId: Refflevalncome11._id,
+                          Note: `You Got Level ${11} Income`,
+                          Usernameby: decoded.profile.username,
+                          Amount: (req.body.Amount * 0.5) / 100,
+                          balace: res.mainWallet,
+                          type: 1,
+                          Active: true,
+                        }).save();
+                      });
                       await Communitymodal(data11).save();
 
                       console.log("===============>1111", {
@@ -1274,14 +1525,23 @@ exports.stack = {
                         Usernameby: decoded.profile.username,
                         Amount: (req.body.Amount * 0.5) / 100,
                       };
-                      await Mainwallatesc({
-                        userId: Refflevalncome12._id,
-                        Note: `You Got Level ${12} Income`,
-                        Usernameby: decoded.profile.username,
-                        Amount: (req.body.Amount * 0.5) / 100,
-                        type: 1,
-                        Active: true,
-                      }).save();
+                      await updateRecord(
+                        Walletmodal,
+                        {
+                          userId: Refflevalncome12._id,
+                        },
+                        { $inc: { mainWallet: (req.body.Amount * 3) / 100 } }
+                      ).then(async (res) => {
+                        await Mainwallatesc({
+                          userId: Refflevalncome12._id,
+                          Note: `You Got Level ${12} Income`,
+                          Usernameby: decoded.profile.username,
+                          Amount: (req.body.Amount * 0.5) / 100,
+                          balace: res.mainWallet,
+                          type: 1,
+                          Active: true,
+                        }).save();
+                      });
                       await Communitymodal(data12).save();
 
                       console.log("===============>1212", {
@@ -1305,14 +1565,23 @@ exports.stack = {
                         Usernameby: decoded.profile.username,
                         Amount: (req.body.Amount * 0.5) / 100,
                       };
-                      await Mainwallatesc({
-                        userId: Refflevalncome13._id,
-                        Note: `You Got Level ${13} Income`,
-                        Usernameby: decoded.profile.username,
-                        Amount: (req.body.Amount * 0.5) / 100,
-                        type: 1,
-                        Active: true,
-                      }).save();
+                      await updateRecord(
+                        Walletmodal,
+                        {
+                          userId: Refflevalncome13._id,
+                        },
+                        { $inc: { mainWallet: (req.body.Amount * 3) / 100 } }
+                      ).then(async (res) => {
+                        await Mainwallatesc({
+                          userId: Refflevalncome13._id,
+                          Note: `You Got Level ${13} Income`,
+                          Usernameby: decoded.profile.username,
+                          Amount: (req.body.Amount * 0.5) / 100,
+                          balace: res.mainWallet,
+                          type: 1,
+                          Active: true,
+                        }).save();
+                      });
                       await Communitymodal(data13).save();
 
                       console.log("===============>1313", {
@@ -1336,14 +1605,23 @@ exports.stack = {
                         Usernameby: decoded.profile.username,
                         Amount: (req.body.Amount * 0.5) / 100,
                       };
-                      await Mainwallatesc({
-                        userId: Refflevalncome14._id,
-                        Note: `You Got Level ${14} Income`,
-                        Usernameby: decoded.profile.username,
-                        Amount: (req.body.Amount * 0.5) / 100,
-                        type: 1,
-                        Active: true,
-                      }).save();
+                      await updateRecord(
+                        Walletmodal,
+                        {
+                          userId: Refflevalncome13._id,
+                        },
+                        { $inc: { mainWallet: (req.body.Amount * 3) / 100 } }
+                      ).then(async (res) => {
+                        await Mainwallatesc({
+                          userId: Refflevalncome14._id,
+                          Note: `You Got Level ${14} Income`,
+                          Usernameby: decoded.profile.username,
+                          Amount: (req.body.Amount * 0.5) / 100,
+                          balace: res.mainWallet,
+                          type: 1,
+                          Active: true,
+                        }).save();
+                      });
                       await Communitymodal(data14).save();
 
                       console.log("===============>1414", {
@@ -1367,14 +1645,23 @@ exports.stack = {
                         Usernameby: decoded.profile.username,
                         Amount: (req.body.Amount * 1) / 100,
                       };
-                      await Mainwallatesc({
-                        userId: Refflevalncome15._id,
-                        Note: `You Got Level ${15} Income`,
-                        Usernameby: decoded.profile.username,
-                        Amount: (req.body.Amount * 1) / 100,
-                        type: 1,
-                        Active: true,
-                      }).save();
+                      await updateRecord(
+                        Walletmodal,
+                        {
+                          userId: Refflevalncome15._id,
+                        },
+                        { $inc: { mainWallet: (req.body.Amount * 3) / 100 } }
+                      ).then(async (res) => {
+                        await Mainwallatesc({
+                          userId: Refflevalncome15._id,
+                          Note: `You Got Level ${15} Income`,
+                          Usernameby: decoded.profile.username,
+                          Amount: (req.body.Amount * 1) / 100,
+                          balace: res.mainWallet,
+                          type: 1,
+                          Active: true,
+                        }).save();
+                      });
                       await Communitymodal(data15).save();
 
                       console.log("===============>1515", {
@@ -1398,14 +1685,23 @@ exports.stack = {
                         Usernameby: decoded.profile.username,
                         Amount: (req.body.Amount * 2) / 100,
                       };
-                      await Mainwallatesc({
-                        userId: Refflevalncome16._id,
-                        Note: `You Got Level ${16} Income`,
-                        Usernameby: decoded.profile.username,
-                        Amount: (req.body.Amount * 2) / 100,
-                        type: 1,
-                        Active: true,
-                      }).save();
+                      await updateRecord(
+                        Walletmodal,
+                        {
+                          userId: Refflevalncome16._id,
+                        },
+                        { $inc: { mainWallet: (req.body.Amount * 3) / 100 } }
+                      ).then(async (res) => {
+                        await Mainwallatesc({
+                          userId: Refflevalncome16._id,
+                          Note: `You Got Level ${16} Income`,
+                          Usernameby: decoded.profile.username,
+                          Amount: (req.body.Amount * 2) / 100,
+                          balace: res.mainWallet,
+                          type: 1,
+                          Active: true,
+                        }).save();
+                      });
                       await Communitymodal(data16).save();
 
                       console.log("===============>1616", {
@@ -1429,14 +1725,23 @@ exports.stack = {
                         Usernameby: decoded.profile.username,
                         Amount: (req.body.Amount * 3) / 100,
                       };
-                      await Mainwallatesc({
-                        userId: Refflevalncome17._id,
-                        Note: `You Got Level ${17} Income`,
-                        Usernameby: decoded.profile.username,
-                        Amount: (req.body.Amount * 3) / 100,
-                        type: 1,
-                        Active: true,
-                      }).save();
+                      await updateRecord(
+                        Walletmodal,
+                        {
+                          userId: Refflevalncome17._id,
+                        },
+                        { $inc: { mainWallet: (req.body.Amount * 3) / 100 } }
+                      ).then(async (res) => {
+                        await Mainwallatesc({
+                          userId: Refflevalncome17._id,
+                          Note: `You Got Level ${17} Income`,
+                          Usernameby: decoded.profile.username,
+                          Amount: (req.body.Amount * 3) / 100,
+                          balace: res.mainWallet,
+                          type: 1,
+                          Active: true,
+                        }).save();
+                      });
                       await Communitymodal(data17).save();
 
                       console.log("===============>1717", {
@@ -1460,14 +1765,23 @@ exports.stack = {
                         Usernameby: decoded.profile.username,
                         Amount: (req.body.Amount * 4) / 100,
                       };
-                      await Mainwallatesc({
-                        userId: Refflevalncome18._id,
-                        Note: `You Got Level ${18} Income`,
-                        Usernameby: decoded.profile.username,
-                        Amount: (req.body.Amount * 4) / 100,
-                        type: 1,
-                        Active: true,
-                      }).save();
+                      await updateRecord(
+                        Walletmodal,
+                        {
+                          userId: Refflevalncome18._id,
+                        },
+                        { $inc: { mainWallet: (req.body.Amount * 3) / 100 } }
+                      ).then(async (res) => {
+                        await Mainwallatesc({
+                          userId: Refflevalncome18._id,
+                          Note: `You Got Level ${18} Income`,
+                          Usernameby: decoded.profile.username,
+                          Amount: (req.body.Amount * 4) / 100,
+                          balace: res.mainWallet,
+                          type: 1,
+                          Active: true,
+                        }).save();
+                      });
                       await Communitymodal(data18).save();
                       console.log("===============>1818", {
                         Refflevalncome18,
@@ -1481,14 +1795,16 @@ exports.stack = {
                 Walletmodal,
                 { userId: decoded.profile._id },
                 { v4xWallet: WalletData.v4xWallet - req.body.Amount }
-              );
-              await Ewallateesc({
-                userId: decoded.profile._id ,
-                Note: `Staking`,
-                Amount: req.body.Amount,
-                type: 0,
-                Active: true,
-              }).save();
+              ).then(async (res) => {
+                await Ewallateesc({
+                  userId: decoded.profile._id,
+                  Note: `Staking`,
+                  Amount: req.body.Amount,
+                  balace: res.mainWallet,
+                  type: 0,
+                  Active: true,
+                }).save();
+              });
               const price = await findAllRecord(V4Xpricemodal, {});
               await Stakingmodal({
                 userId: decoded.profile._id,

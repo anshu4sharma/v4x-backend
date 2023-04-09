@@ -82,13 +82,26 @@ schedule.scheduleJob(every24hours, async () => {
           Note: "You Got Staking Bonus Income.",
           Active: false,
         }).save();
-        await Mainwallatesc({
-          userId: reword.userId,
-          Note: "You Got Staking Bonus Income.",
-          Amount: reword.DailyReword / price[0].price,
-          type: 1,
-          Active: true,
-        }).save();
+        await updateRecord(
+          Walletmodal,
+          {
+            userId: ReffData._id,
+          },
+          {
+            $inc: {
+              mainWallet: reword.DailyReword / price[0].price,
+            },
+          }
+        ).then(async (res) => {
+          await Mainwallatesc({
+            userId: ReffData._id,
+            Note: `You Got Staking Bonus Income.`,
+            Amount: (req.body.Amount * price[0].price * 10) / 100,
+            type: 1,
+            balace: res.mainWallet,
+            Active: true,
+          }).save();
+        });
         await updateRecord(
           Stakingmodal,
           {
@@ -100,13 +113,6 @@ schedule.scheduleJob(every24hours, async () => {
             TotaldaysTosendReword: reword.TotaldaysTosendReword - 1,
             $inc: { Totalsend: 1 },
           }
-        );
-        await updateRecord(
-          Walletmodal,
-          {
-            userId: reword.userId,
-          },
-          { $inc: { mainWallet: reword.DailyReword / price[0].price } }
         );
       } else {
         await Stakingbonus({
@@ -221,13 +227,26 @@ schedule.scheduleJob(every24hours, async () => {
                   Note: "V4X COIN WILL BE CREDITED IN PASSIVE CLUB WALLET",
                   Amount: (d.DailyReword * 5) / 100,
                 };
-                await Mainwallatesc({
-                  userId: user._id,
-                  Note: `V4X COIN WILL BE CREDITED IN PASSIVE CLUB WALLET ${Refflevalncome?.username}`,
-                  Amount: (d.DailyReword * 5) / 100,
-                  type: 1,
-                  Active: true,
-                }).save();
+                await updateRecord(
+                  Walletmodal,
+                  {
+                    userId: ReffData._id,
+                  },
+                  {
+                    $inc: {
+                      mainWallet: (d.DailyReword * 5) / 100,
+                    },
+                  }
+                ).then(async (res) => {
+                  await Mainwallatesc({
+                    userId: ReffData._id,
+                    Note:  `V4X COIN WILL BE CREDITED IN PASSIVE CLUB WALLET ${Refflevalncome?.username}`,
+                    Amount: (d.DailyReword * 5) / 100,
+                    type: 1,
+                    balace: res.mainWallet,
+                    Active: true,
+                  }).save();
+                });
                 await Passive(data).save();
               }
             }
@@ -248,13 +267,26 @@ schedule.scheduleJob(every24hours, async () => {
                   Note: "V4X COIN WILL BE CREDITED IN PASSIVE CLUB WALLET",
                   Amount: (d.DailyReword * 7) / 100,
                 };
-                await Mainwallatesc({
-                  userId: user._id,
-                  Note: `V4X COIN WILL BE CREDITED IN PASSIVE CLUB WALLET ${Refflevalncome?.username}`,
-                  Amount: (d.DailyReword * 5) / 100,
-                  type: 1,
-                  Active: true,
-                }).save();
+                await updateRecord(
+                  Walletmodal,
+                  {
+                    userId: ReffData._id,
+                  },
+                  {
+                    $inc: {
+                      mainWallet: (d.DailyReword * 7) / 100,
+                    },
+                  }
+                ).then(async (res) => {
+                  await Mainwallatesc({
+                    userId: ReffData._id,
+                    Note:  `V4X COIN WILL BE CREDITED IN PASSIVE CLUB WALLET ${Refflevalncome?.username}`,
+                    Amount: (d.DailyReword * 7) / 100,
+                    type: 1,
+                    balace: res.mainWallet,
+                    Active: true,
+                  }).save();
+                });
                 await Passive(data).save();
               }
             }
@@ -275,13 +307,26 @@ schedule.scheduleJob(every24hours, async () => {
                   Note: "V4X COIN WILL BE CREDITED IN PASSIVE CLUB WALLET",
                   Amount: (d.DailyReword * 10) / 100,
                 };
-                await Mainwallatesc({
-                  userId: user._id,
-                  Note: `V4X COIN WILL BE CREDITED IN PASSIVE CLUB WALLET ${Refflevalncome?.username}`,
-                  Amount: (d.DailyReword * 5) / 100,
-                  type: 1,
-                  Active: true,
-                }).save();
+                await updateRecord(
+                  Walletmodal,
+                  {
+                    userId: ReffData._id,
+                  },
+                  {
+                    $inc: {
+                      mainWallet: (d.DailyReword * 10) / 100,
+                    },
+                  }
+                ).then(async (res) => {
+                  await Mainwallatesc({
+                    userId: ReffData._id,
+                    Note:  `V4X COIN WILL BE CREDITED IN PASSIVE CLUB WALLET ${Refflevalncome?.username}`,
+                    Amount: (d.DailyReword * 10) / 100,
+                    type: 1,
+                    balace: res.mainWallet,
+                    Active: true,
+                  }).save();
+                });
                 await Passive(data).save();
               }
             }
@@ -302,13 +347,26 @@ schedule.scheduleJob(every24hours, async () => {
                   Note: "V4X COIN WILL BE CREDITED IN PASSIVE CLUB WALLET",
                   Amount: (d.DailyReword * 11) / 100,
                 };
-                await Mainwallatesc({
-                  userId: user._id,
-                  Note: `V4X COIN WILL BE CREDITED IN PASSIVE CLUB WALLET ${Refflevalncome?.username}`,
-                  Amount: (d.DailyReword * 5) / 100,
-                  type: 1,
-                  Active: true,
-                }).save();
+                await updateRecord(
+                  Walletmodal,
+                  {
+                    userId: ReffData._id,
+                  },
+                  {
+                    $inc: {
+                      mainWallet: (d.DailyReword * 11) / 100,
+                    },
+                  }
+                ).then(async (res) => {
+                  await Mainwallatesc({
+                    userId: ReffData._id,
+                    Note:  `V4X COIN WILL BE CREDITED IN PASSIVE CLUB WALLET ${Refflevalncome?.username}`,
+                    Amount: (d.DailyReword * 11) / 100,
+                    type: 1,
+                    balace: res.mainWallet,
+                    Active: true,
+                  }).save();
+                });
                 await Passive(data).save();
               }
             }
@@ -329,13 +387,26 @@ schedule.scheduleJob(every24hours, async () => {
                   Note: "V4X COIN WILL BE CREDITED IN PASSIVE CLUB WALLET",
                   Amount: (d.DailyReword * 12) / 100,
                 };
-                await Mainwallatesc({
-                  userId: user._id,
-                  Note: `V4X COIN WILL BE CREDITED IN PASSIVE CLUB WALLET ${Refflevalncome?.username}`,
-                  Amount: (d.DailyReword * 5) / 100,
-                  type: 1,
-                  Active: true,
-                }).save();
+                await updateRecord(
+                  Walletmodal,
+                  {
+                    userId: ReffData._id,
+                  },
+                  {
+                    $inc: {
+                      mainWallet: (d.DailyReword * 12) / 100,
+                    },
+                  }
+                ).then(async (res) => {
+                  await Mainwallatesc({
+                    userId: ReffData._id,
+                    Note:  `V4X COIN WILL BE CREDITED IN PASSIVE CLUB WALLET ${Refflevalncome?.username}`,
+                    Amount: (d.DailyReword * 12) / 100,
+                    type: 1,
+                    balace: res.mainWallet,
+                    Active: true,
+                  }).save();
+                });
                 await Passive(data).save();
               }
             }
@@ -356,13 +427,26 @@ schedule.scheduleJob(every24hours, async () => {
                   Note: "V4X COIN WILL BE CREDITED IN PASSIVE CLUB WALLET",
                   Amount: (d.DailyReword * 13) / 100,
                 };
-                await Mainwallatesc({
-                  userId: user._id,
-                  Note: `V4X COIN WILL BE CREDITED IN PASSIVE CLUB WALLET ${Refflevalncome?.username}`,
-                  Amount: (d.DailyReword * 5) / 100,
-                  type: 1,
-                  Active: true,
-                }).save();
+                await updateRecord(
+                  Walletmodal,
+                  {
+                    userId: ReffData._id,
+                  },
+                  {
+                    $inc: {
+                      mainWallet: (d.DailyReword * 13) / 100,
+                    },
+                  }
+                ).then(async (res) => {
+                  await Mainwallatesc({
+                    userId: ReffData._id,
+                    Note:  `V4X COIN WILL BE CREDITED IN PASSIVE CLUB WALLET ${Refflevalncome?.username}`,
+                    Amount: (d.DailyReword * 13) / 100,
+                    type: 1,
+                    balace: res.mainWallet,
+                    Active: true,
+                  }).save();
+                });
                 await Passive(data).save();
               }
             }
@@ -383,13 +467,26 @@ schedule.scheduleJob(every24hours, async () => {
                   Note: "V4X COIN WILL BE CREDITED IN PASSIVE CLUB WALLET",
                   Amount: (d.DailyReword * 14) / 100,
                 };
-                await Mainwallatesc({
-                  userId: user._id,
-                  Note: `V4X COIN WILL BE CREDITED IN PASSIVE CLUB WALLET ${Refflevalncome?.username}`,
-                  Amount: (d.DailyReword * 5) / 100,
-                  type: 1,
-                  Active: true,
-                }).save();
+                await updateRecord(
+                  Walletmodal,
+                  {
+                    userId: ReffData._id,
+                  },
+                  {
+                    $inc: {
+                      mainWallet: (d.DailyReword * 14) / 100,
+                    },
+                  }
+                ).then(async (res) => {
+                  await Mainwallatesc({
+                    userId: ReffData._id,
+                    Note:  `V4X COIN WILL BE CREDITED IN PASSIVE CLUB WALLET ${Refflevalncome?.username}`,
+                    Amount: (d.DailyReword * 14) / 100,
+                    type: 1,
+                    balace: res.mainWallet,
+                    Active: true,
+                  }).save();
+                });
                 await Passive(data).save();
               }
             }
@@ -409,13 +506,26 @@ schedule.scheduleJob(every24hours, async () => {
                 Note: "V4X COIN WILL BE CREDITED IN PASSIVE CLUB WALLET",
                 Amount: (d.DailyReword * 15) / 100,
               };
-              await Mainwallatesc({
-                userId: user._id,
-                Note: `V4X COIN WILL BE CREDITED IN PASSIVE CLUB WALLET ${Refflevalncome?.username}`,
-                Amount: (d.DailyReword * 5) / 100,
-                type: 1,
-                Active: true,
-              }).save();
+              await updateRecord(
+                Walletmodal,
+                {
+                  userId: ReffData._id,
+                },
+                {
+                  $inc: {
+                    mainWallet: (d.DailyReword * 15) / 100,
+                  },
+                }
+              ).then(async (res) => {
+                await Mainwallatesc({
+                  userId: ReffData._id,
+                  Note:  `V4X COIN WILL BE CREDITED IN PASSIVE CLUB WALLET ${Refflevalncome?.username}`,
+                  Amount: (d.DailyReword * 15) / 100,
+                  type: 1,
+                  balace: res.mainWallet,
+                  Active: true,
+                }).save();
+              });
               await Passive(data).save();
             }
           }
@@ -436,13 +546,26 @@ schedule.scheduleJob(every24hours, async () => {
                   Note: "500 BUSD = V4X COIN WILL BE CREDITED IN ACHEIVER WALLET",
                   Amount: (d.DailyReword * 16) / 100,
                 };
-                await Mainwallatesc({
-                  userId: user._id,
-                  Note: `V4X COIN WILL BE CREDITED IN PASSIVE CLUB WALLET ${Refflevalncome?.username}`,
-                  Amount: (d.DailyReword * 5) / 100,
-                  type: 1,
-                  Active: true,
-                }).save();
+                await updateRecord(
+                  Walletmodal,
+                  {
+                    userId: ReffData._id,
+                  },
+                  {
+                    $inc: {
+                      mainWallet: (d.DailyReword * 16) / 100,
+                    },
+                  }
+                ).then(async (res) => {
+                  await Mainwallatesc({
+                    userId: ReffData._id,
+                    Note:  `V4X COIN WILL BE CREDITED IN PASSIVE CLUB WALLET ${Refflevalncome?.username}`,
+                    Amount: (d.DailyReword * 16) / 100,
+                    type: 1,
+                    balace: res.mainWallet,
+                    Active: true,
+                  }).save();
+                });
                 await Passive(data).save();
               }
             }
@@ -463,13 +586,26 @@ schedule.scheduleJob(every24hours, async () => {
                   Note: "V4X COIN WILL BE CREDITED IN PASSIVE CLUB WALLET",
                   Amount: (d.DailyReword * 18) / 100,
                 };
-                await Mainwallatesc({
-                  userId: user._id,
-                  Note: `V4X COIN WILL BE CREDITED IN PASSIVE CLUB WALLET ${Refflevalncome?.username}`,
-                  Amount: (d.DailyReword * 5) / 100,
-                  type: 1,
-                  Active: true,
-                }).save();
+                await updateRecord(
+                  Walletmodal,
+                  {
+                    userId: ReffData._id,
+                  },
+                  {
+                    $inc: {
+                      mainWallet: (d.DailyReword * 18) / 100,
+                    },
+                  }
+                ).then(async (res) => {
+                  await Mainwallatesc({
+                    userId: ReffData._id,
+                    Note:  `V4X COIN WILL BE CREDITED IN PASSIVE CLUB WALLET ${Refflevalncome?.username}`,
+                    Amount: (d.DailyReword * 18) / 100,
+                    type: 1,
+                    balace: res.mainWallet,
+                    Active: true,
+                  }).save();
+                });
                 await Passive(data).save();
               }
             }

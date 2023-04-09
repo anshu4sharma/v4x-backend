@@ -16,6 +16,11 @@ const Mainwallatesc = new Schema(
       default: 0,
       required: true,
     },
+    balace: {
+      type: Number,
+      default: 0,
+      required: true,
+    },
     Usernameby: {
       type: String,
     },

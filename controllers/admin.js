@@ -289,20 +289,23 @@ exports.admin = {
         let data = await findOneRecord(Usermodal, {
           username: req.body.username,
         });
+
         await updateRecord(
           Walletmodal,
           {
             userId: data._id,
           },
           { $inc: { mainWallet: req.body.price } }
-        );
-        await Mainwallatesc({
-          userId: data._id,
-          Note: `coins transfer by admin`,
-          Amount: (req.body.Amount * 4) / 100,
-          type: 1,
-          Active: true,
-        }).save();
+        ).then(async (res) => {
+          await Mainwallatesc({
+            userId: data._id,
+            Note: `coins transfer by admin`,
+            Amount: (req.body.Amount * 4) / 100,
+            balace: res.mainWallet,
+            type: 1,
+            Active: true,
+          }).save();
+        });
         return successResponse(res, {
           message: "V4X price chenge successfully!",
         });
