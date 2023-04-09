@@ -28,6 +28,7 @@ const {
 const Ticket = require("../models/Ticket");
 
 const { ticketsend } = require("../services/sendOTP");
+const e = require("express");
 let transport = nodemailer.createTransport({
   host: "smtp.gmail.com",
   port: 465,
@@ -48,85 +49,42 @@ exports.register = {
       const refferalBygetdata = await findOneRecord(Usermodal, {
         username: req.body.refferalBy,
       });
-      if (refferalBygetdata !== null) {
-        const userdata = await findOneRecord(Usermodal, {
-          email: req.body.email,
-          isActive: !false,
-          isValid: !false,
-        });
-        if (userdata !== null) {
-          return badRequestResponse(res, {
-            message: "user is already exist.",
-          });
-        } else {
-          await bcrypt.hash(req.body.password, 8).then(async (pass) => {
-            await updateRecord(
-              Usermodal,
-              {
-                email: req.body.email,
-                isActive: !false,
-                isValid: false,
-              },
-              {
-                walletaddress: req.body.walletaddress,
-                password: pass,
-              }
-            );
-          });
-          const data = await findOneRecord(Usermodal, {
+      const walletaddress = await findOneRecord(Usermodal, {
+        walletaddress: req.body.walletaddress,
+      });
+      if (refferalBygetdata === null) {
+        if (refferalBygetdata !== null) {
+          const userdata = await findOneRecord(Usermodal, {
             email: req.body.email,
             isActive: !false,
-            isValid: false,
+            isValid: !false,
           });
-          if (data !== null) {
-            const profile = await Usermodal.findById(data._id).select({
-              password: 0,
+          if (userdata !== null) {
+            return badRequestResponse(res, {
+              message: "user is already exist.",
             });
-            const accessToken = jwt.sign({ profile }, "3700 0000 0000 002", {
-              expiresIn: "1hr",
-            });
-            ejs.renderFile(
-              __dirname + "/mail.ejs",
-              {
-                name: "prashantvadhvana@gmail.com",
-                action_url: `https://api.v4x.org/api/registration/signUp/varify:${accessToken}`,
-              },
-              async function (err, mail) {
-                const mailOptions = {
-                  from: "noreply.photometaclub@gmail.com", // Sender address
-                  to: data["email"], // List of recipients
-                  subject: "Node Mailer", // Subject line
-                  html: mail,
-                };
-                transport.sendMail(mailOptions, async function (err, info) {
-                  if (err) {
-                    badRequestResponse(res, {
-                      message: `Email not send error something is wrong ${err}`,
-                    });
-                  } else {
-                    successResponse(res, {
-                      message:
-                        "Verification link has been send to your email address..!!",
-                    });
-                  }
-                });
-              }
-            );
           } else {
-            let allUser = await Usermodal.find({});
-            let usernumber = 10019 + allUser.length;
-            let finalusename = "V4X" + usernumber;
-            console.log("usernumber", finalusename);
-            const isCreated = await Usermodal({
-              ...req.body,
-              username: finalusename,
-            }).save();
-            if (!isCreated) {
-              return badRequestResponse(res, {
-                message: "Failed to create register!",
-              });
-            } else {
-              const profile = await Usermodal.findById(isCreated._id).select({
+            await bcrypt.hash(req.body.password, 8).then(async (pass) => {
+              await updateRecord(
+                Usermodal,
+                {
+                  email: req.body.email,
+                  isActive: !false,
+                  isValid: false,
+                },
+                {
+                  walletaddress: req.body.walletaddress,
+                  password: pass,
+                }
+              );
+            });
+            const data = await findOneRecord(Usermodal, {
+              email: req.body.email,
+              isActive: !false,
+              isValid: false,
+            });
+            if (data !== null) {
+              const profile = await Usermodal.findById(data._id).select({
                 password: 0,
               });
               const accessToken = jwt.sign({ profile }, "3700 0000 0000 002", {
@@ -138,12 +96,12 @@ exports.register = {
                   name: "prashantvadhvana@gmail.com",
                   action_url: `https://api.v4x.org/api/registration/signUp/varify:${accessToken}`,
                 },
-                async function (err, data) {
+                async function (err, mail) {
                   const mailOptions = {
-                    from: "prashantvadhavana.vision@gmail.com", // Sender address
-                    to: isCreated["email"], // List of recipients
+                    from: "noreply.photometaclub@gmail.com", // Sender address
+                    to: data["email"], // List of recipients
                     subject: "Node Mailer", // Subject line
-                    html: data,
+                    html: mail,
                   };
                   transport.sendMail(mailOptions, async function (err, info) {
                     if (err) {
@@ -154,18 +112,74 @@ exports.register = {
                       successResponse(res, {
                         message:
                           "Verification link has been send to your email address..!!",
-                        token: accessToken.token,
                       });
                     }
                   });
                 }
               );
+            } else {
+              let allUser = await Usermodal.find({});
+              let usernumber = 10019 + allUser.length;
+              let finalusename = "V4X" + usernumber;
+              console.log("usernumber", finalusename);
+              const isCreated = await Usermodal({
+                ...req.body,
+                username: finalusename,
+              }).save();
+              if (!isCreated) {
+                return badRequestResponse(res, {
+                  message: "Failed to create register!",
+                });
+              } else {
+                const profile = await Usermodal.findById(isCreated._id).select({
+                  password: 0,
+                });
+                const accessToken = jwt.sign(
+                  { profile },
+                  "3700 0000 0000 002",
+                  {
+                    expiresIn: "1hr",
+                  }
+                );
+                ejs.renderFile(
+                  __dirname + "/mail.ejs",
+                  {
+                    name: "prashantvadhvana@gmail.com",
+                    action_url: `https://api.v4x.org/api/registration/signUp/varify:${accessToken}`,
+                  },
+                  async function (err, data) {
+                    const mailOptions = {
+                      from: "prashantvadhavana.vision@gmail.com", // Sender address
+                      to: isCreated["email"], // List of recipients
+                      subject: "Node Mailer", // Subject line
+                      html: data,
+                    };
+                    transport.sendMail(mailOptions, async function (err, info) {
+                      if (err) {
+                        badRequestResponse(res, {
+                          message: `Email not send error something is wrong ${err}`,
+                        });
+                      } else {
+                        successResponse(res, {
+                          message:
+                            "Verification link has been send to your email address..!!",
+                          token: accessToken.token,
+                        });
+                      }
+                    });
+                  }
+                );
+              }
             }
           }
+        } else {
+          validarionerrorResponse(res, {
+            message: `please enter valid  RefferalId.`,
+          });
         }
       } else {
         validarionerrorResponse(res, {
-          message: `please enter valid  RefferalId.`,
+          message: `please enter valid  walletaddress.`,
         });
       }
     } catch (error) {
