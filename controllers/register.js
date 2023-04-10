@@ -198,7 +198,13 @@ exports.register = {
         }
         if (decoded) {
           decoded = await cloneDeep(decoded);
-          updateRecord(Usermodal, { email: decoded.profile.email });
+          updateRecord(
+            Usermodal,
+            { email: decoded.profile.email },
+            {
+              isValid: true,
+            }
+          );
 
           ejs.renderFile(
             __dirname + "/welcome.ejs",
@@ -218,7 +224,7 @@ exports.register = {
                     message: `Email not send error something is wrong ${err}`,
                   });
                 } else {
-                  res.redirect("https://v4x.org/");
+                  res.redirect("https://v4x.org/login?login#");
                 }
               });
             }
