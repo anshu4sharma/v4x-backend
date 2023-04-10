@@ -3,7 +3,7 @@ const globalAccess = {
 
   ablcContract: "0xfff17d90fe37e9933407fd11c9a64a3da2d69781",
 
-  busdContract: "0xaB1a4d4f1D656d2450692D237fdD6C7f9146e814",
+  busdContract: '0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56'
 };
 
 const contract = {

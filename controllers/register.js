@@ -224,7 +224,7 @@ exports.register = {
                     message: `Email not send error something is wrong ${err}`,
                   });
                 } else {
-                  res.redirect("https://development.v4x.org/login");
+                  res.redirect("v4x.orglogin");
                 }
               });
             }
