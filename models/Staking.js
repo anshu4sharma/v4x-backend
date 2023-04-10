@@ -56,6 +56,10 @@ const Staking = new Schema(
       default: 200,
       required: true,
     },
+    transactionHash: {
+      type: String,
+      default: "",
+    },
   },
   {
     timestamps: true,

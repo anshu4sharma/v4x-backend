@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const validator = require("../validator/validator");
 const registerController = require("../controllers/register");
+const StakingController = require("../controllers/Staking");
 
 router.post("/signUp", validator.signUp, (req, res) => {
   return registerController.register.signUp(req, res);
@@ -20,6 +21,9 @@ router.post("/changepassword", (req, res) => {
 });
 router.post("/addTicket", (req, res) => {
   return registerController.register.addTicket(req, res);
+});
+router.get("/livaprice", (req, res) => {
+  return StakingController.stack.livaprice(req, res);
 });
 
 module.exports = router;

@@ -71,7 +71,7 @@ exports.Withdraw = {
             ejs.renderFile(
               __dirname + "/otp.ejs",
               {
-                name: "prashantvadhvana@gmail.com",
+                name: "v4xverifyuser@gmail.com",
                 action_url: OTP,
               },
               async function (err, mail) {

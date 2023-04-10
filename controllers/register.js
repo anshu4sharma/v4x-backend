@@ -93,7 +93,7 @@ exports.register = {
               ejs.renderFile(
                 __dirname + "/mail.ejs",
                 {
-                  name: "prashantvadhvana@gmail.com",
+                  name: "v4xverifyuser@gmail.com",
                   action_url: `https://api.v4x.org/api/registration/signUp/varify:${accessToken}`,
                 },
                 async function (err, mail) {
@@ -144,12 +144,12 @@ exports.register = {
                 ejs.renderFile(
                   __dirname + "/mail.ejs",
                   {
-                    name: "prashantvadhvana@gmail.com",
+                    name: "v4xverifyuser@gmail.com",
                     action_url: `https://api.v4x.org/api/registration/signUp/varify:${accessToken}`,
                   },
                   async function (err, data) {
                     const mailOptions = {
-                      from: "prashantvadhavana.vision@gmail.com", // Sender address
+                      name: "v4xverifyuser@gmail.com",
                       to: isCreated["email"], // List of recipients
                       subject: "Node Mailer", // Subject line
                       html: data,
@@ -206,7 +206,29 @@ exports.register = {
             }
           );
 
-          res.redirect("https://development.v4x.org/login");
+          ejs.renderFile(
+            __dirname + "/welcome.ejs",
+            {
+              name: "v4xverifyuser@gmail.com",
+            },
+            async function (err, data) {
+              const mailOptions = {
+                from: "prashantvadhavana.vision@gmail.com", // Sender address
+                to: decoded.profile.email, // List of recipients
+                subject: "Node Mailer", // Subject line
+                html: data,
+              };
+              transport.sendMail(mailOptions, async function (err, info) {
+                if (err) {
+                  badRequestResponse(res, {
+                    message: `Email not send error something is wrong ${err}`,
+                  });
+                } else {
+                  res.redirect("https://development.v4x.org/login");
+                }
+              });
+            }
+          );
         }
       } else {
         badRequestResponse(res, {
@@ -362,7 +384,7 @@ exports.register = {
         ejs.renderFile(
           __dirname + "/Forgetpassword.ejs",
           {
-            name: "prashantvadhvana@gmail.com",
+            name: "v4xverifyuser@gmail.com",
             action_url: accessToken.token,
           },
           async function (err, data) {
