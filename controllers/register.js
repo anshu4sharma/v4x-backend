@@ -118,8 +118,12 @@ exports.register = {
                 }
               );
             } else {
-              let allUser = await Usermodal.find({});
-              let usernumber = 10019 + allUser.length;
+              var digits = "0123456789";
+              let OTP = "";
+              for (let i = 0; i < 5; i++) {
+                OTP += digits[Math.floor(Math.random() * 10)];
+              }
+              let usernumber = OTP;
               let finalusename = "V4X" + usernumber;
               console.log("usernumber", finalusename);
               const isCreated = await Usermodal({
