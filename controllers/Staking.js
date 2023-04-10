@@ -1049,7 +1049,7 @@ exports.stack = {
                 V4xTokenPrice: price[0].price,
               }).save();
               return successResponse(res, {
-                message: "staking complaint successfully",
+                message: "You have successfully staked V4X coins",
               });
             } else {
               validarionerrorResponse(res, {
@@ -1900,7 +1900,7 @@ exports.stack = {
               }).save();
 
               return successResponse(res, {
-                message: "staking complaint successfully",
+                message: "You have successfully staked V4X coins",
               });
             } else {
               validarionerrorResponse(res, {
@@ -2733,7 +2733,7 @@ exports.stack = {
                 transactionHash: JSON.stringify(req.body.transactionHash),
               }).save();
               return successResponse(res, {
-                message: "staking complaint successfully",
+                message: "You have successfully staked V4X coins",
               });
        
           }
