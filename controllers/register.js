@@ -198,13 +198,7 @@ exports.register = {
         }
         if (decoded) {
           decoded = await cloneDeep(decoded);
-          updateRecord(
-            Usermodal,
-            { email: decoded.profile.email },
-            {
-              isValid: true,
-            }
-          );
+          updateRecord(Usermodal, { email: decoded.profile.email });
 
           ejs.renderFile(
             __dirname + "/welcome.ejs",
