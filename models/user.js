@@ -16,7 +16,7 @@ const user = new mongoose.Schema(
     iswalletActive: { type: Boolean, default: true },
     refferalId: { type: String, trim: true, unique: true },
     refferalBy: { type: String, trim: true },
-    Airdropped: { type: Number, default: 10 },
+    Airdropped: { type: Number, default: 0 },
     teamtotalstack: { type: Number, default: 0 },
     mystack: { type: Number, default: 0 },
     AirdroppedActive: { type: Boolean, default: false },
