@@ -258,7 +258,6 @@ exports.admin = {
       );
       if (decoded) {
         decoded = await cloneDeep(decoded);
-
         if (decoded.profile.username === "V4X10019") {
           if (price > 0) {
             await updateRecord(

@@ -20,6 +20,7 @@ const {
 const Usermodal = require("../models/user");
 const Walletmodal = require("../models/Wallet");
 const Token = require("../models/Token");
+const mailgun = require("mailgun-js");
 const {
   token,
   tokenverify,
@@ -30,12 +31,12 @@ const Ticket = require("../models/Ticket");
 const { ticketsend } = require("../services/sendOTP");
 const e = require("express");
 let transport = nodemailer.createTransport({
-  host: "smtp.gmail.com",
-  port: 465,
+  port: 587,
+  host: "smtp.mailgun.org",
   secure: true,
   auth: {
-    user: process.env.GMAIL_USER,
-    pass: process.env.GMAIL_PASS,
+    user: process.env.MAIL_ID,
+    pass: process.env.MAIL_PASSWORD,
   },
 });
 
@@ -98,7 +99,7 @@ exports.register = {
                 },
                 async function (err, mail) {
                   const mailOptions = {
-                    from: "noreply.photometaclub@gmail.com", // Sender address
+                    from: process.env.MAIL_ID, // Sender address
                     to: data["email"], // List of recipients
                     subject: "Node Mailer", // Subject line
                     html: mail,
@@ -110,8 +111,7 @@ exports.register = {
                       });
                     } else {
                       successResponse(res, {
-                        message:
-                          "registration completed successfully",
+                        message: "registration completed successfully",
                       });
                     }
                   });
@@ -152,22 +152,28 @@ exports.register = {
                     action_url: `https://api.v4x.org/api/registration/signUp/varify:${accessToken}`,
                   },
                   async function (err, data) {
-                    const mailOptions = {
-                      name: "v4xverifyuser@gmail.com",
-                      to: isCreated["email"], // List of recipients
-                      subject: "Node Mailer", // Subject line
+                    const DOMAIN = "verify.ablcexchange.io";
+                    const mg = mailgun({
+                      apiKey:
+                        "bd53806c79362e3baf250886340fb16b-b36d2969-79b90ce5",
+                      domain: DOMAIN,
+                    });
+                    const data111 = {
+                      from: "verify@ablcexchange.io",
+                      to: req.body.email,
+                      subject: "main varification",
                       html: data,
                     };
-                    transport.sendMail(mailOptions, async function (err, info) {
-                      if (err) {
-                        badRequestResponse(res, {
-                          message: `Email not send error something is wrong ${err}`,
+                    mg.messages().send(data111, function (error, body) {
+                      console.log("body", body);
+                      console.log(error);
+                      if (!error) {
+                        return successResponse(res, {
+                          message: "registration completed successfully",
                         });
                       } else {
-                        successResponse(res, {
-                          message:
-                            "registration completed successfully",
-                          token: accessToken.token,
+                        return badRequestResponse(res, {
+                          message: `Email not send error something is wrong ${err}`,
                         });
                       }
                     });
@@ -216,19 +222,26 @@ exports.register = {
               name: "v4xverifyuser@gmail.com",
             },
             async function (err, data) {
-              const mailOptions = {
-                from: "prashantvadhavana.vision@gmail.com", // Sender address
-                to: decoded.profile.email, // List of recipients
-                subject: "Node Mailer", // Subject line
+              const DOMAIN = "verify.ablcexchange.io";
+              const mg = mailgun({
+                apiKey: "bd53806c79362e3baf250886340fb16b-b36d2969-79b90ce5",
+                domain: DOMAIN,
+              });
+              const data111 = {
+                from: "verify@ablcexchange.io",
+                to: decoded.profile.email,
+                subject: "main varification",
                 html: data,
               };
-              transport.sendMail(mailOptions, async function (err, info) {
-                if (err) {
-                  badRequestResponse(res, {
+              mg.messages().send(data111, function (error, body) {
+                console.log("body", body);
+                console.log(error);
+                if (!error) {
+                  res.redirect("https://v4x.org/login?login#");
+                } else {
+                  return badRequestResponse(res, {
                     message: `Email not send error something is wrong ${err}`,
                   });
-                } else {
-                  res.redirect("https://v4x.org/login?login#");
                 }
               });
             }
@@ -392,19 +405,28 @@ exports.register = {
             action_url: accessToken.token,
           },
           async function (err, data) {
-            const mailOptions = {
-              from: process.env.GMAIL_USER, // Sender address
-              to: decoded["email"], // List of recipients
-              subject: "Node Mailer", // Subject line
+            const data111 = {
+              from: "verify@ablcexchange.io",
+              to: decoded["email"],
+              subject: "main varification",
               html: data,
             };
-            await transport.sendMail(mailOptions, function (err, info) {
-              if (err) {
-                return errorResponse(err, res);
-              } else {
+            const DOMAIN = "verify.ablcexchange.io";
+            const mg = mailgun({
+              apiKey: "bd53806c79362e3baf250886340fb16b-b36d2969-79b90ce5",
+              domain: DOMAIN,
+            });
+            mg.messages().send(data111, function (error, body) {
+              console.log("body", body);
+              console.log(error);
+              if (!error) {
                 return successResponse(res, {
                   message:
                     "Forgot Password link has been send to your email address..!!",
+                });
+              } else {
+                return badRequestResponse(res, {
+                  message: `Email not send error something is wrong ${err}`,
                 });
               }
             });
