@@ -111,7 +111,7 @@ exports.register = {
                     } else {
                       successResponse(res, {
                         message:
-                          "Verification link has been send to your email address..!!",
+                          "registration completed successfully",
                       });
                     }
                   });
@@ -166,7 +166,7 @@ exports.register = {
                       } else {
                         successResponse(res, {
                           message:
-                            "Verification link has been send to your email address..!!",
+                            "registration completed successfully",
                           token: accessToken.token,
                         });
                       }
