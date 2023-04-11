@@ -11,7 +11,7 @@ const user = new mongoose.Schema(
     leval: { type: Number, default: 0 },
     Rank: { type: String, default: "DIRECT" },
     password: { type: String, trim: true },
-    isValid: { type: Boolean, default: false },
+    isValid: { type: Boolean, default: true },
     isActive: { type: Boolean, default: true },
     iswalletActive: { type: Boolean, default: true },
     refferalId: { type: String, trim: true, unique: true },

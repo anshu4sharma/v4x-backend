@@ -66,11 +66,13 @@ exports.admin = {
         );
         if (decoded) {
           decoded = await cloneDeep(decoded);
-          const userdata1 = await findAllRecord(Usermodal, {});
-          successResponse(res, {
-            message: "all user data get",
-            data: userdata1,
-          });
+          if (decoded.profile.username === "V4X10019") {
+            const userdata1 = await findAllRecord(Usermodal, {});
+            successResponse(res, {
+              message: "all user data get",
+              data: userdata1,
+            });
+          }
         }
       } else {
         badRequestResponse(res, {
@@ -89,51 +91,53 @@ exports.admin = {
         );
         if (decoded) {
           decoded = await cloneDeep(decoded);
-          const userdata1 = await Transactionmodal.aggregate([
-            {
-              $lookup: {
-                from: "users",
-                localField: "userId",
-                foreignField: "_id",
-                as: "result",
+          if (decoded.profile.username === "V4X10019") {
+            const userdata1 = await Transactionmodal.aggregate([
+              {
+                $lookup: {
+                  from: "users",
+                  localField: "userId",
+                  foreignField: "_id",
+                  as: "result",
+                },
               },
-            },
-            {
-              $lookup: {
-                from: "users",
-                localField: "fromaccountusername",
-                foreignField: "_id",
-                as: "result1",
+              {
+                $lookup: {
+                  from: "users",
+                  localField: "fromaccountusername",
+                  foreignField: "_id",
+                  as: "result1",
+                },
               },
-            },
-            {
-              $unwind: {
-                path: "$result",
-                preserveNullAndEmptyArrays: true,
+              {
+                $unwind: {
+                  path: "$result",
+                  preserveNullAndEmptyArrays: true,
+                },
               },
-            },
-            {
-              $unwind: {
-                path: "$result1",
-                preserveNullAndEmptyArrays: true,
+              {
+                $unwind: {
+                  path: "$result1",
+                  preserveNullAndEmptyArrays: true,
+                },
               },
-            },
-            {
-              $project: {
-                toaccunt: "$result.username",
-                fromaccunt: "$result1.username",
-                tranforWallet: 1,
-                Amount: 1,
-                createdAt: 1,
-                updatedAt: 1,
+              {
+                $project: {
+                  toaccunt: "$result.username",
+                  fromaccunt: "$result1.username",
+                  tranforWallet: 1,
+                  Amount: 1,
+                  createdAt: 1,
+                  updatedAt: 1,
+                },
               },
-            },
-          ]);
+            ]);
 
-          successResponse(res, {
-            message: "all user data get",
-            data: userdata1,
-          });
+            successResponse(res, {
+              message: "all user data get",
+              data: userdata1,
+            });
+          }
         }
       } else {
         badRequestResponse(res, {
@@ -152,37 +156,39 @@ exports.admin = {
       );
       if (decoded) {
         decoded = await cloneDeep(decoded);
-        let a = await findOneRecord(Usermodal, {
-          username: usename,
-        });
-        if (a.isActive === false) {
-          await updateRecord(
-            Usermodal,
-            {
-              username: usename,
-            },
-            {
-              isActive: !false,
-              note: note,
-            }
-          );
-          return successResponse(res, {
-            message: "user unblock",
+        if (decoded.profile.username === "V4X10019") {
+          let a = await findOneRecord(Usermodal, {
+            username: usename,
           });
-        } else {
-          await updateRecord(
-            Usermodal,
-            {
-              username: usename,
-            },
-            {
-              isActive: false,
-              note: note,
-            }
-          );
-          return successResponse(res, {
-            message: "user block",
-          });
+          if (a.isActive === false) {
+            await updateRecord(
+              Usermodal,
+              {
+                username: usename,
+              },
+              {
+                isActive: !false,
+                note: note,
+              }
+            );
+            return successResponse(res, {
+              message: "user unblock",
+            });
+          } else {
+            await updateRecord(
+              Usermodal,
+              {
+                username: usename,
+              },
+              {
+                isActive: false,
+                note: note,
+              }
+            );
+            return successResponse(res, {
+              message: "user block",
+            });
+          }
         }
       } else {
         return badRequestResponse(res, {
@@ -201,24 +207,26 @@ exports.admin = {
       );
       if (decoded) {
         decoded = await cloneDeep(decoded);
-        console.log(usename);
-        let a = await findOneRecord(Usermodal, {
-          username: usename,
-        });
-        console.log(req.body);
-        if (a?.iswalletActive === false) {
-          await updateRecord(
-            wallatemodal,
-            {
-              userId: a._id,
-            },
-            {
-              iswalletActive: !false,
-            }
-          );
-          return successResponse(res, {
-            message: "wallate unblock",
+        if (decoded.profile.username === "V4X10019") {
+          console.log(usename);
+          let a = await findOneRecord(Usermodal, {
+            username: usename,
           });
+          console.log(req.body);
+          if (a?.iswalletActive === false) {
+            await updateRecord(
+              wallatemodal,
+              {
+                userId: a._id,
+              },
+              {
+                iswalletActive: !false,
+              }
+            );
+            return successResponse(res, {
+              message: "wallate unblock",
+            });
+          }
         } else {
           await updateRecord(
             Usermodal,
@@ -250,21 +258,24 @@ exports.admin = {
       );
       if (decoded) {
         decoded = await cloneDeep(decoded);
-        if (price > 0) {
-          await updateRecord(
-            V4Xpricemodal,
-            {},
-            {
-              price: price,
-            }
-          );
-          return successResponse(res, {
-            message: "V4X price chenge successfully!",
-          });
-        } else {
-          return badRequestResponse(res, {
-            message: "anter valid amount!",
-          });
+
+        if (decoded.profile.username === "V4X10019") {
+          if (price > 0) {
+            await updateRecord(
+              V4Xpricemodal,
+              {},
+              {
+                price: price,
+              }
+            );
+            return successResponse(res, {
+              message: "V4X price chenge successfully!",
+            });
+          } else {
+            return badRequestResponse(res, {
+              message: "anter valid amount!",
+            });
+          }
         }
         // console.log(usename);
         // let data = await findOneRecord(Usermodal, {
@@ -286,29 +297,31 @@ exports.admin = {
       );
       if (decoded) {
         decoded = await cloneDeep(decoded);
-        let data = await findOneRecord(Usermodal, {
-          username: req.body.username,
-        });
+        if (decoded.profile.username === "V4X10019") {
+          let data = await findOneRecord(Usermodal, {
+            username: req.body.username,
+          });
 
-        await updateRecord(
-          Walletmodal,
-          {
-            userId: data._id,
-          },
-          { $inc: { mainWallet: req.body.price } }
-        ).then(async (res) => {
-          await Mainwallatesc({
-            userId: data._id,
-            Note: `coins transfer by admin`,
-            Amount: (req.body.Amount * 4) / 100,
-            balace: res.mainWallet,
-            type: 1,
-            Active: true,
-          }).save();
-        });
-        return successResponse(res, {
-          message: "V4X price chenge successfully!",
-        });
+          await updateRecord(
+            Walletmodal,
+            {
+              userId: data._id,
+            },
+            { $inc: { mainWallet: req.body.price } }
+          ).then(async (res) => {
+            await Mainwallatesc({
+              userId: data._id,
+              Note: `coins transfer by admin`,
+              Amount: (req.body.Amount * 4) / 100,
+              balace: res.mainWallet,
+              type: 1,
+              Active: true,
+            }).save();
+          });
+          return successResponse(res, {
+            message: "V4X price chenge successfully!",
+          });
+        }
       } else {
         return badRequestResponse(res, {
           message: "No token provided.",
@@ -325,26 +338,28 @@ exports.admin = {
       );
       if (decoded) {
         decoded = await cloneDeep(decoded);
-        const userdata1 = await Sopprtmodal.aggregate([
-          {
-            $lookup: {
-              from: "users",
-              localField: "userId",
-              foreignField: "_id",
-              as: "result",
+        if (decoded.profile.username === "V4X10019") {
+          const userdata1 = await Sopprtmodal.aggregate([
+            {
+              $lookup: {
+                from: "users",
+                localField: "userId",
+                foreignField: "_id",
+                as: "result",
+              },
             },
-          },
-          {
-            $unwind: {
-              path: "$result",
-              preserveNullAndEmptyArrays: true,
+            {
+              $unwind: {
+                path: "$result",
+                preserveNullAndEmptyArrays: true,
+              },
             },
-          },
-        ]);
-        return successResponse(res, {
-          message: "V4X price chenge successfully!",
-          data: userdata1,
-        });
+          ]);
+          return successResponse(res, {
+            message: "V4X price chenge successfully!",
+            data: userdata1,
+          });
+        }
       } else {
         return badRequestResponse(res, {
           message: "No token provided.",
