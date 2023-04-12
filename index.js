@@ -80,12 +80,12 @@ schedule.scheduleJob(every24hours, async () => {
         await updateRecord(
           Walletmodal,
           {
-            userId: ReffData?._id,
+            userId: reword.userId,
           },
           { $inc: { mainWallet: reword.DailyReword / price[0].price } }
         ).then(async (res) => {
           await Mainwallatesc({
-            userId: ReffData?._id,
+            userId:reword.userId,
             Note: "You Got Staking Bonus Income.",
             Amount: (req.body.Amount * price[0].price * 10) / 100,
             type: 1,
@@ -93,7 +93,7 @@ schedule.scheduleJob(every24hours, async () => {
             Active: true,
           }).save();
           await Stakingbonus({
-            userId: ReffData?._id,
+            userId:reword.userId,
             ReffId: decoded.profile._id,
             Amount: (req.body.Amount * price[0].price * 10) / 100,
             Note: "You Got Staking Bonus Income.",

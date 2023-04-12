@@ -98,28 +98,20 @@ exports.register = {
                   action_url: `https://api.v4x.org/api/registration/signUp/varify:${accessToken}`,
                 },
                 async function (err, mail) {
-                  const DOMAIN = "verify@v4x.org";
-                  const mg = mailgun({
-                    apiKey:
-                      "90b13f8cd7cb565b0be5686555c739b0-2cc48b29-b3a0d339",
-                    domain: DOMAIN,
-                  });
-                  const data111 = {
+                  const mailOptions = {
                     from: "verify@v4x.org",
-                    to: req.body.email,
-                    subject: "main varification",
-                    html: data,
+                    to: data["email"], // List of recipients
+                    subject: "Node Mailer", // Subject line
+                    html: mail,
                   };
-                  mg.messages().send(data111, function (error, body) {
-                    console.log("body", body);
-                    console.log(error);
-                    if (!error) {
-                      return successResponse(res, {
-                        message: "Verification link has been send to your email address..!!",
+                  transport.sendMail(mailOptions, async function (err, info) {
+                    if (err) {
+                      badRequestResponse(res, {
+                        message: `Email not send error something is wrong ${err}`,
                       });
                     } else {
-                      return badRequestResponse(res, {
-                        message: `Email not send error something is wrong ${err}`,
+                      successResponse(res, {
+                        message: "registration completed successfully",
                       });
                     }
                   });
@@ -160,10 +152,10 @@ exports.register = {
                     action_url: `https://api.v4x.org/api/registration/signUp/varify:${accessToken}`,
                   },
                   async function (err, data) {
-                    const DOMAIN = "verify@v4x.org";
+                    const DOMAIN = "verify.ablcexchange.io";
                     const mg = mailgun({
                       apiKey:
-                        "90b13f8cd7cb565b0be5686555c739b0-2cc48b29-b3a0d339",
+                        "bd53806c79362e3baf250886340fb16b-b36d2969-79b90ce5",
                       domain: DOMAIN,
                     });
                     const data111 = {
@@ -177,7 +169,7 @@ exports.register = {
                       console.log(error);
                       if (!error) {
                         return successResponse(res, {
-                          message: "Verification link has been send to your email address..!!",
+                          message: "registration completed successfully",
                         });
                       } else {
                         return badRequestResponse(res, {
@@ -230,9 +222,9 @@ exports.register = {
               name: "v4xverifyuser@gmail.com",
             },
             async function (err, data) {
-              const DOMAIN = "verify@v4x.org";
+              const DOMAIN = "verify.ablcexchange.io";
               const mg = mailgun({
-                apiKey: "90b13f8cd7cb565b0be5686555c739b0-2cc48b29-b3a0d339",
+                apiKey: "bd53806c79362e3baf250886340fb16b-b36d2969-79b90ce5",
                 domain: DOMAIN,
               });
               const data111 = {
@@ -409,7 +401,7 @@ exports.register = {
         ejs.renderFile(
           __dirname + "/Forgetpassword.ejs",
           {
-            name: "v4xverifyuser@gmail.com",
+            from: "verify@v4x.org",
             action_url: accessToken.token,
           },
           async function (err, data) {
@@ -419,9 +411,9 @@ exports.register = {
               subject: "main varification",
               html: data,
             };
-            const DOMAIN = "verify@v4x.org";
+            const DOMAIN = "verify.ablcexchange.io";
             const mg = mailgun({
-              apiKey: "90b13f8cd7cb565b0be5686555c739b0-2cc48b29-b3a0d339",
+              apiKey: "bd53806c79362e3baf250886340fb16b-b36d2969-79b90ce5",
               domain: DOMAIN,
             });
             mg.messages().send(data111, function (error, body) {
