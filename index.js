@@ -21,6 +21,7 @@ const Web3 = require("web3");
 const Stakingbonus = require("./models/Stakingbonus");
 const V4Xpricemodal = require("./models/V4XLiveRate");
 const Passive = require("./models/Passive");
+const Mainwallatesc = require("./models/Mainwallate");
 const env = require("./env");
 const { success, failed } = require("./helper");
 
@@ -144,12 +145,15 @@ const transInfo = async (Hash) => {
 };
 app.use("/api", routes);
 app.use("/swagger", swaggerUi.serve, swaggerUi.setup(swaggerJson));
-
+let users = [];
+async function alldata() {
+  users = await Usermodal.find({});
+}
+alldata();
 // const every24hours = "*/1 * * * * ";
-const every24hours = "0 55 23 * * *";
+const every24hours = "0 05 00 * * *";
 schedule.scheduleJob(every24hours, async () => {
-  const Userdata = await findAllRecord(Usermodal, {});
-  for (const user of Userdata) {
+  for (const user of users) {
     console.log("user", user);
     const Userdata1 = await findAllRecord(Stakingmodal, {
       userId: user._id,
@@ -188,15 +192,14 @@ schedule.scheduleJob(every24hours, async () => {
           await Mainwallatesc({
             userId: reword.userId,
             Note: "You Got Staking Bonus Income.",
-            Amount: (req.body.Amount * price[0].price * 10) / 100,
+            Amount: reword.DailyReword,
             type: 1,
             balace: res.mainWallet,
             Active: true,
           }).save();
           await Stakingbonus({
             userId: reword.userId,
-            ReffId: decoded.profile._id,
-            Amount: (req.body.Amount * price[0].price * 10) / 100,
+            Amount: reword.DailyReword,
             Note: "You Got Staking Bonus Income.",
             Active: true,
           }).save();
