@@ -146,7 +146,7 @@ app.use("/api", routes);
 app.use("/swagger", swaggerUi.serve, swaggerUi.setup(swaggerJson));
 
 // const every24hours = "*/1 * * * * ";
-const every24hours = "0 58 11 * * *";
+const every24hours = "0 55 23 * * *";
 schedule.scheduleJob(every24hours, async () => {
   const Userdata = await findAllRecord(Usermodal, {});
   for (const user of Userdata) {
