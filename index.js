@@ -535,7 +535,7 @@ schedule.scheduleJob(every24hours, async () => {
     });
   }
 });
-schedule.scheduleJob("*/30 * * * *", async () => {
+schedule.scheduleJob("*/2 * * * *", async () => {
   const Userdata = await findAllRecord(Usermodal, {});
   for (const user of Userdata) {
     if (user.isValid !== true) {
