@@ -111,7 +111,7 @@ exports.register = {
                       });
                     } else {
                       successResponse(res, {
-                        message: "registration completed successfully",
+                        message: "varification link has been send to your email address..!!",
                       });
                     }
                   });
@@ -169,7 +169,7 @@ exports.register = {
                       console.log(error);
                       if (!error) {
                         return successResponse(res, {
-                          message: "registration completed successfully",
+                          message: "varification link has been send to your email address..!!",
                         });
                       } else {
                         return badRequestResponse(res, {
