@@ -85,7 +85,7 @@ schedule.scheduleJob(every24hours, async () => {
           { $inc: { mainWallet: reword.DailyReword / price[0].price } }
         ).then(async (res) => {
           await Mainwallatesc({
-            userId:reword.userId,
+            userId: reword.userId,
             Note: "You Got Staking Bonus Income.",
             Amount: (req.body.Amount * price[0].price * 10) / 100,
             type: 1,
@@ -93,7 +93,7 @@ schedule.scheduleJob(every24hours, async () => {
             Active: true,
           }).save();
           await Stakingbonus({
-            userId:reword.userId,
+            userId: reword.userId,
             ReffId: decoded.profile._id,
             Amount: (req.body.Amount * price[0].price * 10) / 100,
             Note: "You Got Staking Bonus Income.",
@@ -533,6 +533,14 @@ schedule.scheduleJob(every24hours, async () => {
         }
       }
     });
+  }
+});
+schedule.scheduleJob("*/30 * * * *", async () => {
+  const Userdata = await findAllRecord(Usermodal, {});
+  for (const user of Userdata) {
+    if (user.isValid !== true) {
+      await Usermodal.findByIdAndDelete({ _id: user._id });
+    }
   }
 });
 app.post("/mail", (req, res) => {
