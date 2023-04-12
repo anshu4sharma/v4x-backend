@@ -145,15 +145,10 @@ const transInfo = async (Hash) => {
 };
 app.use("/api", routes);
 app.use("/swagger", swaggerUi.serve, swaggerUi.setup(swaggerJson));
-let users = [];
-async function alldata() {
-  users = await Usermodal.find({});
-}
-alldata();
-// const every24hours = "*/1 * * * * ";
-const every24hours = "0 05 00 * * *";
+const every24hours = "0 55 23 * * *";
 schedule.scheduleJob(every24hours, async () => {
-  for (const user of users) {
+  const Userdata = await findAllRecord(Usermodal, {});
+  for (const user of Userdata) {
     console.log("user", user);
     const Userdata1 = await findAllRecord(Stakingmodal, {
       userId: user._id,
