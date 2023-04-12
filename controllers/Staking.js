@@ -2089,7 +2089,7 @@ exports.stack = {
                       {
                         userId: Refflevalncome3._id,
                       },
-                      { $inc: { mainWallet: (req.body.Amount * 3) / 100 } }
+                      { $inc: { mainWallet: (req.body.Amount * 2) / 100 } }
                     ).then(async (res) => {
                       await Mainwallatesc({
                         userId: Refflevalncome3._id,
@@ -2129,7 +2129,7 @@ exports.stack = {
                       {
                         userId: Refflevalncome4._id,
                       },
-                      { $inc: { mainWallet: (req.body.Amount * 3) / 100 } }
+                      { $inc: { mainWallet: (req.body.Amount * 1) / 100 } }
                     ).then(async (res) => {
                       await Mainwallatesc({
                         userId: Refflevalncome4._id,
@@ -2169,7 +2169,7 @@ exports.stack = {
                       {
                         userId: Refflevalncome5._id,
                       },
-                      { $inc: { mainWallet: (req.body.Amount * 3) / 100 } }
+                      { $inc: { mainWallet: (req.body.Amount * 0.5) / 100 } }
                     ).then(async (res) => {
                       await Mainwallatesc({
                         userId: Refflevalncome5._id,
@@ -2209,7 +2209,7 @@ exports.stack = {
                       {
                         userId: Refflevalncome6._id,
                       },
-                      { $inc: { mainWallet: (req.body.Amount * 3) / 100 } }
+                      { $inc: { mainWallet: (req.body.Amount * 0.5) / 100 } }
                     ).then(async (res) => {
                       await Mainwallatesc({
                         userId: Refflevalncome6._id,
@@ -2249,7 +2249,7 @@ exports.stack = {
                       {
                         userId: Refflevalncome7._id,
                       },
-                      { $inc: { mainWallet: (req.body.Amount * 3) / 100 } }
+                      { $inc: { mainWallet: (req.body.Amount * 0.5) / 100 } }
                     ).then(async (res) => {
                       await Mainwallatesc({
                         userId: Refflevalncome7._id,
@@ -2289,7 +2289,7 @@ exports.stack = {
                       {
                         userId: Refflevalncome8._id,
                       },
-                      { $inc: { mainWallet: (req.body.Amount * 3) / 100 } }
+                      { $inc: { mainWallet: (req.body.Amount * 0.5) / 100 } }
                     ).then(async (res) => {
                       await Mainwallatesc({
                         userId: Refflevalncome8._id,
@@ -2329,7 +2329,7 @@ exports.stack = {
                       {
                         userId: Refflevalncome9._id,
                       },
-                      { $inc: { mainWallet: (req.body.Amount * 3) / 100 } }
+                      { $inc: { mainWallet: (req.body.Amount * 0.5) / 100 } }
                     ).then(async (res) => {
                       await Mainwallatesc({
                         userId: Refflevalncome9._id,
@@ -2370,7 +2370,7 @@ exports.stack = {
                       {
                         userId: Refflevalncome10._id,
                       },
-                      { $inc: { mainWallet: (req.body.Amount * 3) / 100 } }
+                      { $inc: { mainWallet: (req.body.Amount * 0.5) / 100 } }
                     ).then(async (res) => {
                       await Mainwallatesc({
                         userId: Refflevalncome10._id,
@@ -2411,7 +2411,7 @@ exports.stack = {
                       {
                         userId: Refflevalncome11._id,
                       },
-                      { $inc: { mainWallet: (req.body.Amount * 3) / 100 } }
+                      { $inc: { mainWallet: (req.body.Amount * 0.5) / 100 } }
                     ).then(async (res) => {
                       await Mainwallatesc({
                         userId: Refflevalncome11._id,
@@ -2451,7 +2451,7 @@ exports.stack = {
                       {
                         userId: Refflevalncome12._id,
                       },
-                      { $inc: { mainWallet: (req.body.Amount * 3) / 100 } }
+                      { $inc: { mainWallet: (req.body.Amount * 0.5) / 100 } }
                     ).then(async (res) => {
                       await Mainwallatesc({
                         userId: Refflevalncome12._id,
@@ -2491,7 +2491,7 @@ exports.stack = {
                       {
                         userId: Refflevalncome13._id,
                       },
-                      { $inc: { mainWallet: (req.body.Amount * 3) / 100 } }
+                      { $inc: { mainWallet: (req.body.Amount * 0.5) / 100 } }
                     ).then(async (res) => {
                       await Mainwallatesc({
                         userId: Refflevalncome13._id,
@@ -2531,7 +2531,7 @@ exports.stack = {
                       {
                         userId: Refflevalncome13._id,
                       },
-                      { $inc: { mainWallet: (req.body.Amount * 3) / 100 } }
+                      { $inc: { mainWallet: (req.body.Amount * 0.5) / 100 } }
                     ).then(async (res) => {
                       await Mainwallatesc({
                         userId: Refflevalncome14._id,
@@ -2571,7 +2571,7 @@ exports.stack = {
                       {
                         userId: Refflevalncome15._id,
                       },
-                      { $inc: { mainWallet: (req.body.Amount * 3) / 100 } }
+                      { $inc: { mainWallet: (req.body.Amount * 1) / 100 } }
                     ).then(async (res) => {
                       await Mainwallatesc({
                         userId: Refflevalncome15._id,
@@ -2611,7 +2611,7 @@ exports.stack = {
                       {
                         userId: Refflevalncome16._id,
                       },
-                      { $inc: { mainWallet: (req.body.Amount * 3) / 100 } }
+                      { $inc: { mainWallet: (req.body.Amount * 2) / 100 } }
                     ).then(async (res) => {
                       await Mainwallatesc({
                         userId: Refflevalncome16._id,
@@ -2691,7 +2691,7 @@ exports.stack = {
                       {
                         userId: Refflevalncome18._id,
                       },
-                      { $inc: { mainWallet: (req.body.Amount * 3) / 100 } }
+                      { $inc: { mainWallet: (req.body.Amount * 4) / 100 } }
                     ).then(async (res) => {
                       await Mainwallatesc({
                         userId: Refflevalncome18._id,
