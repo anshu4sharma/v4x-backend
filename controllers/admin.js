@@ -283,7 +283,7 @@ exports.admin = {
             );
             await V4XpriceSchemaDetails({
               price: price,
-              ipAddress: ip.address(),
+              ipAddress: ip.isV4Format(),
             }).save();
             return successResponse(res, {
               message: "V4X price chenge successfully!",
