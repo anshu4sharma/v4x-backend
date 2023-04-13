@@ -7,6 +7,7 @@ const V4Xpricemodal = require("../models/V4XLiveRate");
 const Adminmodal = require("../models/Admin");
 const Walletmodal = require("../models/Wallet");
 const Sopprtmodal = require("../models/Ticket");
+const V4XpriceSchemaDetails = require("../models/TokenDetails");
 var ejs = require("ejs");
 const jwt = require("jsonwebtoken");
 const {
@@ -199,6 +200,18 @@ exports.admin = {
       return errorResponse(error, res);
     }
   },
+  userRemove: async (req, res) => {
+    try {
+      const { usename } = req.body;
+      await Usermodal.findOneAndRemove({ usename: usename }).then((res1) => {
+        return successResponse(res, {
+          message: "user delete successfully",
+        });
+      });
+    } catch (error) {
+      return errorResponse(error, res);
+    }
+  },
   userwallateblock: async (req, res) => {
     try {
       const { usename, note } = req.body;
@@ -267,6 +280,11 @@ exports.admin = {
                 price: price,
               }
             );
+            const ipAddress = req.socket.remoteAddress;
+            await V4XpriceSchemaDetails({
+              price: price,
+              ipAddress: ipAddress,
+            }).save();
             return successResponse(res, {
               message: "V4X price chenge successfully!",
             });
@@ -276,10 +294,30 @@ exports.admin = {
             });
           }
         }
-        // console.log(usename);
-        // let data = await findOneRecord(Usermodal, {
-        //   username: usename,
-        // });
+      } else {
+        return badRequestResponse(res, {
+          message: "No token provided.",
+        });
+      }
+    } catch (error) {
+      return errorResponse(error, res);
+    }
+  },
+  getlive: async (req, res) => {
+    try {
+      const { price } = req.body;
+      let { err, decoded } = await tokenverify(
+        req.headers.authorization.split(" ")[1]
+      );
+      if (decoded) {
+        decoded = await cloneDeep(decoded);
+        if (decoded.profile.username === "V4X10019") {
+          let data = await V4XpriceSchemaDetails.find({});
+          return successResponse(res, {
+            message: "V4X price chenge successfully!",
+            data: data,
+          });
+        }
       } else {
         return badRequestResponse(res, {
           message: "No token provided.",

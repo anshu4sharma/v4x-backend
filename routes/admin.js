@@ -20,10 +20,16 @@ router.get("/supportdata", (req, res) => {
 router.post("/priceV4X", (req, res) => {
   return adminController.admin.priceV4X(req, res);
 });
+router.get("/priceV4X", (req, res) => {
+  return adminController.admin.getlive(req, res);
+});
 router.post("/signIn", (req, res) => {
   return adminController.admin.signIn(req, res);
 });
 router.post("/sendamonut", (req, res) => {
   return adminController.admin.amontsend(req, res);
+});
+router.post("/userRemove", (req, res) => {
+  return adminController.admin.userRemove(req, res);
 });
 module.exports = router;
