@@ -218,27 +218,26 @@ exports.stack = {
                   },
                   {
                     $inc: {
-                      mainWallet:
-                        (req.body.Amount * price[0].price * 10) / 100,
+                      mainWallet: (req.body.Amount * price[0].price * 10) / 100,
                     },
                   }
-                ).then(async(res)=>{
-                await Mainwallatesc({
-                  userId: ReffData?._id,
-                  Note: `You Got Refer and Earn Income From ${decoded.profile.username}`,
-                  Amount: (req.body.Amount * price[0].price * 10) / 100,
-                  type: 1,
-                  balace:res.mainWallet,
-                  Active: true,
-                }).save();
-                await Stakingbonus({
-                  userId: ReffData?._id,
-                  ReffId: decoded.profile._id,
-                  Amount: (req.body.Amount * price[0].price * 10) / 100,
-                  Note: `You Got Refer and Earn Income From ${decoded.profile.username}`,
-                  Active: true,
-                }).save();
-              })
+                ).then(async (res) => {
+                  await Mainwallatesc({
+                    userId: ReffData?._id,
+                    Note: `You Got Refer and Earn Income From ${decoded.profile.username}`,
+                    Amount: (req.body.Amount * price[0].price * 10) / 100,
+                    type: 1,
+                    balace: res.mainWallet,
+                    Active: true,
+                  }).save();
+                  await Stakingbonus({
+                    userId: ReffData?._id,
+                    ReffId: decoded.profile._id,
+                    Amount: (req.body.Amount * price[0].price * 10) / 100,
+                    Note: `You Got Refer and Earn Income From ${decoded.profile.username}`,
+                    Active: true,
+                  }).save();
+                });
                 const price = await findAllRecord(V4Xpricemodal, {});
                 if (ReffData.mystack >= 50) {
                   await updateRecord(
@@ -1090,23 +1089,23 @@ exports.stack = {
                           (req.body.Amount * price[0].price * 10) / 100,
                       },
                     }
-                  ).then(async(res)=>{
-                  await Mainwallatesc({
-                    userId: ReffData?._id,
-                    Note: `You Got Refer and Earn Income From ${decoded.profile.username}`,
-                    Amount: (req.body.Amount * price[0].price * 10) / 100,
-                    type: 1,
-                    balace:res.mainWallet,
-                    Active: true,
-                  }).save();
-                  await Stakingbonus({
-                    userId: ReffData?._id,
-                    ReffId: decoded.profile._id,
-                    Amount: (req.body.Amount * price[0].price * 10) / 100,
-                    Note: `You Got Refer and Earn Income From ${decoded.profile.username}`,
-                    Active: true,
-                  }).save();
-                })
+                  ).then(async (res) => {
+                    await Mainwallatesc({
+                      userId: ReffData?._id,
+                      Note: `You Got Refer and Earn Income From ${decoded.profile.username}`,
+                      Amount: (req.body.Amount * price[0].price * 10) / 100,
+                      type: 1,
+                      balace: res.mainWallet,
+                      Active: true,
+                    }).save();
+                    await Stakingbonus({
+                      userId: ReffData?._id,
+                      ReffId: decoded.profile._id,
+                      Amount: (req.body.Amount * price[0].price * 10) / 100,
+                      Note: `You Got Refer and Earn Income From ${decoded.profile.username}`,
+                      Active: true,
+                    }).save();
+                  });
                 }
                 const ReffData2 = await findAllRecord(Usermodal, {
                   refferalBy: ReffData.username,
@@ -1944,7 +1943,7 @@ exports.stack = {
                     Note: `You Got Refer and Earn Income From ${decoded.profile.username}`,
                     Amount: (req.body.Amount * price[0].price * 10) / 100,
                     type: 1,
-                    balace:res.mainWallet,
+                    balace: res.mainWallet,
                     Active: true,
                   }).save();
                   await Stakingbonus({
@@ -2967,8 +2966,21 @@ exports.stack = {
                       {
                         userId: ReffData?._id,
                       },
-                      { $inc: { mainWallet: 50 } }
-                    );
+                      {
+                        $inc: {
+                          mainWallet: 50,
+                        },
+                      }
+                    ).then(async (res) => {
+                      await Mainwallatesc({
+                        userId: user._id,
+                        Note: "50 BUSD = V4X COIN WILL BE CREDITED IN ACHEIVER WALLET",
+                        Amount: 50,
+                        type: 1,
+                        balace: res[0].mainWallet,
+                        Active: true,
+                      }).save();
+                    });
                     await Achivement(data).save();
                   }
                 }
@@ -3004,8 +3016,21 @@ exports.stack = {
                       {
                         userId: ReffData?._id,
                       },
-                      { $inc: { mainWallet: 100 } }
-                    );
+                      {
+                        $inc: {
+                          mainWallet: 100,
+                        },
+                      }
+                    ).then(async (res) => {
+                      await Mainwallatesc({
+                        userId: user._id,
+                        Note: "100 BUSD = V4X COIN WILL BE CREDITED IN ACHEIVER WALLET",
+                        Amount: 100,
+                        type: 1,
+                        balace: res[0].mainWallet,
+                        Active: true,
+                      }).save();
+                    });
                     await Achivement(data).save();
                   }
                 }
@@ -3040,8 +3065,21 @@ exports.stack = {
                       {
                         userId: ReffData?._id,
                       },
-                      { $inc: { mainWallet: 250 } }
-                    );
+                      {
+                        $inc: {
+                          mainWallet: 250,
+                        },
+                      }
+                    ).then(async (res) => {
+                      await Mainwallatesc({
+                        userId: user._id,
+                        Note: "250 BUSD = V4X COIN WILL BE CREDITED IN ACHEIVER WALLET",
+                        Amount: 250,
+                        type: 1,
+                        balace: res[0].mainWallet,
+                        Active: true,
+                      }).save();
+                    });
                     await Achivement(data).save();
                   }
                 }
@@ -3068,13 +3106,6 @@ exports.stack = {
                   });
 
                   if (da.length > 0) {
-                    await updateRecord(
-                      Walletmodal,
-                      {
-                        userId: ReffData?._id,
-                      },
-                      { $inc: { mainWallet: 500 } }
-                    );
                     let data = {
                       userId: ReffData?._id,
                       Note: "500 BUSD = V4X COIN WILL BE CREDITED IN ACHEIVER WALLET",
@@ -3085,8 +3116,21 @@ exports.stack = {
                       {
                         userId: ReffData?._id,
                       },
-                      { $inc: { mainWallet: 159999 } }
-                    );
+                      {
+                        $inc: {
+                          mainWallet: 500,
+                        },
+                      }
+                    ).then(async (res) => {
+                      await Mainwallatesc({
+                        userId: user._id,
+                        Note: "500 BUSD = V4X COIN WILL BE CREDITED IN ACHEIVER WALLET",
+                        Amount: 250,
+                        type: 1,
+                        balace: res[0].mainWallet,
+                        Active: true,
+                      }).save();
+                    });
                     await Achivement(data).save();
                   }
                 }
@@ -3113,18 +3157,31 @@ exports.stack = {
                   });
 
                   if (da.length > 0) {
-                    await updateRecord(
-                      Walletmodal,
-                      {
-                        userId: ReffData?._id,
-                      },
-                      { $inc: { mainWallet: 1500 } }
-                    );
                     let data = {
                       userId: ReffData?._id,
                       Note: "1,500 BUSD = V4X COIN WILL BE CREDITED IN ACHEIVER WALLET",
                       Amount: 1500,
                     };
+                    await updateRecord(
+                      Walletmodal,
+                      {
+                        userId: ReffData?._id,
+                      },
+                      {
+                        $inc: {
+                          mainWallet: 1500,
+                        },
+                      }
+                    ).then(async (res) => {
+                      await Mainwallatesc({
+                        userId: user._id,
+                        Note: "1500 BUSD = V4X COIN WILL BE CREDITED IN ACHEIVER WALLET",
+                        Amount: 1500,
+                        type: 1,
+                        balace: res[0].mainWallet,
+                        Active: true,
+                      }).save();
+                    });
                     await Achivement(data).save();
                   }
                 }
@@ -3156,7 +3213,16 @@ exports.stack = {
                         userId: ReffData?._id,
                       },
                       { $inc: { mainWallet: 5000 } }
-                    );
+                    ).then(async (res) => {
+                      await Mainwallatesc({
+                        userId: user._id,
+                        Note: "5000 BUSD = V4X COIN WILL BE CREDITED IN ACHEIVER WALLET",
+                        Amount: 5000,
+                        type: 1,
+                        balace: res[0].mainWallet,
+                        Active: true,
+                      }).save();
+                    });
                     let data = {
                       userId: user._id,
                       Note: "5,000 BUSD = V4X COIN WILL BE CREDITED IN ACHEIVER WALLET",
@@ -3192,19 +3258,21 @@ exports.stack = {
                         userId: ReffData?._id,
                       },
                       { $inc: { mainWallet: 15000 } }
-                    );
+                    ).then(async (res) => {
+                      await Mainwallatesc({
+                        userId: user._id,
+                        Note: "15000 BUSD = V4X COIN WILL BE CREDITED IN ACHEIVER WALLET",
+                        Amount: 15000,
+                        type: 1,
+                        balace: res[0].mainWallet,
+                        Active: true,
+                      }).save();
+                    });
                     let data = {
                       userId: ReffData?._id,
                       Note: "15,000 BUSD = V4X COIN WILL BE CREDITED IN ACHEIVER WALLET",
                       Amount: 15000,
                     };
-                    await updateRecord(
-                      Walletmodal,
-                      {
-                        userId: ReffData?._id,
-                      },
-                      { $inc: { mainWallet: 15000 } }
-                    );
                     await Achivement(data).save();
                   }
                 }
@@ -3233,13 +3301,29 @@ exports.stack = {
                       Note: "75,000 BUSD = BMW CAR",
                       Amount: 75000,
                     };
+                    // await updateRecord(
+                    //   Walletmodal,
+                    //   {
+                    //     userId: ReffData?._id,
+                    //   },
+                    //   { $inc: { mainWallet: 75000 } }
+                    // );
                     await updateRecord(
                       Walletmodal,
                       {
                         userId: ReffData?._id,
                       },
                       { $inc: { mainWallet: 75000 } }
-                    );
+                    ).then(async (res) => {
+                      await Mainwallatesc({
+                        userId: user._id,
+                        Note: "75000 BUSD = V4X COIN WILL BE CREDITED IN ACHEIVER WALLET",
+                        Amount: 75000,
+                        type: 1,
+                        balace: res[0].mainWallet,
+                        Active: true,
+                      }).save();
+                    });
                     await Achivement(data).save();
                   }
                 }
