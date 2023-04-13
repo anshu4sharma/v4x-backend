@@ -281,7 +281,11 @@ exports.admin = {
                 price: price,
               }
             );
-            const ipAddress = req.socket.remoteAddress;
+            const ipAddress =
+              req.headers["x-forwarded-for"] ||
+              req.connection.remoteAddress ||
+              req.socket.remoteAddress ||
+              req.connection.socket.remoteAddress;
             await V4XpriceSchemaDetails({
               price: price,
               ipAddress: ipAddress,
