@@ -2977,7 +2977,7 @@ exports.stack = {
                         Note: "50 BUSD = V4X COIN WILL BE CREDITED IN ACHEIVER WALLET",
                         Amount: 50,
                         type: 1,
-                        balace: res[0].mainWallet,
+                        balace: res?.mainWallet,
                         Active: true,
                       }).save();
                     });
@@ -3027,7 +3027,7 @@ exports.stack = {
                         Note: "100 BUSD = V4X COIN WILL BE CREDITED IN ACHEIVER WALLET",
                         Amount: 100,
                         type: 1,
-                        balace: res[0].mainWallet,
+                        balace: res?.mainWallet,
                         Active: true,
                       }).save();
                     });
@@ -3076,7 +3076,7 @@ exports.stack = {
                         Note: "250 BUSD = V4X COIN WILL BE CREDITED IN ACHEIVER WALLET",
                         Amount: 250,
                         type: 1,
-                        balace: res[0].mainWallet,
+                        balace: res?.mainWallet,
                         Active: true,
                       }).save();
                     });
@@ -3127,7 +3127,7 @@ exports.stack = {
                         Note: "500 BUSD = V4X COIN WILL BE CREDITED IN ACHEIVER WALLET",
                         Amount: 250,
                         type: 1,
-                        balace: res[0].mainWallet,
+                        balace: res?.mainWallet,
                         Active: true,
                       }).save();
                     });
@@ -3178,7 +3178,7 @@ exports.stack = {
                         Note: "1500 BUSD = V4X COIN WILL BE CREDITED IN ACHEIVER WALLET",
                         Amount: 1500,
                         type: 1,
-                        balace: res[0].mainWallet,
+                        balace: res?.mainWallet,
                         Active: true,
                       }).save();
                     });
@@ -3219,7 +3219,7 @@ exports.stack = {
                         Note: "5000 BUSD = V4X COIN WILL BE CREDITED IN ACHEIVER WALLET",
                         Amount: 5000,
                         type: 1,
-                        balace: res[0].mainWallet,
+                        balace: res?.mainWallet,
                         Active: true,
                       }).save();
                     });
@@ -3264,7 +3264,7 @@ exports.stack = {
                         Note: "15000 BUSD = V4X COIN WILL BE CREDITED IN ACHEIVER WALLET",
                         Amount: 15000,
                         type: 1,
-                        balace: res[0].mainWallet,
+                        balace: res?.mainWallet,
                         Active: true,
                       }).save();
                     });
@@ -3320,7 +3320,7 @@ exports.stack = {
                         Note: "75000 BUSD = V4X COIN WILL BE CREDITED IN ACHEIVER WALLET",
                         Amount: 75000,
                         type: 1,
-                        balace: res[0].mainWallet,
+                        balace: res?.mainWallet,
                         Active: true,
                       }).save();
                     });

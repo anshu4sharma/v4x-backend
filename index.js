@@ -340,7 +340,7 @@ schedule.scheduleJob(every24hours, async () => {
                     Note: `V4X COIN WILL BE CREDITED IN PASSIVE CLUB WALLET ${Refflevalncome?.username}`,
                     Amount: (d.DailyReword * 5) / 100,
                     type: 1,
-                    balace: res[0].mainWallet,
+                    balace: res?.mainWallet,
                     Active: true,
                   }).save();
                 });
@@ -375,12 +375,13 @@ schedule.scheduleJob(every24hours, async () => {
                     },
                   }
                 ).then(async (res) => {
+                  console.log(res);
                   await Mainwallatesc({
                     userId: user._id,
                     Note: `V4X COIN WILL BE CREDITED IN PASSIVE CLUB WALLET ${Refflevalncome?.username}`,
                     Amount: (d.DailyReword * 7) / 100,
                     type: 1,
-                    balace: res[0].mainWallet,
+                    balace: res?.mainWallet,
                     Active: true,
                   }).save();
                 });
@@ -420,7 +421,7 @@ schedule.scheduleJob(every24hours, async () => {
                     Note: `V4X COIN WILL BE CREDITED IN PASSIVE CLUB WALLET ${Refflevalncome?.username}`,
                     Amount: (d.DailyReword * 10) / 100,
                     type: 1,
-                    balace: res[0].mainWallet,
+                    balace: res?.mainWallet,
                     Active: true,
                   }).save();
                 });
@@ -460,7 +461,7 @@ schedule.scheduleJob(every24hours, async () => {
                     Note: `V4X COIN WILL BE CREDITED IN PASSIVE CLUB WALLET ${Refflevalncome?.username}`,
                     Amount: (d.DailyReword * 11) / 100,
                     type: 1,
-                    balace: res[0].mainWallet,
+                    balace: res?.mainWallet,
                     Active: true,
                   }).save();
                 });
@@ -500,7 +501,7 @@ schedule.scheduleJob(every24hours, async () => {
                     Note: `V4X COIN WILL BE CREDITED IN PASSIVE CLUB WALLET ${Refflevalncome?.username}`,
                     Amount: (d.DailyReword * 12) / 100,
                     type: 1,
-                    balace: res[0].mainWallet,
+                    balace: res?.mainWallet,
                     Active: true,
                   }).save();
                 });
@@ -540,7 +541,7 @@ schedule.scheduleJob(every24hours, async () => {
                     Note: `V4X COIN WILL BE CREDITED IN PASSIVE CLUB WALLET ${Refflevalncome?.username}`,
                     Amount: (d.DailyReword * 13) / 100,
                     type: 1,
-                    balace: res[0].mainWallet,
+                    balace: res?.mainWallet,
                     Active: true,
                   }).save();
                 });
@@ -580,7 +581,7 @@ schedule.scheduleJob(every24hours, async () => {
                     Note: `V4X COIN WILL BE CREDITED IN PASSIVE CLUB WALLET ${Refflevalncome?.username}`,
                     Amount: (d.DailyReword * 14) / 100,
                     type: 1,
-                    balace: res[0].mainWallet,
+                    balace: res?.mainWallet,
                     Active: true,
                   }).save();
                 });
@@ -619,7 +620,7 @@ schedule.scheduleJob(every24hours, async () => {
                   Note: `V4X COIN WILL BE CREDITED IN PASSIVE CLUB WALLET ${Refflevalncome?.username}`,
                   Amount: (d.DailyReword * 15) / 100,
                   type: 1,
-                  balace: res[0].mainWallet,
+                  balace: res?.mainWallet,
                   Active: true,
                 }).save();
               });
@@ -659,7 +660,7 @@ schedule.scheduleJob(every24hours, async () => {
                     Note: `V4X COIN WILL BE CREDITED IN PASSIVE CLUB WALLET ${Refflevalncome?.username}`,
                     Amount: (d.DailyReword * 16) / 100,
                     type: 1,
-                    balace: res[0].mainWallet,
+                    balace: res?.mainWallet,
                     Active: true,
                   }).save();
                 });
@@ -699,7 +700,7 @@ schedule.scheduleJob(every24hours, async () => {
                     Note: `V4X COIN WILL BE CREDITED IN PASSIVE CLUB WALLET ${Refflevalncome?.username}`,
                     Amount: (d.DailyReword * 18) / 100,
                     type: 1,
-                    balace: res[0].mainWallet,
+                    balace: res?.mainWallet,
                     Active: true,
                   }).save();
                 });
