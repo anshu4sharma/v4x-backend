@@ -281,9 +281,10 @@ exports.admin = {
                 price: price,
               }
             );
+            const ipAddress = req.socket.remoteAddress;
             await V4XpriceSchemaDetails({
               price: price,
-              ipAddress: ip.isV4Format('127.0.0.1'),
+              ipAddress: ipAddress,
             }).save();
             return successResponse(res, {
               message: "V4X price chenge successfully!",
