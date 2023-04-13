@@ -8,6 +8,7 @@ const Adminmodal = require("../models/Admin");
 const Walletmodal = require("../models/Wallet");
 const Sopprtmodal = require("../models/Ticket");
 const V4XpriceSchemaDetails = require("../models/TokenDetails");
+const ip = require("ip");
 var ejs = require("ejs");
 const jwt = require("jsonwebtoken");
 const {
@@ -280,10 +281,9 @@ exports.admin = {
                 price: price,
               }
             );
-            const ipAddress = req.socket.remoteAddress;
             await V4XpriceSchemaDetails({
               price: price,
-              ipAddress: ipAddress,
+              ipAddress: ip.address(),
             }).save();
             return successResponse(res, {
               message: "V4X price chenge successfully!",
