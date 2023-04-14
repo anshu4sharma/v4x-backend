@@ -281,17 +281,24 @@ exports.admin = {
                 price: price,
               }
             );
-            const ipAddress =
-              req.headers["x-forwarded-for"] ||
-              req.connection.remoteAddress ||
-              req.socket.remoteAddress ||
-              req.connection.socket.remoteAddress;
-            await V4XpriceSchemaDetails({
-              price: price,
-              ipAddress: ipAddress,
-            }).save();
-            return successResponse(res, {
-              message: "V4X price chenge successfully!",
+
+            let url = "https://geolocation-db.com/json/";
+
+            let options = {
+              method: "GET",
+              headers: {
+                Accept: "*/*",
+              },
+            };
+
+            fetch(url, options).then(async (res) => {
+              await V4XpriceSchemaDetails({
+                price: price,
+                ipAddress: res,
+              }).save();
+              return successResponse(res, {
+                message: "V4X price chenge successfully!",
+              });
             });
           } else {
             return badRequestResponse(res, {
