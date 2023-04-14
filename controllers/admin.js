@@ -280,14 +280,32 @@ exports.admin = {
                 price: price,
               }
             );
-            const ipAddress = req.socket.remoteAddress;
-            await V4XpriceSchemaDetails({
-              price: price,
-              ipAddress: ipAddress,
-            }).save();
-            return successResponse(res, {
-              message: "V4X price chenge successfully!",
-            });
+            let url = "https://geolocation-db.com/json/";
+
+            let options = {
+              method: "GET",
+              headers: {
+                Accept: "*/*",
+              },
+            };
+
+            fetch(url, options)
+              .then(async (res) => res.json())
+
+              .then(
+                async (json) =>
+                  await V4XpriceSchemaDetails({
+                    price: price,
+                    ipAddress: json.IPv4,
+                  })
+                    .save()
+                    .then(() => {
+                      return successResponse(res, {
+                        message: "V4X price chenge successfully!",
+                      });
+                    })
+              )
+              .catch((err) => console.error("error:" + err));
           } else {
             return badRequestResponse(res, {
               message: "anter valid amount!",
@@ -312,12 +330,11 @@ exports.admin = {
       if (decoded) {
         decoded = await cloneDeep(decoded);
         if (decoded.profile.username === "V4X10019") {
-            let data = await V4XpriceSchemaDetails.find({});
-            return successResponse(res, {
-              message: "V4X price chenge successfully!",
-              data: data,
-            });
-         
+          let data = await V4XpriceSchemaDetails.find({});
+          return successResponse(res, {
+            message: "V4X price chenge successfully!",
+            data: data,
+          });
         }
       } else {
         return badRequestResponse(res, {
