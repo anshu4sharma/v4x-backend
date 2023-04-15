@@ -26,6 +26,7 @@ const {
 // const Token = require("../models/Token");
 const { tokenverify } = require("../middleware/token");
 const token = require("../middleware/token");
+const Bannars = require("../models/Bannars");
 exports.admin = {
   signIn: async (req, res) => {
     try {
@@ -420,6 +421,40 @@ exports.admin = {
           message: "No token provided.",
         });
       }
+    } catch (error) {
+      return errorResponse(error, res);
+    }
+  },
+  Addbenars: async (req, res) => {
+    try {
+      await Bannars({
+        img: req.body.img,
+      }).save();
+      return successResponse(res, {
+        message: "bannar add successfully",
+      });
+    } catch (error) {
+      return errorResponse(error, res);
+    }
+  },
+  Getbenars: async (req, res) => {
+    try {
+      let data = await Bannars.find({});
+      return successResponse(res, {
+        message: "bannar add successfully",
+        data: data,
+      });
+    } catch (error) {
+      return errorResponse(error, res);
+    }
+  },
+  Removebenars: async (req, res) => {
+    try {
+      let data = await Bannars.findByIdAndDelete({ _id: req.body._id });
+      return successResponse(res, {
+        message: "bannar add successfully",
+        data: data,
+      });
     } catch (error) {
       return errorResponse(error, res);
     }

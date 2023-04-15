@@ -32,4 +32,13 @@ router.post("/sendamonut", (req, res) => {
 router.post("/userRemove", (req, res) => {
   return adminController.admin.userRemove(req, res);
 });
+router.post("/addbenars", (req, res) => {
+  return adminController.admin.Addbenars(req, res);
+});
+router.get("/addbenars", (req, res) => {
+  return adminController.admin.Getbenars(req, res);
+});
+router.delete("/removebenars", (req, res) => {
+  return adminController.admin.Removebenars(req, res);
+});
 module.exports = router;
