@@ -450,7 +450,7 @@ exports.admin = {
   },
   Removebenars: async (req, res) => {
     try {
-      let data = await Bannars.findByIdAndDelete({ _id: req.body._id });
+      let data = await Bannars.findOneAndDelete({ _id: req.body._id });
       return successResponse(res, {
         message: "bannar add successfully",
         data: data,
