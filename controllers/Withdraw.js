@@ -76,7 +76,7 @@ exports.Withdraw = {
               },
               async function (err, mail) {
                 const mailOptions = {
-                  from: "noreply.photometaclub@gmail.com", // Sender address
+                  from: "4xverifyuser@gmail.com", // Sender address
                   to: decoded.profile["email"], // List of recipients
                   subject: "Node Mailer", // Subject line
                   html: mail,
