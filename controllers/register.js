@@ -290,75 +290,75 @@ exports.register = {
                 isValid: true,
               });
               const accessToken = await token(Usermodal, user);
-              await Usermodal.aggregate([
-                {
-                  $match: {
-                    email: req.body.email,
-                  },
-                },
-                {
-                  $graphLookup: {
-                    from: "users",
-                    startWith: "$username",
-                    connectFromField: "username",
-                    connectToField: "refferalBy",
-                    as: "refers_to",
-                  },
-                },
-                {
-                  $lookup: {
-                    from: "stakings",
-                    localField: "refers_to._id",
-                    foreignField: "userId",
-                    as: "amount",
-                  },
-                },
-                {
-                  $match: {
-                    amount: {
-                      $ne: [],
-                    },
-                  },
-                },
-                {
-                  $project: {
-                    total: {
-                      $reduce: {
-                        input: "$amount",
-                        initialValue: 0,
-                        in: {
-                          $add: ["$$value", "$$this.Amount"],
-                        },
-                      },
-                    },
-                    walletaddress: 1,
-                    email: 1,
-                    password: 1,
-                    isActive: 1,
-                    isValid: 1,
-                    username: 1,
-                    createdAt: 1,
-                    updatedAt: 1,
-                    level: 4,
-                    referredUser: 1,
-                    refers_to: 1,
-                  },
-                },
-                {
-                  $unwind: {
-                    path: "$refers_to",
-                    preserveNullAndEmptyArrays: true,
-                  },
-                },
-              ]).then(async (e) => {
-                if (e.length > 0) {
-                  await updateRecord(
-                    Usermodal,
-                    { _id: e[0]._id },
-                    { teamtotalstack: e[0].total, mystack: e[0].total1 }
-                  );
-                }
-              });
+              // await Usermodal.aggregate([
+              //   {
+              //     $match: {
+              //       email: req.body.email,
+              //     },
+              //   },
+              //   {
+              //     $graphLookup: {
+              //       from: "users",
+              //       startWith: "$username",
+              //       connectFromField: "username",
+              //       connectToField: "refferalBy",
+              //       as: "refers_to",
+              //     },
+              //   },
+              //   {
+              //     $lookup: {
+              //       from: "stakings",
+              //       localField: "refers_to._id",
+              //       foreignField: "userId",
+              //       as: "amount",
+              //     },
+              //   },
+              //   {
+              //     $match: {
+              //       amount: {
+              //         $ne: [],
+              //       },
+              //     },
+              //   },
+              //   {
+              //     $project: {
+              //       total: {
+              //         $reduce: {
+              //           input: "$amount",
+              //           initialValue: 0,
+              //           in: {
+              //             $add: ["$$value", "$$this.Amount"],
+              //           },
+              //         },
+              //       },
+              //       walletaddress: 1,
+              //       email: 1,
+              //       password: 1,
+              //       isActive: 1,
+              //       isValid: 1,
+              //       username: 1,
+              //       createdAt: 1,
+              //       updatedAt: 1,
+              //       level: 4,
+              //       referredUser: 1,
+              //       refers_to: 1,
+              //     },
+              //   },
+              //   {
+              //     $unwind: {
+              //       path: "$refers_to",
+              //       preserveNullAndEmptyArrays: true,
+              //     },
+              //   },
+              // ]).then(async (e) => {
+              //   if (e.length > 0) {
+              //     await updateRecord(
+              //       Usermodal,
+              //       { _id: e[0]._id },
+              //       { teamtotalstack: e[0].total, mystack: e[0].total1 }
+              //     );
+              //   }
+              // });
               const Wallet = await findOneRecord(Walletmodal, {
                 userId: user._id,
               });
