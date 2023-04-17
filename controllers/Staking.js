@@ -5,8 +5,6 @@ const {
   cloneDeep,
   findOneRecord,
   updateRecord,
-  hardDeleteRecord,
-  updateRecordValue,
   findAllRecord,
 } = require("../library/commonQueries");
 const {
@@ -16,7 +14,6 @@ const {
   notFoundResponse,
   validarionerrorResponse,
 } = require("../middleware/response");
-const Web3 = require("web3");
 const { tokenverify } = require("../middleware/token");
 const Stakingmodal = require("../models/Staking");
 const Walletmodal = require("../models/Wallet");
@@ -31,159 +28,7 @@ const Achivement = require("../models/Achivement");
 const Mainwallatesc = require("../models/Mainwallate");
 const Ewallateesc = require("../models/Ewallate");
 const env = require("../env");
-const { success, failed } = require("../helper");
-const infraUrl = env.globalAccess.rpcUrl;
 
-const ContractAbi = env.contract.ablcAbi.abi;
-
-const ContractAddress = env.globalAccess.ablcContract;
-
-const ContractAbiForBUSD = env.contract.busdAbi.abi;
-
-const ContractAddressForBUSD = env.globalAccess.busdContract;
-
-const PrivateKey = env.privateKey;
-
-const web3 = new Web3(infraUrl);
-
-let levalreword = [
-  {
-    LEVELS: 1,
-    INCOME: 4,
-    DIRECTS: 1,
-  },
-  {
-    LEVELS: 2,
-    INCOME: 3,
-    DIRECTS: 1,
-  },
-  {
-    LEVELS: 3,
-    INCOME: 2,
-    DIRECTS: 2,
-  },
-  {
-    LEVELS: 4,
-    INCOME: 1,
-    DIRECTS: 2,
-  },
-  {
-    LEVELS: 5,
-    INCOME: 0.5,
-    DIRECTS: 3,
-  },
-  {
-    LEVELS: 6,
-    INCOME: 0.5,
-    DIRECTS: 3,
-  },
-  {
-    LEVELS: 7,
-    INCOME: 0.5,
-    DIRECTS: 4,
-  },
-  {
-    LEVELS: 8,
-    INCOME: 0.5,
-    DIRECTS: 4,
-  },
-  {
-    LEVELS: 9,
-    INCOME: 0.5,
-    DIRECTS: 5,
-  },
-  {
-    LEVELS: 10,
-    INCOME: 0.5,
-    DIRECTS: 5,
-  },
-  {
-    LEVELS: 11,
-    INCOME: 0.5,
-    DIRECTS: 6,
-  },
-  {
-    LEVELS: 12,
-    INCOME: 0.5,
-    DIRECTS: 6,
-  },
-  {
-    LEVELS: 13,
-    INCOME: 0.5,
-    DIRECTS: 7,
-  },
-  {
-    LEVELS: 14,
-    INCOME: 0.5,
-    DIRECTS: 7,
-  },
-  {
-    LEVELS: 15,
-    INCOME: 1,
-    DIRECTS: 8,
-  },
-  {
-    LEVELS: 16,
-    INCOME: 2,
-    DIRECTS: 8,
-  },
-  {
-    LEVELS: 17,
-    INCOME: 2,
-    DIRECTS: 8,
-  },
-  {
-    LEVELS: 18,
-    INCOME: 2,
-    DIRECTS: 8,
-  },
-];
-
-const init1 = async (to_address, token_amount) => {
-  const myContract = new web3.eth.Contract(
-    JSON.parse(ContractAbi),
-
-    ContractAddress
-  );
-
-  const tx = myContract.methods.transfer(to_address, token_amount);
-
-  try {
-    const gas = 500000;
-
-    const data = tx.encodeABI();
-
-    const signedTx = await web3.eth.accounts.signTransaction(
-      {
-        to: myContract.options.address,
-
-        data,
-
-        gas: gas,
-
-        value: "0x0",
-      },
-
-      PrivateKey
-    );
-
-    console.log("Started");
-
-    const receipt = await web3.eth.sendSignedTransaction(
-      signedTx.rawTransaction
-    );
-
-    console.log(`Transaction Hash :  ${receipt.transactionHash}`);
-
-    console.log("End");
-
-    return [true, receipt.transactionHash];
-  } catch (error) {
-    console.log(error);
-
-    return [false, JSON.stringify(error)];
-  }
-};
 exports.stack = {
   Buystack: async (req, res) => {
     try {
@@ -2774,89 +2619,6 @@ exports.stack = {
             userId: decoded.profile._id,
           });
           const price = await findAllRecord(V4Xpricemodal, {});
-          const ReffData = await findOneRecord(Usermodal, {
-            _id: decoded.profile._id,
-            isValid: true,
-          });
-          await Usermodal.aggregate([
-            {
-              $match: {
-                username: decoded.profile.username,
-              },
-            },
-            {
-              $graphLookup: {
-                from: "users",
-                startWith: "$username",
-                connectFromField: "username",
-                connectToField: "refferalBy",
-                as: "refers_to",
-              },
-            },
-            {
-              $lookup: {
-                from: "stakings",
-                localField: "refers_to._id",
-                foreignField: "userId",
-                as: "amount2",
-              },
-            },
-            {
-              $lookup: {
-                from: "stakings",
-                localField: "_id",
-                foreignField: "userId",
-                as: "amount",
-              },
-            },
-            {
-              $match: {
-                amount: {
-                  $ne: [],
-                },
-              },
-            },
-            {
-              $project: {
-                total: {
-                  $reduce: {
-                    input: "$amount",
-                    initialValue: 0,
-                    in: {
-                      $add: ["$$value", "$$this.Amount"],
-                    },
-                  },
-                },
-                total1: {
-                  $reduce: {
-                    input: "$amount2",
-                    initialValue: 0,
-                    in: {
-                      $add: ["$$value", "$$this.Amount"],
-                    },
-                  },
-                },
-                email: 1,
-                username: 1,
-                level: 4,
-                refers_to: 1,
-              },
-            },
-            {
-              $unwind: {
-                path: "$refers_to",
-                preserveNullAndEmptyArrays: true,
-              },
-            },
-          ]).then(async (e) => {
-            if (e.length > 0) {
-              await updateRecord(
-                Usermodal,
-                { _id: e[0]._id },
-                { teamtotalstack: e[0].total1, mystack: e[0].total }
-              );
-            }
-          });
           return successResponse(res, {
             message: "staking data get successfully",
             data: StakingData,

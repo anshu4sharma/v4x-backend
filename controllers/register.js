@@ -278,22 +278,20 @@ exports.register = {
         if (
           !match &&
           user.password.toString() !== req.body.password.toString()
-        ) {
-          badRequestResponse(res, { message: "Password is incorrect!" });
-        } else {
-          if (!user.isActive) {
-            badRequestResponse(res, {
-              message: "Account is disabled. please contact support!",
-            });
+          ) {
+            badRequestResponse(res, { message: "Password is incorrect!" });
           } else {
-            if (!user.isValid) {
+            if (!user.isActive) {
               badRequestResponse(res, {
-                message: "please verify your account",
+                message: "Account is disabled. please contact support!",
               });
             } else {
-              let allUser = await Usermodal.find({
-                isValid: true,
-              });
+              if (!user.isValid) {
+                badRequestResponse(res, {
+                  message: "please verify your account",
+                });
+              } else {
+              console.log(user);
               const accessToken = await token(Usermodal, user);
               // await Usermodal.aggregate([
               //   {
@@ -364,7 +362,6 @@ exports.register = {
               //     );
               //   }
               // });
-
               return successResponse(res, {
                 message: "Login successfully",
                 token: accessToken.token,
