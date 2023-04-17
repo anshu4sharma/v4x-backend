@@ -2955,7 +2955,7 @@ exports.stack = {
           });
         }
       } else {
-        badRequestResponse(res, {
+        return  badRequestResponse(res, {
           message: "No token provided.",
         });
       }
