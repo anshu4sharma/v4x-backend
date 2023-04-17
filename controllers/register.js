@@ -221,7 +221,12 @@ exports.register = {
               isValid: true,
             }
           );
-
+          const Wallet = await findOneRecord(Walletmodal, {
+            userId: decoded.profile._id,
+          });
+          if (!Wallet) {
+            await Walletmodal({ userId: decoded.profile._id }).save();
+          }
           ejs.renderFile(
             __dirname + "/welcome.ejs",
             {
@@ -359,12 +364,7 @@ exports.register = {
               //     );
               //   }
               // });
-              const Wallet = await findOneRecord(Walletmodal, {
-                userId: user._id,
-              });
-              if (!Wallet) {
-                await Walletmodal({ userId: user._id }).save();
-              }
+
               successResponse(res, {
                 message: "Login successfully",
                 token: accessToken.token,
