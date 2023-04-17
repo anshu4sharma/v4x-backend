@@ -365,7 +365,7 @@ exports.register = {
               //   }
               // });
 
-              successResponse(res, {
+              return successResponse(res, {
                 message: "Login successfully",
                 token: accessToken.token,
                 profile: user,
