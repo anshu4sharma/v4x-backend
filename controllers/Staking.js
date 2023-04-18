@@ -2705,7 +2705,87 @@ exports.stack = {
                 Airdropped: 0,
               },
             },
-          ]);
+          ]).then(async () => {
+            await Usermodal.aggregate([
+              {
+                $match: {
+                  username: decoded.profile.username,
+                },
+              },
+              {
+                $graphLookup: {
+                  from: "users",
+                  startWith: "$username",
+                  connectFromField: "username",
+                  connectToField: "refferalBy",
+                  as: "refers_to",
+                },
+              },
+              {
+                $lookup: {
+                  from: "stakings",
+                  localField: "refers_to._id",
+                  foreignField: "userId",
+                  as: "amount2",
+                },
+              },
+              {
+                $lookup: {
+                  from: "stakings",
+                  localField: "_id",
+                  foreignField: "userId",
+                  as: "amount",
+                },
+              },
+              {
+                $match: {
+                  amount: {
+                    $ne: [],
+                  },
+                },
+              },
+              {
+                $project: {
+                  total: {
+                    $reduce: {
+                      input: "$amount",
+                      initialValue: 0,
+                      in: {
+                        $add: ["$$value", "$$this.Amount"],
+                      },
+                    },
+                  },
+                  total1: {
+                    $reduce: {
+                      input: "$amount2",
+                      initialValue: 0,
+                      in: {
+                        $add: ["$$value", "$$this.Amount"],
+                      },
+                    },
+                  },
+                  email: 1,
+                  username: 1,
+                  level: 4,
+                  refers_to: 1,
+                },
+              },
+              {
+                $unwind: {
+                  path: "$refers_to",
+                  preserveNullAndEmptyArrays: true,
+                },
+              },
+            ]).then(async (e) => {
+              if (e.length > 0) {
+                await updateRecord(
+                  Usermodal,
+                  { _id: e[0]._id },
+                  { teamtotalstack: e[0].total1, mystack: e[0].total }
+                );
+              }
+            });
+          });
           const price = await findAllRecord(V4Xpricemodal, {});
           return successResponse(res, {
             message: "wallet data get successfully",
@@ -2717,7 +2797,7 @@ exports.stack = {
           });
         }
       } else {
-        return  badRequestResponse(res, {
+        return badRequestResponse(res, {
           message: "No token provided.",
         });
       }
