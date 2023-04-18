@@ -221,12 +221,6 @@ exports.register = {
               isValid: true,
             }
           );
-          const Wallet = await findOneRecord(Walletmodal, {
-            userId: decoded.profile._id,
-          });
-          if (!Wallet) {
-            await Walletmodal({ userId: decoded.profile._id }).save();
-          }
           ejs.renderFile(
             __dirname + "/welcome.ejs",
             {
