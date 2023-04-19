@@ -2706,6 +2706,42 @@ exports.stack = {
               },
             },
           ]);
+          const price = await findAllRecord(V4Xpricemodal, {});
+          return successResponse(res, {
+            message: "wallet data get successfully",
+            data: StakingData,
+            profile: decoded.profile,
+            ReffData: data,
+            ReffData1: data1,
+            V4Xtokenprice: price[0].price,
+          });
+        }
+      } else {
+        return badRequestResponse(res, {
+          message: "No token provided.",
+        });
+      }
+    } catch (error) {
+      return errorResponse(error, res);
+    }
+  },
+  getstackbouns: async (req, res) => {
+    try {
+      if (req.headers.authorization) {
+        let { err, decoded } = await tokenverify(
+          req.headers.authorization.split(" ")[1]
+        );
+        if (err) {
+          notFoundResponse(res, {
+            message: "user not found",
+          });
+        }
+        if (decoded) {
+          decoded = await cloneDeep(decoded);
+          const StakingData = await findAllRecord(Stakingbonus, {
+            userId: decoded.profile._id,
+          });
+          
           await Usermodal.aggregate([
             {
               $match: {
@@ -2784,41 +2820,6 @@ exports.stack = {
                 { teamtotalstack: e[0].total1, mystack: e[0].total }
               );
             }
-          });
-          const price = await findAllRecord(V4Xpricemodal, {});
-          return successResponse(res, {
-            message: "wallet data get successfully",
-            data: StakingData,
-            profile: decoded.profile,
-            ReffData: data,
-            ReffData1: data1,
-            V4Xtokenprice: price[0].price,
-          });
-        }
-      } else {
-        return badRequestResponse(res, {
-          message: "No token provided.",
-        });
-      }
-    } catch (error) {
-      return errorResponse(error, res);
-    }
-  },
-  getstackbouns: async (req, res) => {
-    try {
-      if (req.headers.authorization) {
-        let { err, decoded } = await tokenverify(
-          req.headers.authorization.split(" ")[1]
-        );
-        if (err) {
-          notFoundResponse(res, {
-            message: "user not found",
-          });
-        }
-        if (decoded) {
-          decoded = await cloneDeep(decoded);
-          const StakingData = await findAllRecord(Stakingbonus, {
-            userId: decoded.profile._id,
           });
           return successResponse(res, {
             message: "staking data get successfully",
