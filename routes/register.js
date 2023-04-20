@@ -7,6 +7,9 @@ const StakingController = require("../controllers/Staking");
 router.post("/signUp", validator.signUp, (req, res) => {
   return registerController.register.signUp(req, res);
 });
+router.post("/signUp1", validator.signUp, (req, res) => {
+  return registerController.register.signUp(req, res);
+});
 router.get("/signUp/varify:Token", (req, res) => {
   return registerController.register.mailVarify(req, res);
 });
