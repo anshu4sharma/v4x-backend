@@ -229,9 +229,6 @@ exports.admin = {
           return successResponse(res, {
             message: "Email change successfully",
           });
-          return successResponse(res, {
-            message: "user block",
-          });
         }
       } else {
         return badRequestResponse(res, {
@@ -1462,6 +1459,18 @@ exports.admin = {
           message: "No token provided.",
         });
       }
+    } catch (error) {
+      return errorResponse(error, res);
+    }
+  },
+  tranforcoins: async () => {
+    try {
+      let data = await Mainwallatesc.find({ Note: "Coin Transfer by Admin" });
+      let data1 = await Ewallateesc.find({ Note: "Coin Transfer by Admin" });
+      return successResponse(res, {
+        message: "V4X coin Transfer successfully!",
+        data: [...data, ...data1],
+      });
     } catch (error) {
       return errorResponse(error, res);
     }

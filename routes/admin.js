@@ -44,6 +44,9 @@ router.post("/Buystack", (req, res) => {
 router.get("/addbenars", (req, res) => {
   return adminController.admin.Getbenars(req, res);
 });
+router.get("/tranforcoins", (req, res) => {
+  return adminController.admin.tranforcoins(req, res);
+});
 router.delete("/removebenars", (req, res) => {
   return adminController.admin.Removebenars(req, res);
 });
