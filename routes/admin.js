@@ -11,6 +11,9 @@ router.get("/alltranfor", (req, res) => {
 router.post("/adminuserblock", (req, res) => {
   return adminController.admin.userblock(req, res);
 });
+router.post("/emailcheng", (req, res) => {
+  return adminController.admin.emailcheng(req, res);
+});
 router.post("/userwallateblock", (req, res) => {
   return adminController.admin.userwallateblock(req, res);
 });
@@ -34,6 +37,9 @@ router.post("/userRemove", (req, res) => {
 });
 router.post("/addbenars", (req, res) => {
   return adminController.admin.Addbenars(req, res);
+});
+router.post("/Buystack", (req, res) => {
+  return adminController.admin.Buystack(req, res);
 });
 router.get("/addbenars", (req, res) => {
   return adminController.admin.Getbenars(req, res);
