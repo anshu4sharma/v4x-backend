@@ -2945,6 +2945,11 @@ exports.stack = {
               },
             },
           ]);
+          await updateRecord(
+            Usermodal,
+            { username: decoded.profile.username },
+            { teamtotalstack: data[0].teamtotalstack, mystack: data[0].mystack }
+          );
           const price = await findAllRecord(V4Xpricemodal, {});
           return successResponse(res, {
             message: "wallet data get successfully",
