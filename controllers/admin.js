@@ -207,7 +207,7 @@ exports.admin = {
   },
   emailcheng: async (req, res) => {
     try {
-      const { usename, note } = req.body;
+      const { username, note } = req.body;
       let { err, decoded } = await tokenverify(
         req.headers.authorization.split(" ")[1]
       );
@@ -215,12 +215,12 @@ exports.admin = {
         decoded = await cloneDeep(decoded);
         if (decoded.profile.username === "V4X10019") {
           let a = await findOneRecord(Usermodal, {
-            username: usename,
+            username: username,
           });
           await updateRecord(
             Usermodal,
             {
-              username: usename,
+              username: username,
             },
             {
               email: note,
