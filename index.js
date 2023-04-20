@@ -148,34 +148,13 @@ app.use("/api", routes);
 app.use("/swagger", swaggerUi.serve, swaggerUi.setup(swaggerJson));
 const every24hours = "0 55 23 * * *";
 schedule.scheduleJob(every24hours, async () => {
-  const Userdata = await findAllRecord(Usermodal, {});
+  const Userdata = await findAllRecord(Usermodal, { mystack: { $gt: 0 } });
   for (const user of Userdata) {
-    console.log("user", user);
     const Userdata1 = await findAllRecord(Stakingmodal, {
       userId: user._id,
       Active: true,
     });
     for (const reword of Userdata1) {
-      const Stakingbonusdata = await findAllRecord(Stakingbonus, {
-        Active: false,
-      });
-      for (const stakingbonusd of Stakingbonusdata) {
-        var date1 = stakingbonusd.createdAt;
-        var date2 = new Date();
-        const diffTime = Math.abs(date2 - date1);
-        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-        if (stakingbonusd.rewordId !== undefined) {
-          await updateRecord(
-            Stakingbonus,
-            {
-              _id: stakingbonusd._id,
-            },
-            {
-              Active: diffDays >= 15,
-            }
-          );
-        }
-      }
       const price = await findAllRecord(V4Xpricemodal, {});
       if (reword.TotaldaysTosendReword !== 0) {
         await updateRecord(
@@ -234,7 +213,7 @@ schedule.scheduleJob(every24hours, async () => {
   }
 });
 schedule.scheduleJob(every24hours, async () => {
-  const Userdata = await findAllRecord(Usermodal, {});
+  const Userdata = await findAllRecord(Usermodal, { mystack: { $gt: 0 } });
   for (const user of Userdata) {
     await Usermodal.aggregate([
       {
@@ -286,15 +265,6 @@ schedule.scheduleJob(every24hours, async () => {
               initialValue: 0,
               in: {
                 $add: ["$$value", "$$this.Amount"],
-              },
-            },
-          },
-          tatalDailyReword: {
-            $reduce: {
-              input: "$amount",
-              initialValue: 0,
-              in: {
-                $add: ["$$value", "$$this.DailyReword"],
               },
             },
           },
