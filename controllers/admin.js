@@ -8,6 +8,8 @@ const Adminmodal = require("../models/Admin");
 const Walletmodal = require("../models/Wallet");
 const Sopprtmodal = require("../models/Ticket");
 const V4XpriceSchemaDetails = require("../models/TokenDetails");
+const Mainwallatesc = require("../models/Mainwallate");
+const Ewallateesc = require("../models/Ewallate");
 var ejs = require("ejs");
 const jwt = require("jsonwebtoken");
 const {
@@ -357,26 +359,53 @@ exports.admin = {
           let data = await findOneRecord(Usermodal, {
             username: req.body.username,
           });
-
-          await updateRecord(
-            Walletmodal,
-            {
-              userId: data._id,
-            },
-            { $inc: { mainWallet: req.body.price } }
-          ).then(async (res) => {
-            await Mainwallatesc({
-              userId: data._id,
-              Note: `coins transfer by admin`,
-              Amount: (req.body.Amount * 4) / 100,
-              balace: res.mainWallet,
-              type: 1,
-              Active: true,
-            }).save();
-          });
-          return successResponse(res, {
-            message: "V4X price chenge successfully!",
-          });
+          if (data !== null) {
+            if (req.body.Walletname === "Main Wallet") {
+              await updateRecord(
+                Walletmodal,
+                {
+                  userId: data._id,
+                },
+                { $inc: { mainWallet: req.body.price } }
+              ).then(async (res) => {
+                await Mainwallatesc({
+                  userId: data._id,
+                  Note: `Coin Transfer by Admin`,
+                  Amount: req.body.price,
+                  balace: res.mainWallet,
+                  type: 1,
+                  Active: true,
+                }).save();
+              });
+              return successResponse(res, {
+                message: "V4X coin Transfer successfully!",
+              });
+            } else {
+              await updateRecord(
+                Walletmodal,
+                {
+                  userId: data._id,
+                },
+                { $inc: { v4xWallet: req.body.price } }
+              ).then(async (res) => {
+                await Ewallateesc({
+                  userId: data._id,
+                  Note: `Coin Transfer by Admin`,
+                  Amount: req.body.price,
+                  balace: res.v4xWallet,
+                  type: 1,
+                  Active: true,
+                }).save();
+              });
+              return successResponse(res, {
+                message: "V4X coin Transfer successfully!",
+              });
+            }
+          } else {
+            return badRequestResponse(res, {
+              message: "User not Found!",
+            });
+          }
         }
       } else {
         return badRequestResponse(res, {
