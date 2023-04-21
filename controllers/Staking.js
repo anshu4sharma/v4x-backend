@@ -938,6 +938,12 @@ exports.stack = {
                       $ne: [],
                     },
                   },
+                }, {
+                  $match: {
+                    amount2: {
+                      $ne: [],
+                    },
+                  },
                 },
                 {
                   $project: {
@@ -1872,6 +1878,13 @@ exports.stack = {
                   },
                 },
                 {
+                  $match: {
+                    amount2: {
+                      $ne: [],
+                    },
+                  },
+                },
+                {
                   $project: {
                     total: {
                       $reduce: {
@@ -2786,6 +2799,13 @@ exports.stack = {
                 },
               },
               {
+                $match: {
+                  amount2: {
+                    $ne: [],
+                  },
+                },
+              },
+              {
                 $project: {
                   total: {
                     $reduce: {
@@ -2891,6 +2911,13 @@ exports.stack = {
             {
               $match: {
                 amount: {
+                  $ne: [],
+                },
+              },
+            },
+            {
+              $match: {
+                amount2: {
                   $ne: [],
                 },
               },
@@ -3059,6 +3086,13 @@ exports.stack = {
             {
               $match: {
                 amount: {
+                  $ne: [],
+                },
+              },
+            },
+            {
+              $match: {
+                amount2: {
                   $ne: [],
                 },
               },
