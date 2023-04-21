@@ -200,15 +200,6 @@ schedule.scheduleJob(every24hours, async () => {
           Note: "you staking plan period is completed. You have received your bonus as per the return.",
           Active: !false,
         }).save();
-        await updateRecord(
-          Stakingmodal,
-          {
-            userId: reword.userId,
-          },
-          {
-            Active: !true,
-          }
-        );
       }
     }
   }
