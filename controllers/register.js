@@ -102,7 +102,7 @@ exports.register = {
               //   },
               //   async function (err, mail) {
               //     const mailOptions = {
-              //       from: "verify@v4x.org",
+              //       from: "donotreply@v4x.org",
               //       to: data["email"], // List of recipients
               //       subject: "Node Mailer", // Subject line
               //       html: mail,
@@ -158,14 +158,14 @@ exports.register = {
                 //     action_url: `https://api.v4x.org/api/registration/signUp/varify:${accessToken}`,
                 //   },
                 //   async function (err, data) {
-                //     const DOMAIN = "verify.ablcexchange.io";
+                //     const DOMAIN = "donotreply@v4x.org";
                 //     const mg = mailgun({
                 //       apiKey:
-                //         "bd53806c79362e3baf250886340fb16b-b36d2969-79b90ce5",
+                //         "afd2a109fddce998ef411c7ac33c3e0c-81bd92f8-5473abd7",
                 //       domain: DOMAIN,
                 //     });
                 //     const data111 = {
-                //       from: "verify@v4x.org",
+                //       from: "donotreply@v4x.org",
                 //       to: req.body.email,
                 //       subject: "main varification",
                 //       html: data,
@@ -227,13 +227,13 @@ exports.register = {
               name: "v4xverifyuser@gmail.com",
             },
             async function (err, data) {
-              const DOMAIN = "verify.ablcexchange.io";
+              const DOMAIN = "donotreply@v4x.org";
               const mg = mailgun({
-                apiKey: "bd53806c79362e3baf250886340fb16b-b36d2969-79b90ce5",
+                apiKey: "afd2a109fddce998ef411c7ac33c3e0c-81bd92f8-5473abd7",
                 domain: DOMAIN,
               });
               const data111 = {
-                from: "verify@v4x.org",
+                from: "donotreply@v4x.org",
                 to: decoded.profile.email,
                 subject: "main varification",
                 html: data,
@@ -336,19 +336,19 @@ exports.register = {
         ejs.renderFile(
           __dirname + "/Forgetpassword.ejs",
           {
-            from: "verify@v4x.org",
+            from: "donotreply@v4x.org",
             action_url: accessToken.token,
           },
           async function (err, data) {
             const data111 = {
-              from: "verify@v4x.org",
+              from: "donotreply@v4x.org",
               to: decoded["email"],
               subject: "main varification",
               html: data,
             };
-            const DOMAIN = "verify.ablcexchange.io";
+            const DOMAIN = "donotreply@v4x.org";
             const mg = mailgun({
-              apiKey: "bd53806c79362e3baf250886340fb16b-b36d2969-79b90ce5",
+              apiKey: "afd2a109fddce998ef411c7ac33c3e0c-81bd92f8-5473abd7",
               domain: DOMAIN,
             });
             mg.messages().send(data111, function (error, body) {

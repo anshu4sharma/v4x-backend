@@ -3097,7 +3097,6 @@ exports.stack = {
             },
           ]).then(async (e) => {
             if (e.length > 0) {
-              console.log("e", e);
               await updateRecord(
                 Usermodal,
                 { _id: e[0]._id },

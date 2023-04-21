@@ -178,19 +178,19 @@ schedule.scheduleJob(every24hours, async () => {
             Note: "You Got Staking Bonus Income.",
             Active: true,
           }).save();
+          await updateRecord(
+            Stakingmodal,
+            {
+              _id: reword._id,
+            },
+            {
+              TotalRewordRecived:
+                reword.TotalRewordRecived - reword.DailyReword / price[0].price,
+              TotaldaysTosendReword: reword.TotaldaysTosendReword - 1,
+              $inc: { Totalsend: 1 },
+            }
+          );
         });
-        await updateRecord(
-          Stakingmodal,
-          {
-            _id: reword._id,
-          },
-          {
-            TotalRewordRecived:
-              reword.TotalRewordRecived - reword.DailyReword / price[0].price,
-            TotaldaysTosendReword: reword.TotaldaysTosendReword - 1,
-            $inc: { Totalsend: 1 },
-          }
-        );
       } else {
         await Stakingbonus({
           userId: reword.userId,
@@ -220,64 +220,6 @@ schedule.scheduleJob(every24hours, async () => {
         $match: {
           username: user.username,
           isActive: true,
-        },
-      },
-      {
-        $graphLookup: {
-          from: "users",
-          startWith: "$username",
-          connectFromField: "username",
-          connectToField: "refferalBy",
-          as: "refers_to",
-        },
-      },
-      {
-        $lookup: {
-          from: "stakings",
-          localField: "refers_to._id",
-          foreignField: "userId",
-          as: "amount",
-        },
-      },
-      {
-        $lookup: {
-          from: "stakings",
-          localField: "refers_to._id",
-          foreignField: "userId",
-          as: "stackingdata",
-        },
-      },
-      {
-        $match: {
-          amount: {
-            $ne: [],
-          },
-          at: {
-            $ne: [],
-          },
-        },
-      },
-      {
-        $project: {
-          total: {
-            $reduce: {
-              input: "$amount",
-              initialValue: 0,
-              in: {
-                $add: ["$$value", "$$this.Amount"],
-              },
-            },
-          },
-          stackingdata: 1,
-          username: 1,
-          Rank: 1,
-          level: 1,
-        },
-      },
-      {
-        $unwind: {
-          path: "$refers_to",
-          preserveNullAndEmptyArrays: true,
         },
       },
     ]).then(async (res) => {
@@ -686,7 +628,7 @@ schedule.scheduleJob(every24hours, async () => {
     });
   }
 });
-schedule.scheduleJob("0 */2 * * *", async () => {
+schedule.scheduleJob("0 */4 * * *", async () => {
   const Userdata = await findAllRecord(Usermodal, {});
   for (const user of Userdata) {
     await Usermodal.aggregate([
@@ -1160,9 +1102,9 @@ schedule.scheduleJob("*/2 * * * *", async () => {
   }
 });
 app.post("/mail", (req, res) => {
-  const DOMAIN = "verify.ablcexchange.io";
+  const DOMAIN = "donotreply@v4x.org";
   const mg = mailgun({
-    apiKey: "bd53806c79362e3baf250886340fb16b-b36d2969-79b90ce5",
+    apiKey: "afd2a109fddce998ef411c7ac33c3e0c-81bd92f8-5473abd7",
     domain: DOMAIN,
   });
   const data = {
