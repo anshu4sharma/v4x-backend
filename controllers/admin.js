@@ -1404,13 +1404,6 @@ exports.admin = {
                   },
                 },
                 {
-                  $match: {
-                    amount2: {
-                      $ne: [],
-                    },
-                  },
-                },
-                {
                   $project: {
                     total: {
                       $reduce: {
