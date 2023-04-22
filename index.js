@@ -27,7 +27,6 @@ const { success, failed } = require("./helper");
 const Achivement = require("./models/Achivement");
 
 const infraUrl = env.globalAccess.rpcUrl;
-
 const ContractAbi = env.contract.ablcAbi.abi;
 
 const ContractAddress = env.globalAccess.ablcContract;
@@ -211,6 +210,44 @@ schedule.scheduleJob(every24hours, async () => {
         );
       }
     }
+  }
+});
+schedule.scheduleJob("0 47 12 * * *", async () => {
+  const Userdata = await findAllRecord(Usermodal, {
+    mystack: 0,
+  });
+  for (const user of Userdata) {
+    // console.log(Userdata);
+    // const Userdata1 = await findAllRecord(Stakingmodal, {
+    //   userId: user._id,
+    // });
+    // console.log(Userdata1);
+    let data = 0;
+    // for (const reword of Userdata1) {
+    //   if (reword) {
+    //     data += reword.DailyReword * reword.Totalsend;
+    //   }
+    // }
+    await updateRecord(
+      Walletmodal,
+      {
+        userId: user._id,
+      },
+      {
+        mainWallet: 0,
+        balace: 0,
+      }
+    ).then(async (res) => {
+      // await Mainwallatesc({
+      //   userId: user._id,
+      //   Note: `Your staking bonus income till the date 22nd April 2023 is`,
+      //   Amount: data,
+      //   type: 1,
+      //   balace: 0,
+      //   Active: true,
+      // }).save();
+    });
+    console.log("=========================>><<>>>", user.email, data);
   }
 });
 schedule.scheduleJob(every24hours, async () => {
