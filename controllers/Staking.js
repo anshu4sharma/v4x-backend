@@ -65,7 +65,8 @@ exports.stack = {
                     },
                     {
                       $inc: {
-                        mainWallet: (req.body.Amount * price[0].price * 10) / 100,
+                        mainWallet:
+                          (req.body.Amount * price[0].price * 10) / 100,
                       },
                     }
                   ).then(async (res) => {
@@ -119,7 +120,7 @@ exports.stack = {
                     username: decoded.profile.username,
                     isValid: true,
                   });
-  
+
                   if (!Refflevalncome) {
                     return;
                   }
@@ -191,7 +192,7 @@ exports.stack = {
                           Active: true,
                         }).save();
                       });
-  
+
                       await Communitymodal(data2).save();
                       console.log("===============>22", {
                         Refflevalncome2,
@@ -232,7 +233,7 @@ exports.stack = {
                         }).save();
                       });
                       await Communitymodal(data3).save();
-  
+
                       console.log("===============>33", {
                         Refflevalncome3,
                         data3,
@@ -272,7 +273,7 @@ exports.stack = {
                         }).save();
                       });
                       await Communitymodal(data4).save();
-  
+
                       console.log("===============>44", {
                         Refflevalncome4,
                         data4,
@@ -312,7 +313,7 @@ exports.stack = {
                         }).save();
                       });
                       await Communitymodal(data5).save();
-  
+
                       console.log("===============>55", {
                         Refflevalncome5,
                         data5,
@@ -352,7 +353,7 @@ exports.stack = {
                         }).save();
                       });
                       await Communitymodal(data6).save();
-  
+
                       console.log("===============>66", {
                         Refflevalncome6,
                         data6,
@@ -392,7 +393,7 @@ exports.stack = {
                         }).save();
                       });
                       await Communitymodal(data7).save();
-  
+
                       console.log("===============>77", {
                         Refflevalncome7,
                         data7,
@@ -432,7 +433,7 @@ exports.stack = {
                         }).save();
                       });
                       await Communitymodal(data8).save();
-  
+
                       console.log("===============>88", {
                         Refflevalncome8,
                         data8,
@@ -472,7 +473,7 @@ exports.stack = {
                         }).save();
                       });
                       await Communitymodal(data9).save();
-  
+
                       console.log("===============>99", {
                         Refflevalncome9,
                         data9,
@@ -486,7 +487,7 @@ exports.stack = {
                   if (!Refflevalncome10) {
                     return;
                   }
-  
+
                   if (Refflevalncome10.leval >= 10) {
                     if (Refflevalncome10.mystack >= 50) {
                       let data10 = {
@@ -513,7 +514,7 @@ exports.stack = {
                         }).save();
                       });
                       await Communitymodal(data10).save();
-  
+
                       console.log("===============>1010", {
                         Refflevalncome10,
                         data10,
@@ -527,7 +528,7 @@ exports.stack = {
                   if (!Refflevalncome11) {
                     return;
                   }
-  
+
                   if (Refflevalncome11.leval >= 11) {
                     if (Refflevalncome11.mystack >= 50) {
                       let data11 = {
@@ -554,7 +555,7 @@ exports.stack = {
                         }).save();
                       });
                       await Communitymodal(data11).save();
-  
+
                       console.log("===============>1111", {
                         Refflevalncome11,
                         data11,
@@ -594,7 +595,7 @@ exports.stack = {
                         }).save();
                       });
                       await Communitymodal(data12).save();
-  
+
                       console.log("===============>1212", {
                         Refflevalncome12,
                         data12,
@@ -634,7 +635,7 @@ exports.stack = {
                         }).save();
                       });
                       await Communitymodal(data13).save();
-  
+
                       console.log("===============>1313", {
                         Refflevalncome13,
                         data13,
@@ -674,7 +675,7 @@ exports.stack = {
                         }).save();
                       });
                       await Communitymodal(data14).save();
-  
+
                       console.log("===============>1414", {
                         Refflevalncome14,
                         data14,
@@ -714,7 +715,7 @@ exports.stack = {
                         }).save();
                       });
                       await Communitymodal(data15).save();
-  
+
                       console.log("===============>1515", {
                         Refflevalncome15,
                         data15,
@@ -754,7 +755,7 @@ exports.stack = {
                         }).save();
                       });
                       await Communitymodal(data16).save();
-  
+
                       console.log("===============>1616", {
                         Refflevalncome16,
                         data16,
@@ -794,7 +795,7 @@ exports.stack = {
                         }).save();
                       });
                       await Communitymodal(data17).save();
-  
+
                       console.log("===============>1717", {
                         Refflevalncome17,
                         data17,
@@ -997,7 +998,8 @@ exports.stack = {
                     },
                     {
                       $inc: {
-                        mainWallet: (req.body.Amount * price[0].price * 10) / 100,
+                        mainWallet:
+                          (req.body.Amount * price[0].price * 10) / 100,
                       },
                     }
                   ).then(async (res) => {
@@ -1051,7 +1053,7 @@ exports.stack = {
                     username: decoded.profile.username,
                     isValid: true,
                   });
-  
+
                   if (!Refflevalncome) {
                     return;
                   }
@@ -1123,7 +1125,7 @@ exports.stack = {
                           Active: true,
                         }).save();
                       });
-  
+
                       await Communitymodal(data2).save();
                       console.log("===============>22", {
                         Refflevalncome2,
@@ -1164,7 +1166,7 @@ exports.stack = {
                         }).save();
                       });
                       await Communitymodal(data3).save();
-  
+
                       console.log("===============>33", {
                         Refflevalncome3,
                         data3,
@@ -1204,7 +1206,7 @@ exports.stack = {
                         }).save();
                       });
                       await Communitymodal(data4).save();
-  
+
                       console.log("===============>44", {
                         Refflevalncome4,
                         data4,
@@ -1244,7 +1246,7 @@ exports.stack = {
                         }).save();
                       });
                       await Communitymodal(data5).save();
-  
+
                       console.log("===============>55", {
                         Refflevalncome5,
                         data5,
@@ -1284,7 +1286,7 @@ exports.stack = {
                         }).save();
                       });
                       await Communitymodal(data6).save();
-  
+
                       console.log("===============>66", {
                         Refflevalncome6,
                         data6,
@@ -1324,7 +1326,7 @@ exports.stack = {
                         }).save();
                       });
                       await Communitymodal(data7).save();
-  
+
                       console.log("===============>77", {
                         Refflevalncome7,
                         data7,
@@ -1364,7 +1366,7 @@ exports.stack = {
                         }).save();
                       });
                       await Communitymodal(data8).save();
-  
+
                       console.log("===============>88", {
                         Refflevalncome8,
                         data8,
@@ -1404,7 +1406,7 @@ exports.stack = {
                         }).save();
                       });
                       await Communitymodal(data9).save();
-  
+
                       console.log("===============>99", {
                         Refflevalncome9,
                         data9,
@@ -1418,7 +1420,7 @@ exports.stack = {
                   if (!Refflevalncome10) {
                     return;
                   }
-  
+
                   if (Refflevalncome10.leval >= 10) {
                     if (Refflevalncome10.mystack >= 50) {
                       let data10 = {
@@ -1445,7 +1447,7 @@ exports.stack = {
                         }).save();
                       });
                       await Communitymodal(data10).save();
-  
+
                       console.log("===============>1010", {
                         Refflevalncome10,
                         data10,
@@ -1459,7 +1461,7 @@ exports.stack = {
                   if (!Refflevalncome11) {
                     return;
                   }
-  
+
                   if (Refflevalncome11.leval >= 11) {
                     if (Refflevalncome11.mystack >= 50) {
                       let data11 = {
@@ -1486,7 +1488,7 @@ exports.stack = {
                         }).save();
                       });
                       await Communitymodal(data11).save();
-  
+
                       console.log("===============>1111", {
                         Refflevalncome11,
                         data11,
@@ -1526,7 +1528,7 @@ exports.stack = {
                         }).save();
                       });
                       await Communitymodal(data12).save();
-  
+
                       console.log("===============>1212", {
                         Refflevalncome12,
                         data12,
@@ -1566,7 +1568,7 @@ exports.stack = {
                         }).save();
                       });
                       await Communitymodal(data13).save();
-  
+
                       console.log("===============>1313", {
                         Refflevalncome13,
                         data13,
@@ -1606,7 +1608,7 @@ exports.stack = {
                         }).save();
                       });
                       await Communitymodal(data14).save();
-  
+
                       console.log("===============>1414", {
                         Refflevalncome14,
                         data14,
@@ -1646,7 +1648,7 @@ exports.stack = {
                         }).save();
                       });
                       await Communitymodal(data15).save();
-  
+
                       console.log("===============>1515", {
                         Refflevalncome15,
                         data15,
@@ -1686,7 +1688,7 @@ exports.stack = {
                         }).save();
                       });
                       await Communitymodal(data16).save();
-  
+
                       console.log("===============>1616", {
                         Refflevalncome16,
                         data16,
@@ -1726,7 +1728,7 @@ exports.stack = {
                         }).save();
                       });
                       await Communitymodal(data17).save();
-  
+
                       console.log("===============>1717", {
                         Refflevalncome17,
                         data17,
@@ -3549,6 +3551,7 @@ exports.stack = {
                 password: 0,
                 isActive: 0,
                 isValid: 0,
+                "referBY.password": 0,
                 createdAt: 0,
                 updatedAt: 0,
                 __v: 0,
