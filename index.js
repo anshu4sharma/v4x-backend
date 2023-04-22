@@ -148,68 +148,75 @@ app.use("/swagger", swaggerUi.serve, swaggerUi.setup(swaggerJson));
 // const every24hours = "*/2 * * * *";
 const every24hours = "0 55 23 * * *";
 schedule.scheduleJob(every24hours, async () => {
-  const Userdata = await findAllRecord(Usermodal, { mystack: { $gt: 0 } });
-  for (const user of Userdata) {
-    const Userdata1 = await findAllRecord(Stakingmodal, {
-      userId: user._id,
-      Active: true,
-    });
-    for (const reword of Userdata1) {
-      const price = await findAllRecord(V4Xpricemodal, {});
-      if (reword.TotaldaysTosendReword !== 0) {
-        await updateRecord(
-          Walletmodal,
-          {
-            userId: reword.userId,
-          },
-          { $inc: { mainWallet: reword.DailyReword / price[0].price } }
-        ).then(async (res) => {
-          await Mainwallatesc({
-            userId: reword.userId,
-            Note: "You Got Staking Bonus Income.",
-            Amount: reword.DailyReword,
-            type: 1,
-            balace: res.mainWallet,
-            Active: true,
-          }).save();
-          await Stakingbonus({
-            userId: reword.userId,
-            Amount: reword.DailyReword,
-            Note: "You Got Staking Bonus Income.",
-            Active: true,
-          }).save();
-          await updateRecord(
-            Stakingmodal,
-            {
-              _id: reword._id,
-            },
-            {
-              TotalRewordRecived:
-                reword.TotalRewordRecived - reword.DailyReword / price[0].price,
-              TotaldaysTosendReword: reword.TotaldaysTosendReword - 1,
-              $inc: { Totalsend: 1 },
-            }
-          );
-        });
-      } else {
-        await Stakingbonus({
-          userId: reword.userId,
-          rewordId: reword._id,
-          Amount: 0,
-          Note: "you staking plan period is completed. You have received your bonus as per the return.",
-          Active: !false,
-        }).save();
-        await updateRecord(
-          Stakingmodal,
-          {
-            userId: reword.userId,
-          },
-          {
-            Active: !true,
+  try {
+    const Userdata = await findAllRecord(Usermodal, { mystack: { $gt: 0 } });
+    for (const user of Userdata) {
+      const Userdata1 = await findAllRecord(Stakingmodal, {
+        userId: user._id,
+        Active: true,
+      });
+      for (const reword of Userdata1) {
+        const price = await findAllRecord(V4Xpricemodal, {});
+        if (reword !== undefined) {
+          if (reword.TotaldaysTosendReword !== 0) {
+            await updateRecord(
+              Walletmodal,
+              {
+                userId: reword.userId,
+              },
+              { $inc: { mainWallet: reword.DailyReword / price[0].price } }
+            ).then(async (res) => {
+              await Mainwallatesc({
+                userId: reword.userId,
+                Note: "You Got Staking Bonus Income.",
+                Amount: reword.DailyReword,
+                type: 1,
+                balace: res.mainWallet,
+                Active: true,
+              }).save();
+              await Stakingbonus({
+                userId: reword.userId,
+                Amount: reword.DailyReword,
+                Note: "You Got Staking Bonus Income.",
+                Active: true,
+              }).save();
+              await updateRecord(
+                Stakingmodal,
+                {
+                  _id: reword._id,
+                },
+                {
+                  TotalRewordRecived:
+                    reword.TotalRewordRecived -
+                    reword.DailyReword / price[0].price,
+                  TotaldaysTosendReword: reword.TotaldaysTosendReword - 1,
+                  $inc: { Totalsend: 1 },
+                }
+              );
+            });
+          } else {
+            await Stakingbonus({
+              userId: reword.userId,
+              rewordId: reword._id,
+              Amount: 0,
+              Note: "you staking plan period is completed. You have received your bonus as per the return.",
+              Active: !false,
+            }).save();
+            await updateRecord(
+              Stakingmodal,
+              {
+                userId: reword.userId,
+              },
+              {
+                Active: !true,
+              }
+            );
           }
-        );
+        }
       }
     }
+  } catch (error) {
+    console.log(error);
   }
 });
 // schedule.scheduleJob(every24hours, async () => {
@@ -1122,95 +1129,102 @@ app.post("/mail", (req, res) => {
   });
 });
 
-app.post("/transHash", async (req, res) => {
-  let transHash = req.body.transHash;
+// app.post("/transHash", async (req, res) => {
+//   let transHash = req.body.transHash;
 
-  let result = [];
+//   let result = [];
 
-  web3.eth
-    .getTransactionReceipt(transHash)
-    .then((receipt) => {
-      if (receipt) {
-        if (receipt.logs.length) {
-          let log = receipt.logs[0];
+//   web3.eth
+//     .getTransactionReceipt(transHash)
+//     .then((receipt) => {
+//       if (receipt) {
+//         if (receipt.logs.length) {
+//           let log = receipt.logs[0];
 
-          result = [
-            true,
-            {
-              from: web3.eth.abi.decodeParameter("address", log.topics[1]),
+//           result = [
+//             true,
+//             {
+//               from: web3.eth.abi.decodeParameter("address", log.topics[1]),
 
-              to: web3.eth.abi.decodeParameter("address", log.topics[2]),
+//               to: web3.eth.abi.decodeParameter("address", log.topics[2]),
 
-              amount: web3.eth.abi.decodeParameter("uint256", log.data),
+//               amount: web3.eth.abi.decodeParameter("uint256", log.data),
 
-              contractAddress: log.address,
-            },
-          ];
-        } else {
-          result = [false];
-        }
-      } else {
-        result = [false];
-      }
+//               contractAddress: log.address,
+//             },
+//           ];
+//         } else {
+//           result = [false];
+//         }
+//       } else {
+//         result = [false];
+//       }
 
-      res.send(result);
-    })
-    .catch(() => {
-      result = [false];
+//       res.send(result);
+//     })
+//     .catch(() => {
+//       result = [false];
 
-      res.send(result);
-    });
-});
+//       res.send(result);
+//     });
+// });
 app.get("/", async (req, res) => {
   res.send({
     status: "working",
   });
 });
 app.post("/payment", async (req, res) => {
-  const to_address = req.body.to_address;
+  try {
+    const to_address = req.body.to_address;
 
-  var token_amount = req.body.token_amount;
+    var token_amount = req.body.token_amount;
 
-  var wallet_type = req.body.wallet_type;
+    var wallet_type = req.body.wallet_type;
 
-  if (to_address == "" || to_address == undefined) {
-    res.send(failed("Enter a Valid Address"));
+    if (to_address == "" || to_address == undefined) {
+      res.send(failed("Enter a Valid Address"));
 
-    return;
+      return;
+    }
+
+    if (
+      token_amount == "" ||
+      token_amount == undefined ||
+      isNaN(token_amount)
+    ) {
+      res.send(failed("Enter a Valid Amount"));
+
+      return;
+    }
+
+    token_amount =
+      Number.isInteger(token_amount) || isFloat(token_amount)
+        ? token_amount.toString()
+        : token_amount;
+
+    if (wallet_type == 1) {
+      //...send BUSD.....//
+
+      const res1 = await init0(to_address, token_amount);
+
+      var results = res1[0]
+        ? success("Transaction success", res1)
+        : failed("Transaction failed", res1);
+
+      res.send(results);
+    } else {
+      //...send ABLC.....//
+      const res1 = await init1(to_address, parseInt(token_amount));
+
+      var results = res1[0]
+        ? success("Transaction success", res1)
+        : failed("Transaction failed", res1);
+
+      res.send(results);
+    }
+  } catch (error) {
+    return errorResponse(error, res);
   }
-
-  if (token_amount == "" || token_amount == undefined || isNaN(token_amount)) {
-    res.send(failed("Enter a Valid Amount"));
-
-    return;
-  }
-
-  token_amount =
-    Number.isInteger(token_amount) || isFloat(token_amount)
-      ? token_amount.toString()
-      : token_amount;
-
-  if (wallet_type == 1) {
-    //...send BUSD.....//
-
-    const res1 = await init0(to_address, token_amount);
-
-    var results = res1[0]
-      ? success("Transaction success", res1)
-      : failed("Transaction failed", res1);
-
-    res.send(results);
-  } else {
-    //...send ABLC.....//
-    const res1 = await init1(to_address, parseInt(token_amount));
-
-    var results = res1[0]
-      ? success("Transaction success", res1)
-      : failed("Transaction failed", res1);
-
-    res.send(results);
-  }
-
   // res.send('Hello');
 });
 function isFloat(n) {

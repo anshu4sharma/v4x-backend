@@ -110,74 +110,87 @@ exports.Withdraw = {
     }
   },
   Withdrawotpcheck: async (req, res) => {
-    if (req.headers.authorization) {
-      let { err, decoded } = await tokenverify(
-        req.headers.authorization.split(" ")[1]
-      );
-      if (err) {
-        notFoundResponse(res, {
-          message: "user not found",
-        });
-      }
-      if (decoded) {
-        let data1 = await otp.find({
-          userId: decoded.profile._id,
-          otp: Number(req.body.otp),
-        });
-        if (data1.length !== 0) {
-          successResponse(res, {
-            message: "otp verified successfully",
-          });
-        } else {
+    try {
+      if (req.headers.authorization) {
+        let { err, decoded } = await tokenverify(
+          req.headers.authorization.split(" ")[1]
+        );
+        if (err) {
           notFoundResponse(res, {
-            message: "plase enter valid otp.",
+            message: "user not found",
           });
         }
+        if (decoded) {
+          let data1 = await otp.find({
+            userId: decoded.profile._id,
+            otp: Number(req.body.otp),
+          });
+          if (data1.length !== 0) {
+            successResponse(res, {
+              message: "otp verified successfully",
+            });
+          } else {
+            notFoundResponse(res, {
+              message: "plase enter valid otp.",
+            });
+          }
+        }
       }
+    } catch (error) {
+      return errorResponse(error, res);
     }
   },
   MainWallet: async (req, res) => {
-    if (req.headers.authorization) {
-      let { err, decoded } = await tokenverify(
-        req.headers.authorization.split(" ")[1]
-      );
-      if (err) {
-        notFoundResponse(res, {
-          message: "user not found",
-        });
+    try {
+      if (req.headers.authorization) {
+        let { err, decoded } = await tokenverify(
+          req.headers.authorization.split(" ")[1]
+        );
+        if (err) {
+          notFoundResponse(res, {
+            message: "user not found",
+          });
+        }
+        if (decoded) {
+          let data = await findAllRecord(Mainwallatesc, {
+            userId: decoded.profile._id,
+          });
+          return successResponse(res, {
+            message: "Mainwallatesc get successfully",
+            data: data,
+          });
+        }
+      } else {
       }
-      if (decoded) {
-        let data = await findAllRecord(Mainwallatesc, {
-          userId: decoded.profile._id,
-        });
-        return successResponse(res, {
-          message: "Mainwallatesc get successfully",
-          data: data,
-        });
-      }
-    } else {
+    } catch (error) {
+      return errorResponse(error, res);
     }
   },
   V4xWallet: async (req, res) => {
-    if (req.headers.authorization) {
-      let { err, decoded } = await tokenverify(
-        req.headers.authorization.split(" ")[1]
-      );
-      if (err) {
-        notFoundResponse(res, {
-          message: "user not found",
-        });
+    try {
+      if (req.headers.authorization) {
+        let { err, decoded } = await tokenverify(
+          req.headers.authorization.split(" ")[1]
+        );
+        if (err) {
+          notFoundResponse(res, {
+            message: "user not found",
+          });
+        }
+        if (decoded) {
+          let data = await findAllRecord(Ewallateesc, {
+            userId: decoded.profile._id,
+          });
+          return successResponse(res, {
+            message: "Mainwallatesc get successfully",
+            data: data,
+          });
+        }
+      } else {
+        return errorResponse("error", res);
       }
-      if (decoded) {
-        let data = await findAllRecord(Ewallateesc, {
-          userId: decoded.profile._id,
-        });
-        return successResponse(res, {
-          message: "Mainwallatesc get successfully",
-          data: data,
-        });
-      }
-    } else {
+    } catch (error) {
+      return errorResponse(error, res);
     }
   },
 };
