@@ -3191,7 +3191,7 @@ exports.stack = {
                     username: req.body.Username1,
                   });
                   /// E-wallate
-                  await Ewallateesc({
+                  await Mainwallatesc({
                     userId: abc[0]._id,
                     Note: `You Received Coins from ${decoded.profile.username}`,
                     Amount: req.body.Amount,
@@ -3203,7 +3203,7 @@ exports.stack = {
                     {
                       userId: abc[0]._id,
                     },
-                    { $inc: { v4xWallet: req.body.Amount } }
+                    { $inc: { mainWallet: req.body.Amount } }
                   );
                   return successResponse(res, {
                     message: "transactions have been sent successfully",
@@ -3254,7 +3254,7 @@ exports.stack = {
                   let abc = await Usermodal.find({
                     username: req.body.Username1,
                   });
-                  await Ewallateesc({
+                  await Mainwallatesc({
                     userId: abc[0]._id,
                     Note: `You Received Coins from ${decoded.profile.username}`,
                     Amount: req.body.Amount,
@@ -3266,7 +3266,7 @@ exports.stack = {
                     {
                       userId: abc[0]._id,
                     },
-                    { $inc: { v4xWallet: req.body.Amount } }
+                    { $inc: { mainWallet: req.body.Amount } }
                   );
                   return successResponse(res, {
                     message: "transactions have been sent successfully",
