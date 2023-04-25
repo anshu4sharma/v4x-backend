@@ -2885,8 +2885,8 @@ exports.stack = {
             },
             {
               $project: {
-                _id: 0,
-                userId: 0,
+                "_id": 0,
+                "userId": 0,
                 rewordId: 0,
                 updatedAt: 0,
                 V4xTokenPrice: 0,
