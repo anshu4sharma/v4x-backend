@@ -25,6 +25,7 @@ const Mainwallatesc = require("./models/Mainwallate");
 const env = require("./env");
 const { success, failed } = require("./helper");
 const Achivement = require("./models/Achivement");
+const { ObjectId } = require("mongodb");
 
 const infraUrl = env.globalAccess.rpcUrl;
 const ContractAbi = env.contract.V4XAbi.abi;
@@ -948,60 +949,114 @@ app.get("/", async (req, res) => {
     status: "working",
   });
 });
-app.post("/payment", async (req, res) => {
-  try {
-    const to_address = req.body.to_address;
+// app.post("/payment", async (req, res) => {
+//   try {
+//     const to_address = req.body.to_address;
 
-    var token_amount = req.body.token_amount;
+//     var token_amount = req.body.token_amount;
 
-    var wallet_type = req.body.wallet_type;
+//     var wallet_type = req.body.wallet_type;
 
-    if (to_address == "" || to_address == undefined) {
-      res.send(failed("Enter a Valid Address"));
+//     if (to_address == "" || to_address == undefined) {
+//       res.send(failed("Enter a Valid Address"));
 
-      return;
-    }
+//       return;
+//     }
 
-    if (
-      token_amount == "" ||
-      token_amount == undefined ||
-      isNaN(token_amount)
-    ) {
-      res.send(failed("Enter a Valid Amount"));
+//     if (
+//       token_amount == "" ||
+//       token_amount == undefined ||
+//       isNaN(token_amount)
+//     ) {
+//       res.send(failed("Enter a Valid Amount"));
 
-      return;
-    }
+//       return;
+//     }
 
-    token_amount =
-      Number.isInteger(token_amount) || isFloat(token_amount)
-        ? token_amount.toString()
-        : token_amount;
+//     token_amount =
+//       Number.isInteger(token_amount) || isFloat(token_amount)
+//         ? token_amount.toString()
+//         : token_amount;
 
-    if (wallet_type == 1) {
-      //...send BUSD.....//
+//     if (wallet_type == 1) {
+//       //...send BUSD.....//
 
-      const res1 = await init0(to_address, token_amount);
+//       const res1 = await init0(to_address, token_amount);
 
-      var results = res1[0]
-        ? success("Transaction success", res1)
-        : failed("Transaction failed", res1);
+//       var results = res1[0]
+//         ? success("Transaction success", res1)
+//         : failed("Transaction failed", res1);
 
-      res.send(results);
-    } else {
-      //...send ABLC.....//
-      const res1 = await init1(to_address, parseInt(token_amount));
+//       res.send(results);
+//     } else {
+//       //...send ABLC.....//
+//       const res1 = await init1(to_address, parseInt(token_amount));
 
-      var results = res1[0]
-        ? success("Transaction success", res1)
-        : failed("Transaction failed", res1);
+//       var results = res1[0]
+//         ? success("Transaction success", res1)
+//         : failed("Transaction failed", res1);
 
-      res.send(results);
-    }
-  } catch (error) {
-    return errorResponse(error, res);
-  }
-  // res.send('Hello');
-});
+//       res.send(results);
+//     }
+//   } catch (error) {
+//     return errorResponse(error, res);
+//   }
+//   // res.send('Hello');
+// });
+
+// app.get("/", async (req, res) => {
+//   // let id = "643452844a58667086970d29";
+//   await updateRecord(
+//     Stakingmodal,
+//     { _id: "64355bf1c27f7f626362d05b" },
+//     {
+//       TotaldaysTosendReword: 730 - 15,
+//       Totalsend: 15,
+//     }
+//   );
+// await Stakingmodal.findByIdAndDelete({_id:''})
+// const Userdata = await findAllRecord(Usermodal, {});
+// for (const user of Userdata) {
+// const Userdata1 = await Stakingmodal.find({
+//   userId: id,
+// }).then(async (res) => {
+//   if (res) {
+//     console.log(res);
+//     for (const reword of res) {
+//       const Userdata1 = await Stakingmodal.find({
+//         rewordId: reword.id,
+//       });
+//       console.log("res=====>>", Userdata1);
+//     }
+//   }
+// if (res.length > 1) {
+//   await updateRecord(
+//     Walletmodal,
+//     {
+//       userId: user._id,
+//     },
+//     {
+//       mainWallet: res[res.length - 1].Amount + res[res.length - 1].balace,
+//     }
+//   );
+// }
+// });
+// }
+// await updateRecord(
+//   Walletmodal,
+//   {
+//     userId: id,
+//   },
+//   {
+//     mainWallet:
+//       Userdata1[Userdata1.length - 1].Amount +
+//       Userdata1[Userdata1.length - 1].balace,
+//   }
+// );
+//   res.send({
+//     status2: "done",
+//   });
+// });
 function isFloat(n) {
   return Number(n) == n && n % 1 !== 0;
 }
