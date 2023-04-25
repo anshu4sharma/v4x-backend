@@ -19,5 +19,4 @@ const contract = {
 const privateKey =
   "7508267ac4aa650177781404735ba0a187e7c320a2be29629a3875551fc2ed95";
 
-
-module.exports = { globalAccess, contract, privateKey, frontendDomain };
+module.exports = { globalAccess, contract, privateKey };
