@@ -149,7 +149,7 @@ app.use("/swagger", swaggerUi.serve, swaggerUi.setup(swaggerJson));
 const every24hours = "0 55 23 * * *";
 schedule.scheduleJob(every24hours, async () => {
   try {
-    const Userdata = await findAllRecord(Usermodal, { mystack: { $gt: 49 } });
+    const Userdata = await findAllRecord(Usermodal, {});
     for (const user of Userdata) {
       const Userdata1 = await findAllRecord(Stakingmodal, {
         userId: user._id,
@@ -221,7 +221,7 @@ schedule.scheduleJob(every24hours, async () => {
 });
 schedule.scheduleJob(every24hours, async () => {
   try {
-    const Userdata = await findAllRecord(Usermodal, { mystack: { $gt: 49 } });
+    const Userdata = await findAllRecord(Usermodal, {});
     for (const user of Userdata) {
       if (user?.Rank !== "DIRECT") {
         await Usermodal.aggregate([

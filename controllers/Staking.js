@@ -2645,6 +2645,13 @@ exports.stack = {
               },
             },
             {
+              $match: {
+                amount2: {
+                  $ne: [],
+                },
+              },
+            },
+            {
               $project: {
                 total: {
                   $reduce: {
@@ -2668,12 +2675,6 @@ exports.stack = {
                 username: 1,
                 level: 1,
                 referBYCount: { $size: "$refers_to" },
-              },
-            },
-            {
-              $unwind: {
-                path: "$refers_to",
-                preserveNullAndEmptyArrays: true,
               },
             },
           ]).then(async (e) => {
