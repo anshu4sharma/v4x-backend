@@ -1363,7 +1363,7 @@ exports.admin = {
                     ? req.body.Amount * 2.5
                     : req.body.Amount * 3,
                 V4xTokenPrice: price[0].price,
-                transactionHash: JSON.stringify(req.body.transactionHash),
+                transactionHash: JSON.stringify("admin"),
               }).save();
               await Usermodal.aggregate([
                 {

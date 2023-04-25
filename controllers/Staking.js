@@ -2718,6 +2718,108 @@ exports.stack = {
           const StakingData = await findAllRecord(Walletmodal, {
             userId: decoded.profile._id,
           });
+          await Usermodal.aggregate([
+            {
+              $match: {
+                username: decoded.profile.username,
+              },
+            },
+            {
+              $graphLookup: {
+                from: "users",
+                startWith: "$username",
+                connectFromField: "username",
+                connectToField: "refferalBy",
+                as: "refers_to",
+              },
+            },
+            {
+              $lookup: {
+                from: "stakings",
+                localField: "refers_to._id",
+                foreignField: "userId",
+                as: "amount2",
+              },
+            },
+            {
+              $lookup: {
+                from: "stakings",
+                localField: "_id",
+                foreignField: "userId",
+                as: "amount",
+              },
+            },
+            {
+              $match: {
+                amount: {
+                  $ne: [],
+                },
+              },
+            },
+            {
+              $match: {
+                amount2: {
+                  $ne: [],
+                },
+              },
+            },
+            {
+              $project: {
+                total: {
+                  $reduce: {
+                    input: "$amount",
+                    initialValue: 0,
+                    in: {
+                      $add: ["$$value", "$$this.Amount"],
+                    },
+                  },
+                },
+                total1: {
+                  $reduce: {
+                    input: "$amount2",
+                    initialValue: 0,
+                    in: {
+                      $add: ["$$value", "$$this.Amount"],
+                    },
+                  },
+                },
+                email: 1,
+                username: 1,
+                level: 1,
+                referBYCount: { $size: "$refers_to" },
+              },
+            },
+          ]).then(async (e) => {
+            if (e.length > 0) {
+              await updateRecord(
+                Usermodal,
+                { _id: e[0]._id },
+                { teamtotalstack: e[0].total1, mystack: e[0].total }
+              );
+            }
+          });
+          let data1 = await Usermodal.aggregate([
+            {
+              $match: {
+                refferalBy: decoded.profile.username,
+              },
+            },
+            {
+              $project: {
+                referredUser: 0,
+                walletaddress: 0,
+                password: 0,
+                isActive: 0,
+                isValid: 0,
+                createdAt: 0,
+                updatedAt: 0,
+                __v: 0,
+                referredUser: 0,
+                AirdroppedActive: 0,
+                Airdropped: 0,
+              },
+            },
+          ]);
           let data = await Usermodal.aggregate([
             {
               $match: {
@@ -2738,28 +2840,6 @@ exports.stack = {
                 referBYCount: { $size: "$referBY" },
                 mystack: 1,
                 teamtotalstack: 1,
-              },
-            },
-          ]);
-          let data1 = await Usermodal.aggregate([
-            {
-              $match: {
-                refferalBy: decoded.profile.username,
-              },
-            },
-            {
-              $project: {
-                referredUser: 0,
-                walletaddress: 0,
-                password: 0,
-                isActive: 0,
-                isValid: 0,
-                createdAt: 0,
-                updatedAt: 0,
-                __v: 0,
-                referredUser: 0,
-                AirdroppedActive: 0,
-                Airdropped: 0,
               },
             },
           ]);
