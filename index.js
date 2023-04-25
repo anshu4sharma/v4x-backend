@@ -27,9 +27,9 @@ const { success, failed } = require("./helper");
 const Achivement = require("./models/Achivement");
 
 const infraUrl = env.globalAccess.rpcUrl;
-const ContractAbi = env.contract.ablcAbi.abi;
+const ContractAbi = env.contract.V4XAbi.abi;
 
-const ContractAddress = env.globalAccess.ablcContract;
+const ContractAddress = env.globalAccess.V4XContract;
 
 const ContractAbiForBUSD = env.contract.busdAbi.abi;
 
