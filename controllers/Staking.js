@@ -2645,13 +2645,6 @@ exports.stack = {
               },
             },
             {
-              $match: {
-                amount2: {
-                  $ne: [],
-                },
-              },
-            },
-            {
               $project: {
                 total: {
                   $reduce: {
@@ -2673,12 +2666,19 @@ exports.stack = {
                 },
                 email: 1,
                 username: 1,
-                level: 1,
-                referBYCount: { $size: "$refers_to" },
+                level: 4,
+                refers_to: 1,
+              },
+            },
+            {
+              $unwind: {
+                path: "$refers_to",
+                preserveNullAndEmptyArrays: true,
               },
             },
           ]).then(async (e) => {
             if (e.length > 0) {
+              console.log("e", e);
               await updateRecord(
                 Usermodal,
                 { _id: e[0]._id },
@@ -2757,13 +2757,6 @@ exports.stack = {
               },
             },
             {
-              $match: {
-                amount2: {
-                  $ne: [],
-                },
-              },
-            },
-            {
               $project: {
                 total: {
                   $reduce: {
@@ -2785,12 +2778,19 @@ exports.stack = {
                 },
                 email: 1,
                 username: 1,
-                level: 1,
-                referBYCount: { $size: "$refers_to" },
+                level: 4,
+                refers_to: 1,
+              },
+            },
+            {
+              $unwind: {
+                path: "$refers_to",
+                preserveNullAndEmptyArrays: true,
               },
             },
           ]).then(async (e) => {
             if (e.length > 0) {
+              console.log("e", e);
               await updateRecord(
                 Usermodal,
                 { _id: e[0]._id },
