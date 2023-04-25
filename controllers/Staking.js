@@ -875,86 +875,6 @@ exports.stack = {
                 V4xTokenPrice: price[0].price,
                 transactionHash: JSON.stringify(req.body.transactionHash),
               }).save();
-              await Usermodal.aggregate([
-                {
-                  $match: {
-                    username: decoded.profile.username,
-                  },
-                },
-                {
-                  $graphLookup: {
-                    from: "users",
-                    startWith: "$username",
-                    connectFromField: "username",
-                    connectToField: "refferalBy",
-                    as: "refers_to",
-                  },
-                },
-                {
-                  $lookup: {
-                    from: "stakings",
-                    localField: "refers_to._id",
-                    foreignField: "userId",
-                    as: "amount2",
-                  },
-                },
-                {
-                  $lookup: {
-                    from: "stakings",
-                    localField: "_id",
-                    foreignField: "userId",
-                    as: "amount",
-                  },
-                },
-                {
-                  $match: {
-                    amount: {
-                      $ne: [],
-                    },
-                  },
-                },
-                {
-                  $project: {
-                    total: {
-                      $reduce: {
-                        input: "$amount",
-                        initialValue: 0,
-                        in: {
-                          $add: ["$$value", "$$this.Amount"],
-                        },
-                      },
-                    },
-                    total1: {
-                      $reduce: {
-                        input: "$amount2",
-                        initialValue: 0,
-                        in: {
-                          $add: ["$$value", "$$this.Amount"],
-                        },
-                      },
-                    },
-                    email: 1,
-                    username: 1,
-                    level: 4,
-                    refers_to: 1,
-                  },
-                },
-                {
-                  $unwind: {
-                    path: "$refers_to",
-                    preserveNullAndEmptyArrays: true,
-                  },
-                },
-              ]).then(async (e) => {
-                if (e.length > 0) {
-                  console.log("e", e);
-                  await updateRecord(
-                    Usermodal,
-                    { _id: e[0]._id },
-                    { teamtotalstack: e[0].total1, mystack: e[0].total }
-                  );
-                }
-              });
               await updateRecord(
                 Walletmodal,
                 { userId: decoded.profile._id },
@@ -1808,86 +1728,6 @@ exports.stack = {
                 V4xTokenPrice: price[0].price,
                 transactionHash: JSON.stringify(req.body.transactionHash),
               }).save();
-              await Usermodal.aggregate([
-                {
-                  $match: {
-                    username: decoded.profile.username,
-                  },
-                },
-                {
-                  $graphLookup: {
-                    from: "users",
-                    startWith: "$username",
-                    connectFromField: "username",
-                    connectToField: "refferalBy",
-                    as: "refers_to",
-                  },
-                },
-                {
-                  $lookup: {
-                    from: "stakings",
-                    localField: "refers_to._id",
-                    foreignField: "userId",
-                    as: "amount2",
-                  },
-                },
-                {
-                  $lookup: {
-                    from: "stakings",
-                    localField: "_id",
-                    foreignField: "userId",
-                    as: "amount",
-                  },
-                },
-                {
-                  $match: {
-                    amount: {
-                      $ne: [],
-                    },
-                  },
-                },
-                {
-                  $project: {
-                    total: {
-                      $reduce: {
-                        input: "$amount",
-                        initialValue: 0,
-                        in: {
-                          $add: ["$$value", "$$this.Amount"],
-                        },
-                      },
-                    },
-                    total1: {
-                      $reduce: {
-                        input: "$amount2",
-                        initialValue: 0,
-                        in: {
-                          $add: ["$$value", "$$this.Amount"],
-                        },
-                      },
-                    },
-                    email: 1,
-                    username: 1,
-                    level: 4,
-                    refers_to: 1,
-                  },
-                },
-                {
-                  $unwind: {
-                    path: "$refers_to",
-                    preserveNullAndEmptyArrays: true,
-                  },
-                },
-              ]).then(async (e) => {
-                if (e.length > 0) {
-                  console.log("e", e);
-                  await updateRecord(
-                    Usermodal,
-                    { _id: e[0]._id },
-                    { teamtotalstack: e[0].total1, mystack: e[0].total }
-                  );
-                }
-              });
               await updateRecord(
                 Walletmodal,
                 { userId: decoded.profile._id },
@@ -2736,86 +2576,6 @@ exports.stack = {
               V4xTokenPrice: price[0].price,
               transactionHash: JSON.stringify(req.body.transactionHash),
             }).save();
-            await Usermodal.aggregate([
-              {
-                $match: {
-                  username: decoded.profile.username,
-                },
-              },
-              {
-                $graphLookup: {
-                  from: "users",
-                  startWith: "$username",
-                  connectFromField: "username",
-                  connectToField: "refferalBy",
-                  as: "refers_to",
-                },
-              },
-              {
-                $lookup: {
-                  from: "stakings",
-                  localField: "refers_to._id",
-                  foreignField: "userId",
-                  as: "amount2",
-                },
-              },
-              {
-                $lookup: {
-                  from: "stakings",
-                  localField: "_id",
-                  foreignField: "userId",
-                  as: "amount",
-                },
-              },
-              {
-                $match: {
-                  amount: {
-                    $ne: [],
-                  },
-                },
-              },
-              {
-                $project: {
-                  total: {
-                    $reduce: {
-                      input: "$amount",
-                      initialValue: 0,
-                      in: {
-                        $add: ["$$value", "$$this.Amount"],
-                      },
-                    },
-                  },
-                  total1: {
-                    $reduce: {
-                      input: "$amount2",
-                      initialValue: 0,
-                      in: {
-                        $add: ["$$value", "$$this.Amount"],
-                      },
-                    },
-                  },
-                  email: 1,
-                  username: 1,
-                  level: 4,
-                  refers_to: 1,
-                },
-              },
-              {
-                $unwind: {
-                  path: "$refers_to",
-                  preserveNullAndEmptyArrays: true,
-                },
-              },
-            ]).then(async (e) => {
-              if (e.length > 0) {
-                console.log("e", e);
-                await updateRecord(
-                  Usermodal,
-                  { _id: e[0]._id },
-                  { teamtotalstack: e[0].total1, mystack: e[0].total }
-                );
-              }
-            });
             return successResponse(res, {
               message: "You have successfully staked V4X coins",
             });
@@ -2906,8 +2666,8 @@ exports.stack = {
                 },
                 email: 1,
                 username: 1,
-                level: 4,
-                refers_to: 1,
+                level: 1,
+                referBYCount: { $size: "$refers_to" },
               },
             },
             {
@@ -2918,7 +2678,6 @@ exports.stack = {
             },
           ]).then(async (e) => {
             if (e.length > 0) {
-              console.log("e", e);
               await updateRecord(
                 Usermodal,
                 { _id: e[0]._id },
@@ -2975,19 +2734,9 @@ exports.stack = {
             },
             {
               $project: {
-                referredUser: 0,
-                walletaddress: 0,
-                password: 0,
-                isActive: 0,
-                isValid: 0,
-                username: 0,
-                createdAt: 0,
-                updatedAt: 0,
-                __v: 0,
-                email: 0,
-                referredUser: 0,
-                AirdroppedActive: 0,
-                Airdropped: 0,
+                referBYCount: { $size: "$referBY" },
+                mystack: 1,
+                teamtotalstack: 1,
               },
             },
           ]);
@@ -3004,7 +2753,6 @@ exports.stack = {
                 password: 0,
                 isActive: 0,
                 isValid: 0,
-                // username: 0,
                 createdAt: 0,
                 updatedAt: 0,
                 __v: 0,
@@ -3014,85 +2762,6 @@ exports.stack = {
               },
             },
           ]);
-          await Usermodal.aggregate([
-            {
-              $match: {
-                username: decoded.profile.username,
-              },
-            },
-            {
-              $graphLookup: {
-                from: "users",
-                startWith: "$username",
-                connectFromField: "username",
-                connectToField: "refferalBy",
-                as: "refers_to",
-              },
-            },
-            {
-              $lookup: {
-                from: "stakings",
-                localField: "refers_to._id",
-                foreignField: "userId",
-                as: "amount2",
-              },
-            },
-            {
-              $lookup: {
-                from: "stakings",
-                localField: "_id",
-                foreignField: "userId",
-                as: "amount",
-              },
-            },
-            {
-              $match: {
-                amount: {
-                  $ne: [],
-                },
-              },
-            },
-            {
-              $project: {
-                total: {
-                  $reduce: {
-                    input: "$amount",
-                    initialValue: 0,
-                    in: {
-                      $add: ["$$value", "$$this.Amount"],
-                    },
-                  },
-                },
-                total1: {
-                  $reduce: {
-                    input: "$amount2",
-                    initialValue: 0,
-                    in: {
-                      $add: ["$$value", "$$this.Amount"],
-                    },
-                  },
-                },
-                email: 1,
-                username: 1,
-                level: 4,
-                refers_to: 1,
-              },
-            },
-            {
-              $unwind: {
-                path: "$refers_to",
-                preserveNullAndEmptyArrays: true,
-              },
-            },
-          ]).then(async (e) => {
-            if (e.length > 0) {
-              await updateRecord(
-                Usermodal,
-                { _id: e[0]._id },
-                { teamtotalstack: e[0].total1, mystack: e[0].total }
-              );
-            }
-          });
           const price = await findAllRecord(V4Xpricemodal, {});
           return successResponse(res, {
             message: "wallet data get successfully",
@@ -3100,7 +2769,7 @@ exports.stack = {
             teamtotalstack: data[0].teamtotalstack,
             data: StakingData,
             mystack: data[0].mystack,
-            ReffData: data[0]?.referBY.length,
+            ReffData: data[0].referBYCount,
             ReffData1: data1,
             V4Xtokenprice: price[0].price,
           });
@@ -3127,9 +2796,24 @@ exports.stack = {
         }
         if (decoded) {
           decoded = await cloneDeep(decoded);
-          const StakingData = await findAllRecord(Stakingbonus, {
-            userId: decoded.profile._id,
-          });
+          const StakingData = await Stakingbonus.aggregate([
+            {
+              $match: {
+                userId: ObjectId(decoded.profile._id),
+              },
+            },
+            {
+              $project: {
+                _id: 0,
+                userId: 0,
+                rewordId: 0,
+                updatedAt: 0,
+                V4xTokenPrice: 0,
+                ReffId: 0,
+                __v: 0,
+              },
+            },
+          ]);
           return successResponse(res, {
             message: "staking data get successfully",
             data: StakingData,
@@ -3484,12 +3168,19 @@ exports.stack = {
               $project: {
                 referredUser: 0,
                 password: 0,
+                _id: 0,
+                userId: 0,
+                AirdroppedActive: 0,
                 isActive: 0,
+                teamtotalstack: 0,
+                refferalId: 0,
+                iswalletActive: 0,
+                leval: 0,
+                note: 0,
                 isValid: 0,
                 updatedAt: 0,
                 __v: 0,
                 referredUser: 0,
-                AirdroppedActive: 0,
                 Airdropped: 0,
               },
             },
@@ -3524,7 +3215,7 @@ exports.stack = {
           let data = await Usermodal.aggregate([
             {
               $match: {
-                email: decoded.profile.email,
+                username: "V4X83800",
               },
             },
             {
@@ -3537,14 +3228,6 @@ exports.stack = {
               },
             },
             {
-              $lookup: {
-                from: "users",
-                localField: "referBY.username",
-                foreignField: "refferalBy",
-                as: "result",
-              },
-            },
-            {
               $project: {
                 referredUser: 0,
                 walletaddress: 0,
@@ -3552,6 +3235,18 @@ exports.stack = {
                 isActive: 0,
                 isValid: 0,
                 "referBY.password": 0,
+                "referBY._id": 0,
+                "referBY.userId": 0,
+                "referBY.referredUser": 0,
+                "referBY.AirdroppedActive": 0,
+                "referBY.teamtotalstack": 0,
+                "referBY.refferalId": 0,
+                "referBY.iswalletActive": 0,
+                "referBY.isValid": 0,
+                "referBY.isActive": 0,
+                "referBY.leval": 0,
+                "referBY.note": 0,
+                "referBY.updatedAt": 0,
                 createdAt: 0,
                 updatedAt: 0,
                 __v: 0,
