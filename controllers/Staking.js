@@ -2885,8 +2885,6 @@ exports.stack = {
             },
             {
               $project: {
-                _id: 0,
-                userId: 0,
                 rewordId: 0,
                 updatedAt: 0,
                 V4xTokenPrice: 0,
@@ -3296,7 +3294,7 @@ exports.stack = {
           let data = await Usermodal.aggregate([
             {
               $match: {
-                username: "V4X83800",
+                username: decoded.profile.username,
               },
             },
             {
@@ -3345,7 +3343,7 @@ exports.stack = {
         }
       } else {
         badRequestResponse(res, {
-          message: "No token provided.",
+          message: "No token provided!",
         });
       }
     } catch (error) {
