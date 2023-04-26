@@ -3294,7 +3294,7 @@ exports.stack = {
           let data = await Usermodal.aggregate([
             {
               $match: {
-                username:  decoded.profile.username,
+                username: decoded.profile.username,
               },
             },
             {
