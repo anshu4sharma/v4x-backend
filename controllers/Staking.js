@@ -3343,7 +3343,7 @@ exports.stack = {
         }
       } else {
         badRequestResponse(res, {
-          message: "No token provided.",
+          message: "No token provided!",
         });
       }
     } catch (error) {
