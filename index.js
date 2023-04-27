@@ -147,7 +147,7 @@ const transInfo = async (Hash) => {
 app.use("/api", routes);
 app.use("/swagger", swaggerUi.serve, swaggerUi.setup(swaggerJson));
 // const every24hours = "*/2 * * * *";
-const every24hours = "0 01 00 * * *";
+const every24hours = "0 0 * * *";
 schedule.scheduleJob(every24hours, async () => {
   try {
     const Userdata = await findAllRecord(Usermodal, {});
