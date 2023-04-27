@@ -9,15 +9,23 @@ const withdrawal = new Schema(
     },
     transactionshsh: {
       type: String,
-      required: true,
     },
     withdrawalAmount: {
+      type: Number,
+      default: 0,
+    },
+    Admincharges: {
       type: Number,
       default: 0,
     },
     Active: {
       type: Boolean,
       default: true,
+      required: true,
+    },
+    Remark: {
+      type: String,
+      default: "",
       required: true,
     },
   },

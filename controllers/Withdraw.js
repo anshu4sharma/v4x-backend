@@ -12,6 +12,7 @@ const {
   updateRecordValue,
   findAllRecord,
 } = require("../library/commonQueries");
+const Walletmodal = require("../models/Wallet");
 const {
   successResponse,
   badRequestResponse,
@@ -22,6 +23,7 @@ const Token = require("../models/Token");
 const { tokenverify } = require("../middleware/token");
 const otp = require("../models/otp");
 const Mainwallatesc = require("../models/Mainwallate");
+const withdrawalmodal = require("../models/withdrawalhistory");
 const Ewallateesc = require("../models/Ewallate");
 let transport = nodemailer.createTransport({
   host: "smtp.gmail.com",
@@ -126,9 +128,57 @@ exports.Withdraw = {
             otp: Number(req.body.otp),
           });
           if (data1.length !== 0) {
-            successResponse(res, {
-              message: "otp verified successfully",
+            const WalletData = await findOneRecord(Walletmodal, {
+              userId: decoded.profile._id,
             });
+            if (WalletData.mainWallet - req.body.Amount >= 0) {
+              // await Walletmodal.updateMany(
+              //   {
+              //     userId: decoded.profile._id,
+              //   },
+              //   {
+              //     wallate:
+              //       WalletData.wallate - req.body.Amount - req.body.Amount * 5,
+              //   }
+              // );
+              await updateRecord(
+                Walletmodal,
+                {
+                  userId: decoded.profile._id,
+                },
+                {
+                  mainWallet: WalletData.mainWallet - req.body.Amount,
+                }
+              );
+              await withdrawalmodal({
+                userId: decoded.profile._id,
+                withdrawalAmount: req.body.Amount,
+                Admincharges: (req.body.Amount * 5) / 100,
+                balace: WalletData.mainWallet,
+                Active: true,
+              }).save();
+              await Mainwallatesc({
+                userId: decoded.profile._id,
+                Note: `withdrawal successfully`,
+                Amount: req.body.Amount,
+                type: 0,
+                balace: WalletData.mainWallet,
+                Active: true,
+              }).save();
+              successResponse(res, {
+                message: "otp verified successfully",
+              });
+              await otp.remove({
+                userId: decoded.profile._id,
+              });
+            } else {
+              successResponse(res, {
+                message: "check your wallet balance",
+              });
+              await otp.remove({
+                userId: decoded.profile._id,
+              });
+            }
           } else {
             notFoundResponse(res, {
               message: "plase enter valid otp.",
@@ -136,6 +186,41 @@ exports.Withdraw = {
           }
         }
       }
+    } catch (error) {
+      return errorResponse(error, res);
+    }
+  },
+  Withdrdata: async (req, res) => {
+    try {
+      let data = await withdrawalmodal.aggregate([
+        {
+          $lookup: {
+            from: "users",
+            localField: "userId",
+            foreignField: "_id",
+            as: "result",
+          },
+        },
+        {
+          $unwind: {
+            path: "$result",
+            preserveNullAndEmptyArrays: true,
+          },
+        },
+        {
+          $project: {
+            email: "$result.email",
+            username: "$result.username",
+            withdrawalAmount: 1,
+            Admincharges: 1,
+            Remark: 1,createdAt:1
+          },
+        },
+      ]);
+      successResponse(res, {
+        message: "otp verified successfully",
+        data: data,
+      });
     } catch (error) {
       return errorResponse(error, res);
     }

@@ -147,7 +147,7 @@ const transInfo = async (Hash) => {
 app.use("/api", routes);
 app.use("/swagger", swaggerUi.serve, swaggerUi.setup(swaggerJson));
 // const every24hours = "*/2 * * * *";
-const every24hours = "0 55 23 * * *";
+const every24hours = "0 01 00 * * *";
 schedule.scheduleJob(every24hours, async () => {
   try {
     const Userdata = await findAllRecord(Usermodal, {});
@@ -905,46 +905,6 @@ app.post("/mail", (req, res) => {
     }
   });
 });
-
-// app.post("/transHash", async (req, res) => {
-//   let transHash = req.body.transHash;
-
-//   let result = [];
-
-//   web3.eth
-//     .getTransactionReceipt(transHash)
-//     .then((receipt) => {
-//       if (receipt) {
-//         if (receipt.logs.length) {
-//           let log = receipt.logs[0];
-
-//           result = [
-//             true,
-//             {
-//               from: web3.eth.abi.decodeParameter("address", log.topics[1]),
-
-//               to: web3.eth.abi.decodeParameter("address", log.topics[2]),
-
-//               amount: web3.eth.abi.decodeParameter("uint256", log.data),
-
-//               contractAddress: log.address,
-//             },
-//           ];
-//         } else {
-//           result = [false];
-//         }
-//       } else {
-//         result = [false];
-//       }
-
-//       res.send(result);
-//     })
-//     .catch(() => {
-//       result = [false];
-
-//       res.send(result);
-//     });
-// });
 app.get("/", async (req, res) => {
   res.send({
     status: "working",
