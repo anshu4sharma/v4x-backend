@@ -2677,8 +2677,8 @@ exports.stack = {
               },
             },
           ]).then(async (e) => {
+            console.log("e", e);
             if (e.length > 0) {
-              console.log("e", e);
               await updateRecord(
                 Usermodal,
                 { _id: e[0]._id },
@@ -2717,6 +2717,9 @@ exports.stack = {
           decoded = await cloneDeep(decoded);
           const StakingData = await findAllRecord(Walletmodal, {
             userId: decoded.profile._id,
+          });
+          const Userdata = await findAllRecord(Usermodal, {
+            _id: decoded.profile._id,
           });
           await Usermodal.aggregate([
             {
@@ -2846,7 +2849,7 @@ exports.stack = {
           const price = await findAllRecord(V4Xpricemodal, {});
           return successResponse(res, {
             message: "wallet data get successfully",
-            profile: decoded.profile,
+            profile: Userdata,
             teamtotalstack: data[0].teamtotalstack,
             data: StakingData,
             mystack: data[0].mystack,
@@ -2955,21 +2958,25 @@ exports.stack = {
                   let abc = await Usermodal.find({
                     username: req.body.Username1,
                   });
+
                   /// E-wallate
-                  await Mainwallatesc({
-                    userId: abc[0]._id,
-                    Note: `You Received Coins from ${decoded.profile.username}`,
-                    Amount: req.body.Amount,
-                    type: 1,
-                    Active: true,
-                  }).save();
+
                   await updateRecord(
                     Walletmodal,
                     {
                       userId: abc[0]._id,
                     },
-                    { $inc: { mainWallet: req.body.Amount } }
-                  );
+                    { $inc: { v4xWallet: req.body.Amount } }
+                  ).then(async (res) => {
+                    await Ewallateesc({
+                      userId: abc[0]._id,
+                      Note: `You Received Coins from ${decoded.profile.username}`,
+                      Amount: req.body.Amount,
+                      balace: res?.v4xWallet,
+                      type: 1,
+                      Active: true,
+                    }).save();
+                  });
                   return successResponse(res, {
                     message: "transactions have been sent successfully",
                   });
@@ -3007,6 +3014,7 @@ exports.stack = {
                     Active: true,
                   }).save();
                   await Transactionmodal(tdata).save();
+
                   await updateRecord(
                     Walletmodal,
                     {
@@ -3019,10 +3027,11 @@ exports.stack = {
                   let abc = await Usermodal.find({
                     username: req.body.Username1,
                   });
-                  await Mainwallatesc({
+                  await Ewallateesc({
                     userId: abc[0]._id,
                     Note: `You Received Coins from ${decoded.profile.username}`,
                     Amount: req.body.Amount,
+                    balace: res?.v4xWallet,
                     type: 1,
                     Active: true,
                   }).save();
@@ -3031,7 +3040,7 @@ exports.stack = {
                     {
                       userId: abc[0]._id,
                     },
-                    { $inc: { mainWallet: req.body.Amount } }
+                    { $inc: { v4xWallet: req.body.Amount } }
                   );
                   return successResponse(res, {
                     message: "transactions have been sent successfully",
