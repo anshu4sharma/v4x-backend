@@ -140,7 +140,7 @@ exports.register = {
                       } else {
                         return successResponse(res, {
                           message:
-                            "varification link has been send to your email address..!!",
+                            "Verification link has been sent successfully on your email!",
                         });
                       }
                     });
