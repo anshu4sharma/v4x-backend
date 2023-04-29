@@ -20,7 +20,6 @@ const {
 const Usermodal = require("../models/user");
 const Walletmodal = require("../models/Wallet");
 const Token = require("../models/Token");
-const mailgun = require("mailgun-js");
 const {
   token,
   tokenverify,
@@ -30,6 +29,7 @@ const Ticket = require("../models/Ticket");
 
 const { ticketsend } = require("../services/sendOTP");
 const e = require("express");
+const Mailgun = require("mailgun-js");
 let transport = nodemailer.createTransport({
   port: 587,
   host: "smtp.mailgun.org",
@@ -85,41 +85,6 @@ exports.register = {
               isValid: false,
             });
             if (data !== null) {
-              const profile = await Usermodal.findById(data._id).select({
-                password: 0,
-              });
-              const accessToken = jwt.sign({ profile }, "3700 0000 0000 002", {
-                expiresIn: "1hr",
-              });
-              return successResponse(res, {
-                message: "registration successfully",
-              });
-              // ejs.renderFile(
-              //   __dirname + "/mail.ejs",
-              //   {
-              //     name: "v4xverifyuser@gmail.com",
-              //     action_url: `https://api.v4x.org/api/registration/signUp/varify:${accessToken}`,
-              //   },
-              //   async function (err, mail) {
-              //     const mailOptions = {
-              //       from: "donotreply@v4x.org",
-              //       to: data["email"], // List of recipients
-              //       subject: "Node Mailer", // Subject line
-              //       html: mail,
-              //     };
-              //     transport.sendMail(mailOptions, async function (err, info) {
-              //       if (err) {
-              //         badRequestResponse(res, {
-              //           message: `Email not send error something is wrong ${err}`,
-              //         });
-              //       } else {
-              //         successResponse(res, {
-              //           message: "registration successfully",
-              //         });
-              //       }
-              //     });
-              //   }
-              // );
             } else {
               var digits = "0123456789";
               let OTP = "";
@@ -148,43 +113,39 @@ exports.register = {
                     expiresIn: "1hr",
                   }
                 );
-                return successResponse(res, {
-                  message: "registration successfully",
-                });
-                // ejs.renderFile(
-                //   __dirname + "/mail.ejs",
-                //   {
-                //     name: "v4xverifyuser@gmail.com",
-                //     action_url: `https://api.v4x.org/api/registration/signUp/varify:${accessToken}`,
-                //   },
-                //   async function (err, data) {
-                //     const DOMAIN = "donotreply@v4x.org";
-                //     const mg = mailgun({
-                //       apiKey:
-                //         "afd2a109fddce998ef411c7ac33c3e0c-81bd92f8-5473abd7",
-                //       domain: DOMAIN,
-                //     });
-                //     const data111 = {
-                //       from: "donotreply@v4x.org",
-                //       to: req.body.email,
-                //       subject: "main varification",
-                //       html: data,
-                //     };
-                //     mg.messages().send(data111, function (error, body) {
-                //       console.log("body", body);
-                //       console.log(error);
-                //       if (!error) {
-                //         return successResponse(res, {
-                //           message: "registration successfully",
-                //         });
-                //       } else {
-                //         return badRequestResponse(res, {
-                //           message: `Email not send error something is wrong ${err}`,
-                //         });
-                //       }
-                //     });
-                //   }
-                // );
+                ejs.renderFile(
+                  __dirname + "/mail.ejs",
+                  {
+                    name: "v4xverifyuser@gmail.com",
+                    action_url: `https://api.v4x.org/api/registration/signUp/varify:${accessToken}`,
+                  },
+                  async function (err, data) {
+                    const DOMAIN = "donotreply.v4x.org";
+                    const mg = Mailgun({
+                      apiKey:
+                        "afd2a109fddce998ef411c7ac33c3e0c-81bd92f8-5473abd7",
+                      domain: DOMAIN,
+                    });
+                    const mailOptions = {
+                      from: "donotreply@v4x.org", // Sender address
+                      to: req.body.email, // List of recipients
+                      subject: "verification by v4x", // Subject line
+                      html: data,
+                    };
+                    mg.messages().send(mailOptions, async function (err, info) {
+                      if (err) {
+                        return badRequestResponse(res, {
+                          message: `Email not send error something is wrong ${error}`,
+                        });
+                      } else {
+                        return successResponse(res, {
+                          message:
+                            "varification link has been send to your email address..!!",
+                        });
+                      }
+                    });
+                  }
+                );
               }
             }
           }
@@ -227,26 +188,24 @@ exports.register = {
               name: "v4xverifyuser@gmail.com",
             },
             async function (err, data) {
-              const DOMAIN = "donotreply@v4x.org";
-              const mg = mailgun({
+              const DOMAIN = "donotreply.v4x.org";
+              const mg = Mailgun({
                 apiKey: "afd2a109fddce998ef411c7ac33c3e0c-81bd92f8-5473abd7",
                 domain: DOMAIN,
               });
-              const data111 = {
-                from: "donotreply@v4x.org",
-                to: decoded.profile.email,
-                subject: "main varification",
+              const mailOptions = {
+                from: "donotreply@v4x.org", // Sender address
+                to: decoded.profile.email, // List of recipients
+                subject: "verification by v4x", // Subject line
                 html: data,
               };
-              mg.messages().send(data111, function (error, body) {
-                console.log("body", body);
-                console.log(error);
-                if (!error) {
-                  res.redirect("https://v4x.org/login?login#");
-                } else {
+              mg.messages().send(mailOptions, async function (err, info) {
+                if (err) {
                   return badRequestResponse(res, {
-                    message: `Email not send error something is wrong ${err}`,
+                    message: `Email not send error something is wrong ${error}`,
                   });
+                } else {
+                  res.redirect("https://v4x.org/login?login#");
                 }
               });
             }
@@ -272,22 +231,22 @@ exports.register = {
         if (
           !match &&
           user.password.toString() !== req.body.password.toString()
-          ) {
-            badRequestResponse(res, { message: "Password is incorrect!" });
+        ) {
+          badRequestResponse(res, { message: "Password is incorrect!" });
+        } else {
+          if (!user.isActive) {
+            badRequestResponse(res, {
+              message: "Account is disabled. please contact support!",
+            });
           } else {
-            if (!user.isActive) {
+            if (!user.isValid) {
               badRequestResponse(res, {
-                message: "Account is disabled. please contact support!",
+                message: "please verify your account",
               });
             } else {
-              if (!user.isValid) {
-                badRequestResponse(res, {
-                  message: "please verify your account",
-                });
-              } else {
               console.log(user);
               const accessToken = await token(Usermodal, user);
-    
+
               const Wallet = await findOneRecord(Walletmodal, {
                 userId: user._id,
               });
@@ -340,29 +299,24 @@ exports.register = {
             action_url: accessToken.token,
           },
           async function (err, data) {
-            const data111 = {
-              from: "donotreply@v4x.org",
-              to: decoded["email"],
-              subject: "main varification",
-              html: data,
-            };
-            const DOMAIN = "donotreply@v4x.org";
-            const mg = mailgun({
+            const DOMAIN = "donotreply.v4x.org";
+            const mg = Mailgun({
               apiKey: "afd2a109fddce998ef411c7ac33c3e0c-81bd92f8-5473abd7",
               domain: DOMAIN,
             });
-            mg.messages().send(data111, function (error, body) {
-              console.log("body", body);
-              console.log(error);
-              if (!error) {
-                return successResponse(res, {
-                  message:
-                    "Forgot Password link has been send to your email address..!!",
+            const mailOptions = {
+              from: "donotreply@v4x.org", // Sender address
+              to: decoded.profile.email, // List of recipients
+              subject: "verification by v4x", // Subject line
+              html: data,
+            };
+            mg.messages().send(mailOptions, async function (err, info) {
+              if (err) {
+                return badRequestResponse(res, {
+                  message: `Email not send error something is wrong ${error}`,
                 });
               } else {
-                return badRequestResponse(res, {
-                  message: `Email not send error something is wrong ${err}`,
-                });
+                res.redirect("https://v4x.org/login?login#");
               }
             });
           }
