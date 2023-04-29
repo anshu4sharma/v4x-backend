@@ -586,6 +586,9 @@ exports.Withdraw = {
                     });
                   }
                 } else {
+                  notFoundResponse(res, {
+                    message: "minimum withdrawals is 50V4X",
+                  });
                 }
               }
             } else {
@@ -595,7 +598,7 @@ exports.Withdraw = {
             }
           } else {
             notFoundResponse(res, {
-              message: "minimum withdrawals is 50V4X",
+              message: "withdrawal locked in fast 15 days.",
             });
           }
         }
