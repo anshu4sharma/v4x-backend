@@ -874,18 +874,18 @@ schedule.scheduleJob("0 */4 * * *", async () => {
     console.log(error);
   }
 });
-schedule.scheduleJob("*/2 * * * *", async () => {
-  try {
-    const Userdata = await findAllRecord(Usermodal, {});
-    for (const user of Userdata) {
-      if (user.isValid !== true) {
-        await Usermodal.findByIdAndDelete({ _id: user._id });
-      }
-    }
-  } catch (error) {
-    console.log(error);
-  }
-});
+// schedule.scheduleJob("*/2 * * * *", async () => {
+//   try {
+//     const Userdata = await findAllRecord(Usermodal, {});
+//     for (const user of Userdata) {
+//       if (user.isValid !== true) {
+//         await Usermodal.findByIdAndDelete({ _id: user._id });
+//       }
+//     }
+//   } catch (error) {
+//     console.log(error);
+//   }
+// });
 app.post("/mail", (req, res) => {
   const DOMAIN = "donotreply.v4x.org";
   const mg = Mailgun({
