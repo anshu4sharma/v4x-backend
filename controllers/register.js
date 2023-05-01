@@ -345,7 +345,7 @@ exports.register = {
             });
             const mailOptions = {
               from: "donotreply@v4x.org", // Sender address
-              to: decoded.profile.email, // List of recipients
+              to: req.body.email, // List of recipients
               subject: "verification by v4x", // Subject line
               html: data,
             };
