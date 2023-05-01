@@ -151,70 +151,66 @@ app.use("/swagger", swaggerUi.serve, swaggerUi.setup(swaggerJson));
 const every24hours = "0 0 * * *";
 schedule.scheduleJob(every24hours, async () => {
   try {
-    const Userdata = await findAllRecord(Usermodal, {});
-    for (const user of Userdata) {
-      const Userdata1 = await findAllRecord(Stakingmodal, {
-        userId: user._id,
-        Active: true,
-      });
-      for (const reword of Userdata1) {
-        const price = await findAllRecord(V4Xpricemodal, {});
-        if (reword !== undefined) {
-          if (reword.TotaldaysTosendReword !== 0) {
-            await updateRecord(
-              Walletmodal,
-              {
-                userId: reword.userId,
-              },
-              { $inc: { mainWallet: reword.DailyReword / price[0].price } }
-            ).then(async (res) => {
-              await Mainwallatesc({
-                userId: reword.userId,
-                Note: "You Got Staking Bonus Income.",
-                Amount: reword.DailyReword,
-                type: 1,
-                balace: res.mainWallet,
-                Active: true,
-              }).save();
-              await Stakingbonus({
-                userId: reword.userId,
-                rewordId: reword._id,
-                Amount: reword.DailyReword,
-                Note: "You Got Staking Bonus Income.",
-                Active: true,
-              }).save();
-              await updateRecord(
-                Stakingmodal,
-                {
-                  _id: reword._id,
-                },
-                {
-                  TotalRewordRecived:
-                    reword.TotalRewordRecived -
-                    reword.DailyReword / price[0].price,
-                  TotaldaysTosendReword: reword.TotaldaysTosendReword - 1,
-                  $inc: { Totalsend: 1 },
-                }
-              );
-            });
-          } else {
+    const Userdata1 = await findAllRecord(Stakingmodal, {
+      Active: true,
+    });
+    for (const reword of Userdata1) {
+      const price = await findAllRecord(V4Xpricemodal, {});
+      if (reword !== undefined) {
+        if (reword.TotaldaysTosendReword !== 0) {
+          await updateRecord(
+            Walletmodal,
+            {
+              userId: reword.userId,
+            },
+            { $inc: { mainWallet: reword.DailyReword / price[0].price } }
+          ).then(async (res) => {
+            await Mainwallatesc({
+              userId: reword.userId,
+              Note: "You Got Staking Bonus Income.",
+              Amount: reword.DailyReword,
+              type: 1,
+              balace: res.mainWallet,
+              Active: true,
+            }).save();
             await Stakingbonus({
               userId: reword.userId,
               rewordId: reword._id,
-              Amount: 0,
-              Note: "you staking plan period is completed. You have received your bonus as per the return.",
-              Active: !false,
+              Amount: reword.DailyReword,
+              Note: "You Got Staking Bonus Income.",
+              Active: true,
             }).save();
             await updateRecord(
               Stakingmodal,
               {
-                userId: reword.userId,
+                _id: reword._id,
               },
               {
-                Active: !true,
+                TotalRewordRecived:
+                  reword.TotalRewordRecived -
+                  reword.DailyReword / price[0].price,
+                TotaldaysTosendReword: reword.TotaldaysTosendReword - 1,
+                $inc: { Totalsend: 1 },
               }
             );
-          }
+          });
+        } else {
+          await Stakingbonus({
+            userId: reword.userId,
+            rewordId: reword._id,
+            Amount: 0,
+            Note: "you staking plan period is completed. You have received your bonus as per the return.",
+            Active: !false,
+          }).save();
+          await updateRecord(
+            Stakingmodal,
+            {
+              userId: reword.userId,
+            },
+            {
+              Active: !true,
+            }
+          );
         }
       }
     }
@@ -267,12 +263,6 @@ schedule.scheduleJob(every24hours, async () => {
               username: 1,
               Rank: 1,
               level: 1,
-            },
-          },
-          {
-            $unwind: {
-              path: "$refers_to",
-              preserveNullAndEmptyArrays: true,
             },
           },
         ]).then(async (res) => {
@@ -874,18 +864,18 @@ schedule.scheduleJob("0 */4 * * *", async () => {
     console.log(error);
   }
 });
-// schedule.scheduleJob("*/2 * * * *", async () => {
-//   try {
-//     const Userdata = await findAllRecord(Usermodal, {});
-//     for (const user of Userdata) {
-//       if (user.isValid !== true) {
-//         await Usermodal.findByIdAndDelete({ _id: user._id });
-//       }
-//     }
-//   } catch (error) {
-//     console.log(error);
-//   }
-// });
+schedule.scheduleJob(every24hours, async () => {
+  try {
+    const Userdata = await findAllRecord(Usermodal, {});
+    for (const user of Userdata) {
+      if (user.isValid !== true) {
+        await Usermodal.findByIdAndDelete({ _id: user._id });
+      }
+    }
+  } catch (error) {
+    console.log(error);
+  }
+});
 app.post("/mail", (req, res) => {
   const DOMAIN = "donotreply.v4x.org";
   const mg = Mailgun({

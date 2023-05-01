@@ -2666,16 +2666,8 @@ exports.stack = {
                 },
                 email: 1,
                 username: 1,
-                level: 4,
-                refers_to: 1,
               },
-            },
-            {
-              $unwind: {
-                path: "$refers_to",
-                preserveNullAndEmptyArrays: true,
-              },
-            },
+            }
           ]).then(async (e) => {
             console.log("e", e);
             if (e.length > 0) {
@@ -2782,7 +2774,6 @@ exports.stack = {
                 email: 1,
                 username: 1,
                 level: 4,
-                refers_to: 1,
               },
             },
             {
