@@ -355,7 +355,10 @@ exports.register = {
                   message: `Email not send error something is wrong ${error}`,
                 });
               } else {
-                res.redirect("https://v4x.org/login?login#");
+                return successResponse(res, {
+                  message:
+                    "varification link has been send to your email address..!!",
+                });
               }
             });
           }
