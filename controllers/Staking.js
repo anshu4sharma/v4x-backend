@@ -2930,13 +2930,10 @@ exports.stack = {
                 };
                 if (req.body.Username1 !== "") {
                   await Transactionmodal(tdata).save();
-                  await Mainwallatesc({
-                    userId: decoded.profile._id,
-                    Note: `You Transfer token from ${decoded.profile.Username1}`,
-                    Amount: req.body.Amount,
-                    type: 0,
-                    Active: true,
-                  }).save();
+
+                  let abc = await Usermodal.find({
+                    username: req.body.Username1,
+                  });
                   await updateRecord(
                     Walletmodal,
                     {
@@ -2945,9 +2942,15 @@ exports.stack = {
                     {
                       mainWallet: amount,
                     }
-                  );
-                  let abc = await Usermodal.find({
-                    username: req.body.Username1,
+                  ).then(async (res) => {
+                    await Mainwallatesc({
+                      userId: decoded.profile._id,
+                      Note: `You Transfer token from ${abc[0].username}`,
+                      Amount: req.body.Amount,
+                      balace: res?.mainWallet,
+                      type: 0,
+                      Active: true,
+                    }).save();
                   });
 
                   /// E-wallate
@@ -2997,13 +3000,10 @@ exports.stack = {
                   //   type: 0,
                   //   Active: true,
                   // }).save();
-                  await Ewallateesc({
-                    userId: decoded.profile._id,
-                    Note: `You Transfer token from ${decoded.profile.Username1}`,
-                    Amount: req.body.Amount,
-                    type: 0,
-                    Active: true,
-                  }).save();
+
+                  let abc = await Usermodal.find({
+                    username: req.body.Username1,
+                  });
                   await Transactionmodal(tdata).save();
 
                   await updateRecord(
@@ -3014,25 +3014,32 @@ exports.stack = {
                     {
                       v4xWallet: amount,
                     }
-                  );
-                  let abc = await Usermodal.find({
-                    username: req.body.Username1,
+                  ).then(async (res) => {
+                    await Ewallateesc({
+                      userId: decoded.profile._id,
+                      Note: `You Transfer token from ${abc[0].username}`,
+                      Amount: req.body.Amount,
+                      balace: res?.v4xWallet,
+                      type: 0,
+                      Active: true,
+                    }).save();
                   });
-                  await Ewallateesc({
-                    userId: abc[0]._id,
-                    Note: `You Received Coins from ${decoded.profile.username}`,
-                    Amount: req.body.Amount,
-                    balace: res?.v4xWallet,
-                    type: 1,
-                    Active: true,
-                  }).save();
                   await updateRecord(
                     Walletmodal,
                     {
                       userId: abc[0]._id,
                     },
                     { $inc: { v4xWallet: req.body.Amount } }
-                  );
+                  ).then(async (res) => {
+                    await Ewallateesc({
+                      userId: abc[0]._id,
+                      Note: `You Received Coins from ${decoded.profile.username}`,
+                      Amount: req.body.Amount,
+                      balace: res?.v4xWallet,
+                      type: 1,
+                      Active: true,
+                    }).save();
+                  });
                   return successResponse(res, {
                     message: "transactions have been sent successfully",
                   });

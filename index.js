@@ -1004,55 +1004,16 @@ app.post("/payment", async (req, res) => {
   }
 });
 
-// app.get("/", async (req, res) => {
-//   // let id = "643452844a58667086970d29";
-//   await updateRecord(
-//     Stakingmodal,
-//     { _id: "64355bf1c27f7f626362d05b" },
-//     {
-//       TotaldaysTosendReword: 730 - 15,
-//       Totalsend: 15,
-//     }
-//   );
-// await Stakingmodal.findByIdAndDelete({_id:''})
-// const Userdata = await findAllRecord(Usermodal, {});
-// for (const user of Userdata) {
-// const Userdata1 = await Stakingmodal.find({
-//   userId: id,
-// }).then(async (res) => {
-//   if (res) {
-//     console.log(res);
-//     for (const reword of res) {
-//       const Userdata1 = await Stakingmodal.find({
-//         rewordId: reword.id,
-//       });
-//       console.log("res=====>>", Userdata1);
-//     }
-//   }
-// if (res.length > 1) {
+// app.get("/aa", async (req, res) => {
 //   await updateRecord(
 //     Walletmodal,
 //     {
-//       userId: user._id,
+//       userId: "64306724bccd30a786c783a8",
 //     },
 //     {
-//       mainWallet: res[res.length - 1].Amount + res[res.length - 1].balace,
+//       v4xWallet: 500,
 //     }
 //   );
-// }
-// });
-// }
-// await updateRecord(
-//   Walletmodal,
-//   {
-//     userId: id,
-//   },
-//   {
-//     mainWallet:
-//       Userdata1[Userdata1.length - 1].Amount +
-//       Userdata1[Userdata1.length - 1].balace,
-//   }
-// );
 //   res.send({
 //     status2: "done",
 //   });
