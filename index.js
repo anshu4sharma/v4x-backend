@@ -151,13 +151,19 @@ app.use("/swagger", swaggerUi.serve, swaggerUi.setup(swaggerJson));
 const every24hours = "0 0 * * *";
 schedule.scheduleJob(every24hours, async () => {
   try {
-    const Userdata1 = await findAllRecord(Stakingmodal, {
-      Active: true,
-    });
+    const Userdata1 = await Stakingmodal.aggregate([
+      {
+        $skip: 397,
+      },
+    ]);
     for (const reword of Userdata1) {
       const price = await findAllRecord(V4Xpricemodal, {});
       if (reword !== undefined) {
-        if (reword.TotaldaysTosendReword !== 0) {
+        var date1 = new Date(reword.createdAt);
+        var date2 = new Date();
+        const diffTime = Math.abs(date2 - date1);
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        if (diffDays !== 730) {
           await updateRecord(
             Walletmodal,
             {
@@ -170,7 +176,7 @@ schedule.scheduleJob(every24hours, async () => {
               Note: "You Got Staking Bonus Income.",
               Amount: reword.DailyReword,
               type: 1,
-              balace: res.mainWallet,
+              balace: res?.mainWallet,
               Active: true,
             }).save();
             await Stakingbonus({
