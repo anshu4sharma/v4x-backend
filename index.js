@@ -148,17 +148,14 @@ const transInfo = async (Hash) => {
 app.use("/api", routes);
 app.use("/swagger", swaggerUi.serve, swaggerUi.setup(swaggerJson));
 // const every24hours = "*/2 * * * *";
-const every24hours = "0 0 * * *";
+const every24hours = "05 9 * * *";
 schedule.scheduleJob(every24hours, async () => {
   try {
-    const Userdata1 = await Stakingmodal.aggregate([
-      {
-        $skip: 397,
-      },
-    ]);
-    for (const reword of Userdata1) {
+    const Userdata = await findAllRecord(Stakingmodal, {});
+    for (const reword of Userdata) {
       const price = await findAllRecord(V4Xpricemodal, {});
       if (reword !== undefined) {
+        console.log(reword);
         var date1 = new Date(reword.createdAt);
         var date2 = new Date();
         const diffTime = Math.abs(date2 - date1);
@@ -171,34 +168,36 @@ schedule.scheduleJob(every24hours, async () => {
             },
             { $inc: { mainWallet: reword.DailyReword / price[0].price } }
           ).then(async (res) => {
-            await Mainwallatesc({
-              userId: reword.userId,
-              Note: "You Got Staking Bonus Income.",
-              Amount: reword.DailyReword,
-              type: 1,
-              balace: res?.mainWallet,
-              Active: true,
-            }).save();
-            await Stakingbonus({
-              userId: reword.userId,
-              rewordId: reword._id,
-              Amount: reword.DailyReword,
-              Note: "You Got Staking Bonus Income.",
-              Active: true,
-            }).save();
-            await updateRecord(
-              Stakingmodal,
-              {
-                _id: reword._id,
-              },
-              {
-                TotalRewordRecived:
-                  reword.TotalRewordRecived -
-                  reword.DailyReword / price[0].price,
-                TotaldaysTosendReword: reword.TotaldaysTosendReword - 1,
-                $inc: { Totalsend: 1 },
-              }
-            );
+            if (res !== undefined) {
+              await Mainwallatesc({
+                userId: reword.userId,
+                Note: "You Got Staking Bonus Income.",
+                Amount: reword.DailyReword,
+                type: 1,
+                balace: res?.mainWallet,
+                Active: true,
+              }).save();
+              await Stakingbonus({
+                userId: reword.userId,
+                rewordId: reword._id,
+                Amount: reword.DailyReword,
+                Note: "You Got Staking Bonus Income.",
+                Active: true,
+              }).save();
+              await updateRecord(
+                Stakingmodal,
+                {
+                  _id: reword._id,
+                },
+                {
+                  TotalRewordRecived:
+                    reword.TotalRewordRecived -
+                    reword.DailyReword / price[0].price,
+                  TotaldaysTosendReword: reword.TotaldaysTosendReword - 1,
+                  $inc: { Totalsend: 1 },
+                }
+              );
+            }
           });
         } else {
           await Stakingbonus({
@@ -1011,18 +1010,125 @@ app.post("/payment", async (req, res) => {
 });
 
 // app.get("/aa", async (req, res) => {
-//   await updateRecord(
-//     Walletmodal,
-//     {
-//       userId: "64306724bccd30a786c783a8",
-//     },
-//     {
-//       v4xWallet: 500,
+//   // const Userdata = await findAllRecord(Usermodal, {});
+//   // for (const user of Userdata) {
+//   //   let b = await Mainwallatesc.find({ userId: user._id, type: 0 });
+//   //   let data = b[b.length - 1];
+//   //   console.log(
+//   //     "data",
+//   //     data?.balace + data?.Amount > 0 ? data?.balace + data?.Amount : 0
+//   //   );
+//   try {
+//     const Userdata1 = await findAllRecord(Stakingmodal, {
+//       Active: true,
+//     });
+//     console.log(Userdata1);
+//     for (const reword of Userdata1) {
+//       const price = await findAllRecord(V4Xpricemodal, {});
+//       if (reword?.userId !== undefined) {
+//         if (reword.TotaldaysTosendReword !== 0) {
+//           await updateRecord(
+//             Walletmodal,
+//             {
+//               userId: reword.userId,
+//             },
+//             { $inc: { mainWallet: reword.DailyReword / price[0].price } }
+//           ).then(async (res) => {
+//             if (res !== undefined) {
+//               await Mainwallatesc({
+//                 userId: reword.userId,
+//                 Note: "You Got Staking Bonus Income.",
+//                 Amount: reword.DailyReword,
+//                 type: 1,
+//                 balace: res?.mainWallet,
+//                 Active: true,
+//               }).save();
+//               await Stakingbonus({
+//                 userId: reword.userId,
+//                 rewordId: reword._id,
+//                 Amount: reword.DailyReword,
+//                 Note: "You Got Staking Bonus Income.",
+//                 Active: true,
+//               }).save();
+//               await updateRecord(
+//                 Stakingmodal,
+//                 {
+//                   _id: reword._id,
+//                 },
+//                 {
+//                   TotalRewordRecived:
+//                     reword.TotalRewordRecived -
+//                     reword.DailyReword / price[0].price,
+//                   TotaldaysTosendReword: reword.TotaldaysTosendReword - 1,
+//                   $inc: { Totalsend: 1 },
+//                 }
+//               );
+//             }
+//           });
+//         } else {
+//           await Stakingbonus({
+//             userId: reword.userId,
+//             rewordId: reword._id,
+//             Amount: 0,
+//             Note: "you staking plan period is completed. You have received your bonus as per the return.",
+//             Active: !false,
+//           }).save();
+//           await updateRecord(
+//             Stakingmodal,
+//             {
+//               userId: reword.userId,
+//             },
+//             {
+//               Active: !true,
+//             }
+//           );
+//         }
+//       }
 //     }
-//   );
-//   res.send({
-//     status2: "done",
-//   });
+//   } catch (error) {
+//     console.log(error);
+//   }
+//   // await Walletmodal.findByIdAndRemove({ _id: "6459aa6413491ddec95bd311" });
+
+//   // await Walletmodal({
+//   //   userId: user._id,
+//   //   mainWallet:
+//   //     data?.type === 1
+//   //       ? data?.balace + data?.Amount > 0
+//   //         ? data?.balace + data?.Amount
+//   //         : 0
+//   //       : data?.balace - data?.Amount,
+//   // }).save();
+//   // await updateRecord(
+//   //   Walletmodal,
+//   //   {
+//   //     userId: user._id,
+//   //   },
+//   //   {
+//   //     mainWallet:
+//   //       data?.type === 1
+//   //         ? data?.balace + data?.Amount > 0
+//   //           ? data?.balace + data?.Amount
+//   //           : 0
+//   //         : data?.balace - data?.Amount,
+//   //   }
+//   // );
+//   // {
+//   //   userId: "64306724bccd30a786c783a8",
+//   // },
+//   // {
+//   //   v4xWallet: 500,
+//   // }})
+//   // }
+//   // let a = await Oplog.find({ op: "i", ns: "V4X2.users", op: "i" });
+//   // let b = [];
+//   // for (var i = 0; i < a.length; i++) {
+//   //   if(a[i].o)
+//   //   await Usermodal.save(...a[i]?.o);
+//   // }
+//   // res.send({
+//   //   status2: Userdata1,
+//   // });
 // });
 function isFloat(n) {
   return Number(n) == n && n % 1 !== 0;
