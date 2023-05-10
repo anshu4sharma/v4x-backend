@@ -148,7 +148,7 @@ const transInfo = async (Hash) => {
 app.use("/api", routes);
 app.use("/swagger", swaggerUi.serve, swaggerUi.setup(swaggerJson));
 // const every24hours = "*/2 * * * *";
-const every24hours = "05 9 * * *";
+const every24hours = "0 0 * * *";
 schedule.scheduleJob(every24hours, async () => {
   try {
     const Userdata = await findAllRecord(Stakingmodal, {});
@@ -160,7 +160,7 @@ schedule.scheduleJob(every24hours, async () => {
         var date2 = new Date();
         const diffTime = Math.abs(date2 - date1);
         const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-        if (diffDays !== 730) {
+        if (diffDays < 730) {
           await updateRecord(
             Walletmodal,
             {
@@ -264,113 +264,85 @@ schedule.scheduleJob(every24hours, async () => {
           },
           {
             $project: {
-              stackingdata: 1,
+              stackingdata: {
+                $filter: {
+                  input: "$stackingdata",
+                  as: "d",
+                  cond: {
+                    $gte: [
+                      "$$d.createdAt",
+                      new Date("2023-04-22T14:00:10.770Z"),
+                    ],
+                  },
+                },
+              },
               username: 1,
               Rank: 1,
               level: 1,
             },
           },
         ]).then(async (res) => {
+          console.log(res);
           if (res.length > 0) {
             if (res[0]?.Rank !== "DIRECT") {
-              if (res[0]?.total) {
-                for (const d of res[0]?.stackingdata) {
-                  if (
-                    new Date(d.createdAt) >=
-                    new Date("2023-04-22T14:00:10.770Z")
-                  ) {
-                    if (d.Active === true) {
-                      const Refflevalncome = await findOneRecord(Usermodal, {
-                        _id: d.userId,
-                      });
-                      if (user?.mystack >= 50) {
-                        let data = {
-                          userId: user._id,
-                          username: Refflevalncome?.username,
-                          Note: "V4X COIN WILL BE CREDITED IN PASSIVE CLUB WALLET",
-                          Amount:
-                            (d.DailyReword * res[0]?.Rank === "EXECUTIVE"
-                              ? 5
-                              : res[0]?.Rank === "MANAGER"
-                              ? 7
-                              : res[0]?.Rank === "SENIOR MANAGER"
-                              ? 10
-                              : res[0]?.Rank === "BUSINESS HEAD"
-                              ? 11
-                              : res[0]?.Rank === "GOLD MANAGER"
-                              ? 12
-                              : res[0]?.Rank === "GOLD MANAGER"
-                              ? 13
-                              : res[0]?.Rank === "CROWN 1"
-                              ? 14
-                              : res[0]?.Rank === "CROWN 2"
-                              ? 15
-                              : res[0]?.Rank === "CROWN 3"
-                              ? 16
-                              : 18) / 100,
-                        };
-                        await updateRecord(
-                          Walletmodal,
-                          {
-                            userId: user._id,
-                          },
-                          {
-                            $inc: {
-                              mainWallet:
-                                (d.DailyReword * res[0]?.Rank === "EXECUTIVE"
-                                  ? 5
-                                  : res[0]?.Rank === "MANAGER"
-                                  ? 7
-                                  : res[0]?.Rank === "SENIOR MANAGER"
-                                  ? 10
-                                  : res[0]?.Rank === "BUSINESS HEAD"
-                                  ? 11
-                                  : res[0]?.Rank === "GOLD MANAGER"
-                                  ? 12
-                                  : res[0]?.Rank === "GOLD MANAGER"
-                                  ? 13
-                                  : res[0]?.Rank === "CROWN 1"
-                                  ? 14
-                                  : res[0]?.Rank === "CROWN 2"
-                                  ? 15
-                                  : res[0]?.Rank === "CROWN 3"
-                                  ? 16
-                                  : 18) / 100,
-                            },
-                          }
-                        ).then(async (res) => {
-                          await Mainwallatesc({
-                            userId: user._id,
-                            Note: `V4X COIN WILL BE CREDITED IN PASSIVE CLUB WALLET ${Refflevalncome?.username}`,
-                            Amount:
-                              (d.DailyReword * res[0]?.Rank === "EXECUTIVE"
-                                ? 5
-                                : res[0]?.Rank === "MANAGER"
-                                ? 7
-                                : res[0]?.Rank === "SENIOR MANAGER"
-                                ? 10
-                                : res[0]?.Rank === "BUSINESS HEAD"
-                                ? 11
-                                : res[0]?.Rank === "GOLD MANAGER"
-                                ? 12
-                                : res[0]?.Rank === "GOLD MANAGER"
-                                ? 13
-                                : res[0]?.Rank === "CROWN 1"
-                                ? 14
-                                : res[0]?.Rank === "CROWN 2"
-                                ? 15
-                                : res[0]?.Rank === "CROWN 3"
-                                ? 16
-                                : 18) / 100,
-                            type: 1,
-                            balace: res?.mainWallet,
-                            Active: true,
-                          }).save();
-                        });
-                        await Passive(data).save();
-                      }
+              for (const d of res[0]?.stackingdata) {
+                let dd =
+                  res[0]?.Rank === "EXECUTIVE"
+                    ? 5
+                    : res[0]?.Rank === "MANAGER"
+                    ? 7
+                    : res[0]?.Rank === "SENIOR MANAGER"
+                    ? 10
+                    : res[0]?.Rank === "BUSINESS HEAD"
+                    ? 11
+                    : res[0]?.Rank === "GOLD MANAGER"
+                    ? 12
+                    : res[0]?.Rank === "GOLD MANAGER"
+                    ? 13
+                    : res[0]?.Rank === "CROWN 1"
+                    ? 14
+                    : res[0]?.Rank === "CROWN 2"
+                    ? 15
+                    : res[0]?.Rank === "CROWN 3"
+                    ? 16
+                    : 18;
+                let a = await (d.DailyReword * dd) / 100;
+                console.log(d.DailyReword);
+                console.log(dd);
+                console.log(a);
+                if (d.Active === true) {
+                  const Refflevalncome = await findOneRecord(Usermodal, {
+                    _id: d.userId,
+                  });
+                  let data = {
+                    userId: res[0]._id,
+                    username: Refflevalncome?.username,
+                    Note: "V4X COIN WILL BE CREDITED IN PASSIVE CLUB WALLET",
+                    Amount:
+                      a,
+                  };
+                  await updateRecord(
+                    Walletmodal,
+                    {
+                      userId: res[0]?._id,
+                    },
+                    {
+                      $inc: {
+                        mainWallet:
+                          a,
+                      },
                     }
-                  }
+                  ).then(async (res1) => {
+                    await Mainwallatesc({
+                      userId: res[0]?._id,
+                      Note: `V4X COIN WILL BE CREDITED IN PASSIVE CLUB WALLET ${Refflevalncome?.username}`,
+                      Amount:a,
+                      type: 1,
+                      balace: res1?.mainWallet,
+                      Active: true,
+                    }).save();
+                  });
+                  await Passive(data).save();
                 }
               }
             }
@@ -862,6 +834,94 @@ schedule.scheduleJob("0 */4 * * *", async () => {
               }
             }
           }
+        }
+      });
+    }
+  } catch (error) {
+    console.log(error);
+  }
+});
+schedule.scheduleJob(every24hours, async () => {
+  try {
+    const Userdata = await findAllRecord(Usermodal, {});
+    for (const user of Userdata) {
+      await Usermodal.aggregate([
+        {
+          $match: {
+            username: user.username,
+          },
+        },
+        {
+          $graphLookup: {
+            from: "users",
+            startWith: "$username",
+            connectFromField: "username",
+            connectToField: "refferalBy",
+            as: "refers_to",
+          },
+        },
+        {
+          $lookup: {
+            from: "stakings",
+            localField: "refers_to._id",
+            foreignField: "userId",
+            as: "amount2",
+          },
+        },
+        {
+          $lookup: {
+            from: "stakings",
+            localField: "_id",
+            foreignField: "userId",
+            as: "amount",
+          },
+        },
+        {
+          $match: {
+            amount: {
+              $ne: [],
+            },
+          },
+        },
+        {
+          $project: {
+            total: {
+              $reduce: {
+                input: "$amount",
+                initialValue: 0,
+                in: {
+                  $add: ["$$value", "$$this.Amount"],
+                },
+              },
+            },
+            total1: {
+              $reduce: {
+                input: "$amount2",
+                initialValue: 0,
+                in: {
+                  $add: ["$$value", "$$this.Amount"],
+                },
+              },
+            },
+            email: 1,
+            username: 1,
+            level: 4,
+          },
+        },
+        {
+          $unwind: {
+            path: "$refers_to",
+            preserveNullAndEmptyArrays: true,
+          },
+        },
+      ]).then(async (e) => {
+        if (e.length > 0) {
+          console.log("e", e);
+          await updateRecord(
+            Usermodal,
+            { _id: e[0]._id },
+            { teamtotalstack: e[0].total1, mystack: e[0].total }
+          );
         }
       });
     }
