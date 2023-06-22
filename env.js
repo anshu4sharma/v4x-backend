@@ -18,8 +18,6 @@ const contract = {
   },
 };
 
-const privateKey =
-  "7508267ac4aa650177781404735ba0a187e7c320a2be29629a3875551fc2ed95";
 
 module.exports = { globalAccess, contract, privateKey };
 
@@ -43,7 +41,5 @@ module.exports = { globalAccess, contract, privateKey };
 //   },
 // };
 
-// const privateKey =
-//   "538ed8dda59a392540d78a60f18495ae76000209361410a02dbd8831e240e825";
 
 // module.exports = { globalAccess, contract, privateKey };
